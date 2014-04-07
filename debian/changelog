@@ -1,0 +1,27 @@
+flashback (0.4~alpha1) trusty; urgency=medium
+
+  [Nekhelesh Ramananthan]
+  * Fixed blurry actor placeholder image (LP: #1293787)
+  * Added placeholder text to the actors page biography if none are found (LP: #1292891)
+  * Made the ratings chooser opaque (LP: #1292884)
+  * Replace acting and production listview in actors page wth expandables (LP: #1292882)
+  * In the phone form factor, carousel now only shows 2 and 2/3rd cover art (LP: #1292878)
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Sat, 22 Mar 2014 15:04:33 +0100
+
+flashback (0.3.2ubuntu1) trusty; urgency=medium
+
+  [Nekhelesh Ramananthan]
+  * Fixed debian packaing failnig due to missing flashback executable file
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Mon, 17 Mar 2014 13:51:18 +0100
+
+flashback (0.3.2) trusty; urgency=medium
+
+  [Nekhelesh Ramananthan]
+  * Added walkthrough feature
+  * Added new home page search function
+  * Improved the visual of detail carousel corner radius
+  * Improved TV Show experience
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Mon, 17 Mar 2014 09:43:01 +0100

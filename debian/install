@@ -1,0 +1,9 @@
+Flashback.desktop usr/share/applications/
+Flashback.qml usr/share/flashback/
+flashback.png usr/share/icons/hicolor/256x256/apps/
+backend usr/share/flashback/
+components usr/share/flashback/
+graphics usr/share/flashback/
+models usr/share/flashback/
+ui usr/share/flashback/
+walkthrough usr/share/flashback/

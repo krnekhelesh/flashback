@@ -1,0 +1,23 @@
+Source: flashback
+Section: utils
+Priority: extra
+Maintainer: Nekhelesh Ramananthan <nik90@ubuntu.com>
+Build-Depends: debhelper (>= 9.0.0)
+Standards-Version: 3.9.5
+Homepage: http://launchpad.net/cliffhanger
+Vcs-Bzr: https://code.launchpad.net/~cliffhanger-dev/cliffhanger/trunk
+
+Package: flashback
+Architecture: all
+Depends: ${misc:Depends},
+	 qtdeclarative5-hud1.0,
+	 qtdeclarative5-qtquick2-plugin,
+	 qtdeclarative5-ubuntu-ui-toolkit-plugin,
+	 qtdeclarative5-u1db1.0,
+	 qmlscene
+Description: Flashback application
+ Flashback is an entertainment application that helps you manage your movie 
+ and TV show cravings. It integrates with Trakt and TMDB online services to 
+ provide a variety of features such as discovering new movie, keeping track 
+ of tv shows, adding movies and tv shows to your watchlist to watch later.
+

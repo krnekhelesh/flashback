@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Flashback
+Comment=My project description
+Exec=qmlscene $@ /usr/share/flashback/Flashback.qml
+Icon=flashback.png
+Terminal=false
+Type=Application
+Keywords=Movie,Film,TV,Show,Entertainment;
+X-Ubuntu-Touch=true

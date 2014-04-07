@@ -1,0 +1,404 @@
+# Cliffhanger App Translation.
+# Copyright (C) 2013 Cliffhanger Dev Team
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: cliffhanger\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-12-07 14:21+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ui/About.qml:8 ui/SettingTab.qml:50
+msgid "About"
+msgstr ""
+
+#: ui/About.qml:31
+msgid "Author, Developer"
+msgstr ""
+
+#: ui/About.qml:38
+msgid "Developer"
+msgstr ""
+
+#: ui/About.qml:45
+msgid "Icon and Design"
+msgstr ""
+
+#: ui/PersonTab.qml:18
+msgid "Person"
+msgstr ""
+
+#: ui/PersonTab.qml:19
+msgid "Search;Person;Actor;Actors;Actress;Cast;Crew;Find"
+msgstr ""
+
+#: ui/PersonTab.qml:20
+msgid "Search for Actors, Actress and Crew"
+msgstr ""
+
+#: ui/PersonTab.qml:33 ui/TvTab.qml:42 ui/MovieTab.qml:84
+msgid "Popular"
+msgstr ""
+
+#: ui/TvSeasons.qml:25 ui/SummaryPage.qml:41 ui/CastPage.qml:24
+#: ui/CrewPage.qml:24
+msgid "Default"
+msgstr ""
+
+#: ui/TvSeasons.qml:41
+msgid "Season Specials"
+msgstr ""
+
+#: ui/TvSeasons.qml:41
+msgid "Season"
+msgstr ""
+
+#: ui/MovieByRating.qml:10
+msgid "Top Rated Movies"
+msgstr ""
+
+#: ui/TvTab.qml:17
+msgid "Tv Show"
+msgstr ""
+
+#: ui/TvTab.qml:18
+msgid "Search;Tv;Show;Shows;Find"
+msgstr ""
+
+#: ui/TvTab.qml:19
+msgid "Search for Tv Shows"
+msgstr ""
+
+#: ui/PersonPage.qml:101
+msgid "Birth"
+msgstr ""
+
+#: ui/PersonPage.qml:111
+msgid "Death"
+msgstr ""
+
+#: ui/PersonPage.qml:163
+msgid "Acting"
+msgstr ""
+
+#: ui/PersonPage.qml:187
+msgid "Production"
+msgstr ""
+
+#: components/SearchBox.qml:33
+msgid "Search"
+msgstr ""
+
+#: ui/MovieByPopularity.qml:10
+msgid "Popular Movies"
+msgstr ""
+
+#: ui/MovieByGenre.qml:10
+msgid "Genre"
+msgstr ""
+
+#: ui/MovieByGenre.qml:45
+msgid "Choose movie genre"
+msgstr ""
+
+#: ui/MovieByGenre.qml:45
+msgid "Loading movie genre list..."
+msgstr ""
+
+#: ui/TraktLogin.qml:37
+msgid "Logging in..."
+msgstr ""
+
+#: ui/TraktLogin.qml:91
+msgid "Username"
+msgstr ""
+
+#: ui/TraktLogin.qml:96
+msgid "Password"
+msgstr ""
+
+#: ui/TraktLogin.qml:108
+msgid "Invalid user account. Please check your username and password."
+msgstr ""
+
+#: ui/TraktLogin.qml:130 ui/MoviePage.qml:52
+msgid "Cancel"
+msgstr ""
+
+#: ui/TraktLogin.qml:139
+msgid "Login"
+msgstr ""
+
+#: ui/MovieTab.qml:25
+msgid "Movie"
+msgstr ""
+
+#: ui/MovieTab.qml:26
+msgid "Search;Movie;Movies;Find"
+msgstr ""
+
+#: ui/MovieTab.qml:27
+msgid "Search for Movies"
+msgstr ""
+
+#: ui/MovieTab.qml:58
+msgid "Now Playing"
+msgstr ""
+
+#: ui/MovieTab.qml:65
+msgid "Upcoming Movies"
+msgstr ""
+
+#: ui/MovieTab.qml:69
+msgid "Filter"
+msgstr ""
+
+#: ui/MovieTab.qml:72
+msgid "By Genre"
+msgstr ""
+
+#: ui/MovieTab.qml:78
+msgid "Top Rated"
+msgstr ""
+
+#: components/Carousel.qml:36 components/Grid.qml:31 components/Grid.qml:32
+msgid "Default Header Title"
+msgstr ""
+
+#: ui/TvPage.qml:19 ui/TvPage.qml:23
+msgid "Episode Guide"
+msgstr ""
+
+#: ui/TvPage.qml:20
+msgid "See;Episode;Guide;Guides;Episodes"
+msgstr ""
+
+#: ui/TvPage.qml:21
+msgid "See Episode Guide"
+msgstr ""
+
+#: ui/TvPage.qml:114 ui/MoviePage.qml:187 ui/SeasonPage.qml:92
+msgid "Summary"
+msgstr ""
+
+#: ui/TvPage.qml:139
+msgid "Seasons"
+msgstr ""
+
+#: ui/TvPage.qml:146
+msgid "minutes"
+msgstr ""
+
+#: ui/TvPage.qml:185
+msgid "Continuing"
+msgstr ""
+
+#: ui/TvPage.qml:185
+msgid "Ended"
+msgstr ""
+
+#: ui/TvPage.qml:200 ui/MoviePage.qml:235
+msgid "Details"
+msgstr ""
+
+#: ui/TvPage.qml:204 ui/MoviePage.qml:239
+msgid "Genres"
+msgstr ""
+
+#: ui/TvPage.qml:211
+msgid "First Air Date"
+msgstr ""
+
+#: ui/TvPage.qml:216 ui/MoviePage.qml:258
+msgid "Casts"
+msgstr ""
+
+#: ui/TvPage.qml:231 ui/TvPage.qml:233 ui/MoviePage.qml:273
+#: ui/MoviePage.qml:275
+msgid "Full Cast"
+msgstr ""
+
+#: ui/TvPage.qml:236 ui/MoviePage.qml:278
+msgid "Production Crew"
+msgstr ""
+
+#: ui/TvPage.qml:250 ui/TvPage.qml:252 ui/MoviePage.qml:292
+#: ui/MoviePage.qml:294
+msgid "Full Crew"
+msgstr ""
+
+#: components/LoadingIndicator.qml:33
+msgid "Loading..."
+msgstr ""
+
+#: ui/MoviePage.qml:33
+msgid "Movie Check-in"
+msgstr ""
+
+#: ui/MoviePage.qml:37
+msgid "Check-in review (Optional)"
+msgstr ""
+
+#: ui/MoviePage.qml:43
+msgid "Check-in"
+msgstr ""
+
+#: ui/MoviePage.qml:75
+msgid "Trailer"
+msgstr ""
+
+#: ui/MoviePage.qml:76
+msgid "Play;Watch;Trailer;Preview"
+msgstr ""
+
+#: ui/MoviePage.qml:77
+msgid "Play Movie Trailer"
+msgstr ""
+
+#: ui/MoviePage.qml:84
+msgid "Share"
+msgstr ""
+
+#: ui/MoviePage.qml:85
+msgid "Share;Checkin;Social"
+msgstr ""
+
+#: ui/MoviePage.qml:86
+msgid "Share movie with friends"
+msgstr ""
+
+#: ui/MoviePage.qml:93
+msgid ""
+"Configure Trakt to to check-in\n"
+"movies"
+msgstr ""
+
+#: ui/MoviePage.qml:93
+msgid "Check-in movie into Trakt"
+msgstr ""
+
+#: ui/MoviePage.qml:246
+msgid "Release Date"
+msgstr ""
+
+#: ui/MoviePage.qml:253
+msgid "Tagline"
+msgstr ""
+
+#: ui/MoviePage.qml:301
+msgid "Similar Movies"
+msgstr ""
+
+#: ui/SeasonPage.qml:122
+msgid "Episode"
+msgstr ""
+
+#: ui/SearchPerson.qml:11
+msgid "Search Person"
+msgstr ""
+
+#: components/Development.qml:5
+msgid "Still in development"
+msgstr ""
+
+#: Cliffhanger.qml:61
+msgid "Movies"
+msgstr ""
+
+#: Cliffhanger.qml:67
+msgid "TV"
+msgstr ""
+
+#: Cliffhanger.qml:73
+msgid "Celebs"
+msgstr ""
+
+#: Cliffhanger.qml:78
+msgid "Settings"
+msgstr ""
+
+#: ui/SearchTv.qml:11
+msgid "Search TV Show"
+msgstr ""
+
+#: ui/SettingTab.qml:36
+msgid "Web Services"
+msgstr ""
+
+#: ui/SettingTab.qml:41
+msgid "Not Authenticated"
+msgstr ""
+
+#: ui/SettingTab.qml:41
+msgid "Authenticated"
+msgstr ""
+
+#: ui/SettingTab.qml:54
+msgid "Credits"
+msgstr ""
+
+#: ui/SettingTab.qml:61
+msgid "Tweet us!"
+msgstr ""
+
+#: ui/SettingTab.qml:68
+msgid "Facebook us!"
+msgstr ""
+
+#: ui/SettingTab.qml:75
+msgid "Version"
+msgstr ""
+
+#: ui/SettingTab.qml:80
+msgid "Thank you for downloading. Enjoy!"
+msgstr ""
+
+#: ui/SettingTab.qml:85
+msgid "Disclaimer"
+msgstr ""
+
+#: ui/SettingTab.qml:95
+msgid ""
+"This product uses the TMDb API but is not\n"
+"endorsed or certified by TMDb."
+msgstr ""
+
+#: ui/SettingTab.qml:100
+msgid "Click here to report a bug"
+msgstr ""
+
+#: ui/SearchMovie.qml:11
+msgid "Search Movie"
+msgstr ""
+
+#: ui/Trakt.qml:40
+msgid "Track what you're watching. Discover new shows & movies."
+msgstr ""
+
+#: ui/Trakt.qml:61 ui/Trakt.qml:64
+msgid "Authenticate"
+msgstr ""
+
+#: ui/Trakt.qml:61
+msgid "Log out"
+msgstr ""
+
+#: ui/Trakt.qml:49
+msgid ""
+"Trakt is a platform that does many things, but primarily keeps track of TV "
+"shows and movies you watch. It integrates with your media center or home "
+"theater PC to enable scrobbling, so everything is automatic. Some people "
+"like to check in from their phone, so we enable that too. Discover new "
+"shows, follow people with similar tastes and voice your opinion on by using "
+"the trakt website or one of the many community apps that were built using "
+"our API."
+msgstr ""

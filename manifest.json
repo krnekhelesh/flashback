@@ -1,0 +1,15 @@
+{
+    "architecture": "all",
+    "description": "description of Flashback",
+    "framework": "ubuntu-sdk-14.04-qml-dev1",
+    "hooks": {
+        "Cliffhanger": {
+            "apparmor": "Flashback.json",
+            "desktop": "Flashback.desktop"
+        }
+    },
+    "maintainer": "Nekhelesh Ramananthan <krnekhelesh@gmail.com>",
+    "name": "com.ubuntu.developer.nik90.flashback",
+    "title": "Flashback",
+    "version": "0.3.3"
+}
