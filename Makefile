@@ -16,3 +16,6 @@ autopilot:
 
 run:
 	/usr/bin/qmlscene $@ Flashback.qml
+
+erase_db:
+	rm ~/.local/share/com.ubuntu.developer.nik90.flashback/ -R	
