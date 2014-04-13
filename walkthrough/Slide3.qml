@@ -25,42 +25,36 @@ Component {
     Item {
         id: slide3Container
         
-        UbuntuNumberAnimation on x {
-            from: isForward ? width : -width; to: 0;
-        }
-        
-        Label {
-            id: introductionText
-            fontSize: "x-large"
-            text: "Check-In"
-            anchors.top: parent.top
-            anchors.topMargin: units.gu(5)
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-        
-        Image {
-            id: centerImage
-            width: parent.width/2
-            fillMode: Image.PreserveAspectFit
-            source: Qt.resolvedUrl("../graphics/share.png")
-            anchors.top: introductionText.top
-            anchors.topMargin: units.gu(10)
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-        
-        Label {
-            id: body
-            text: "Checking-in movies & shows just before you watch them adds them to your history and allows for a personalised recommendation list. \n\nYou can also choose to share what you check-in to facebook, twitter and tumblr."
-            font.pixelSize: units.dp(16)
-            anchors {
-                top: centerImage.bottom
-                left: parent.left
-                right: parent.right
-                topMargin: units.gu(6)
-                margins: units.gu(3)
+        Column {
+            id: mainColumn
+
+            spacing: units.gu(4)
+            anchors.fill: parent
+
+            Label {
+                id: introductionText
+                font.bold: true
+                fontSize: "x-large"
+                text: "Check-In"
+                anchors.horizontalCenter: parent.horizontalCenter
             }
-            wrapMode: Text.WordWrap
-            horizontalAlignment: Text.AlignHCenter
+
+            Image {
+                id: centerImage
+                fillMode: Image.PreserveAspectFit
+                source: Qt.resolvedUrl("../graphics/share.png")
+                height: parent.height - introductionText.height - body.contentHeight - 4*mainColumn.spacing
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Label {
+                id: body
+                text: "Checking-in movies & shows just before you watch them adds them to your history and allows for a personalised recommendation list. \n\nYou can also choose to share what you check-in to facebook, twitter and tumblr."
+                font.pixelSize: units.dp(17)
+                width: parent.width
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
+            }
         }
     }
 }

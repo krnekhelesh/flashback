@@ -25,41 +25,37 @@ Component {
     Item {
         id: slide5Container
         
-        UbuntuNumberAnimation on x {
-            from: isForward ? width : -width; to: 0;
-        }
-        
-        Label {
-            id: introductionText
-            fontSize: "x-large"
-            text: "Flashback & Trakt"
-            anchors.top: parent.top
-            anchors.topMargin: units.gu(5)
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-        
-        Image {
-            id: centerImage
-            width: parent.width/2
-            fillMode: Image.PreserveAspectFit
-            source: Qt.resolvedUrl("../graphics/fusion.png")
-            anchors.top: introductionText.top
-            anchors.topMargin: units.gu(8)
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-        
-        Label {
-            id: body
-            text: "Flashback uses the Trakt web service to,\n\n1. Discover new shows & movies \n\n2. Rate, Review and Engage with Friends\n\n3. Personalised calendar of your favourite shows\n\n4. Track and share what you watch with Friends"
-            font.pixelSize: units.dp(16)
-            anchors {
-                left: parent.left
-                right: parent.right
-                top: centerImage.bottom
-                topMargin: units.gu(5)
-                margins: units.gu(3)
+        Column {
+            id: mainColumn
+
+            spacing: units.gu(4)
+            anchors.fill: parent
+
+            Label {
+                id: introductionText
+                font.bold: true
+                fontSize: "x-large"
+                text: "Flashback & Trakt"
+                anchors.horizontalCenter: parent.horizontalCenter
             }
-            wrapMode: Text.WordWrap
+
+            Image {
+                id: centerImage
+                height: parent.height - introductionText.height - body.contentHeight - 4*mainColumn.spacing
+                fillMode: Image.PreserveAspectFit
+                source: Qt.resolvedUrl("../graphics/fusion.png")
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Label {
+                id: body
+                text: "Flashback uses the Trakt web service to,\n\n1. Discover new shows & movies \n2. Rate, Review and Engage with Friends\n3. Personalised calendar of your favourite shows\n4. Track and share what you watch with Friends"
+                font.pixelSize: units.dp(17)
+                anchors.horizontalCenter: parent.width <= units.gu(50) ? undefined : parent.horizontalCenter
+                anchors.left: parent.width <= units.gu(50) ? parent.left : undefined
+                anchors.right: parent.width <= units.gu(50) ? parent.right : undefined
+                wrapMode: Text.WordWrap
+            }
         }
     }
 }
