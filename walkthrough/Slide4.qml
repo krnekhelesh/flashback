@@ -25,42 +25,36 @@ Component {
     Item {
         id: slide4Container
         
-        UbuntuNumberAnimation on x {
-            from: isForward ? width : -width; to: 0;
-        }
-        
-        Label {
-            id: introductionText
-            fontSize: "x-large"
-            text: "Watchlist"
-            anchors.top: parent.top
-            anchors.topMargin: units.gu(5)
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-        
-        Image {
-            id: centerImage
-            width: parent.width/5
-            fillMode: Image.PreserveAspectFit
-            source: Qt.resolvedUrl("../graphics/bookmark.png")
-            anchors.top: introductionText.top
-            anchors.topMargin: units.gu(14)
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-        
-        Label {
-            id: body
-            text: "No time to watch the movie you heard from your friends? Add it to your watchlist to watch later. \n\nLet Flashback handle all the bookkeeping while you enjoy the content."
-            font.pixelSize: units.dp(16)
-            anchors {
-                top: centerImage.bottom
-                left: parent.left
-                right: parent.right
-                topMargin: units.gu(10)
-                margins: units.gu(3)
+        Column {
+            id: mainColumn
+
+            spacing: units.gu(4)
+            anchors.fill: parent
+
+            Label {
+                id: introductionText
+                font.bold: true
+                fontSize: "x-large"
+                text: "Watchlist"
+                anchors.horizontalCenter: parent.horizontalCenter
             }
-            wrapMode: Text.WordWrap
-            horizontalAlignment: Text.AlignHCenter
+
+            Image {
+                id: centerImage
+                height: parent.height - introductionText.height - body.contentHeight - 4*mainColumn.spacing
+                fillMode: Image.PreserveAspectFit
+                source: Qt.resolvedUrl("../graphics/bookmark.png")
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Label {
+                id: body
+                text: "No time to watch the movie you heard from your friends? Add it to your watchlist to watch later. \n\nLet Flashback handle all the bookkeeping while you enjoy the content."
+                font.pixelSize: units.dp(17)
+                width: parent.width
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
+            }
         }
     }
 }

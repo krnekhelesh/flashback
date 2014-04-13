@@ -24,47 +24,35 @@ Component {
     id: slide2
     Item {
         id: slide2Container
-        
-        UbuntuNumberAnimation on x {
-            from: isForward ? width : -width; to: 0;
-        }
-        
-        Label {
-            id: introductionText
-            text: "Flashback"
-            fontSize: "x-large"
-            anchors.top: parent.top
-            anchors.topMargin: units.gu(5)
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-        
+
         Column {
             id: mainColumn
-            spacing: units.gu(1)
-            anchors {
-                top: introductionText.bottom
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-                margins: units.gu(4)
+            spacing: units.gu(4)
+            anchors.fill: parent
+
+            Label {
+                id: introductionText
+                text: "Flashback"
+                font.bold: true
+                fontSize: "x-large"
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Image {
+                id: centerImage
+                height: parent.height - bodyText.contentHeight - introductionText.height - 4*mainColumn.spacing
+                fillMode: Image.PreserveAspectFit
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: Qt.resolvedUrl("../graphics/centerImage.png")
             }
             
             Label {
                 id: bodyText
+                width: parent.width
                 wrapMode: Text.WordWrap
-                anchors.left: parent.left
-                anchors.right: parent.right
                 font.pixelSize: units.dp(17)
                 horizontalAlignment: Text.AlignHCenter
                 text: "Flashback is an entertainment app that helps you discover new movies and shows. It learns about your tastes over time and provides you with personalised recommendations.\n\nYour very own personal assistant!"
-            }
-            
-            Image {
-                id: centerImage
-                width: 1.3 * parent.width
-                fillMode: Image.PreserveAspectFit
-                anchors.horizontalCenter: parent.horizontalCenter
-                source: Qt.resolvedUrl("../graphics/centerImage.png")
             }
         }
     }

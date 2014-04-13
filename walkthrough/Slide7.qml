@@ -24,73 +24,47 @@ Component {
     id: slide7
     Item {
         id: slide7Container
-        
-        UbuntuNumberAnimation on x {
-            from: isForward ? width : -width; to: 0;
-        }
-        
-        Label {
-            id: introductionText
-            fontSize: "x-large"
-            text: "Ready!"
-            anchors.top: parent.top
-            anchors.topMargin: units.gu(5)
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-        
-        Image {
-            id: smileImage
-            smooth: true
-            width: units.gu(30)
-            antialiasing: true
-            fillMode: Image.PreserveAspectFit
-            source: Qt.resolvedUrl("../graphics/smile.png")
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-                top: parent.top
-                topMargin: units.gu(15)
+
+        Column {
+            id: mainColumn
+
+            spacing: units.gu(4)
+            anchors.fill: parent
+
+            Label {
+                id: introductionText
+                fontSize: "x-large"
+                font.bold: true
+                text: "Ready!"
+                anchors.horizontalCenter: parent.horizontalCenter
             }
-        }
-        
-        Label {
-            id: finalMessage
-            text: "We hope you enjoy using it! \n\n Flashback your movies and shows!"
-            height: contentHeight
-            width: parent.width
-            wrapMode: Text.WordWrap
-            font.pixelSize: units.dp(20)
-            horizontalAlignment: Text.AlignHCenter
-            anchors {
-                top: smileImage.bottom
-                topMargin: units.gu(5)
-                horizontalCenter: parent.horizontalCenter
+
+            Image {
+                id: smileImage
+                height: parent.height - introductionText.height - finalMessage.contentHeight - 4.5*mainColumn.spacing
+                fillMode: Image.PreserveAspectFit
+                source: Qt.resolvedUrl("../graphics/smile.png")
+                anchors.horizontalCenter: parent.horizontalCenter
             }
-        }
-        
-        Button {
-            id: continueButton
-            color: "Green"
-            height: units.gu(5)
-            width: units.gu(25)
-            text: "Start using Flashback!"
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-                top: finalMessage.bottom
-                topMargin: units.gu(5)
+
+            Label {
+                id: finalMessage
+                text: "We hope you enjoy using it!\n\nFlashback your movies and shows!"
+                width: parent.width
+                wrapMode: Text.WordWrap
+                font.pixelSize: units.dp(17)
+                horizontalAlignment: Text.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
             }
-            
-            onClicked: {
-                if(isFirstRun) {
-                    firstRunDocument.contents = {
-                        firstrun: "false"
-                    }
-                    pageStack.pop()
-                    pageStack.push(rootComponent)
-                }
-                else {
-                    while(pageStack.depth !== 2)
-                        pageStack.pop()
-                }
+
+            Button {
+                id: continueButton
+                color: "Green"
+                height: units.gu(5)
+                width: units.gu(25)
+                text: "Start using Flashback!"
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: finished()
             }
         }
     }

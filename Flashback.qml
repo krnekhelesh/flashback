@@ -209,7 +209,7 @@ MainView {
         Component.onCompleted: {
             if(String(firstRunDocument.contents.firstrun) === "true") {
                 console.log("[LOG]: Running app for the first time. Opening Walkthrough: " + firstRunDocument.contents.firstrun)
-                push(Qt.resolvedUrl("walkthrough/Walkthrough.qml"));
+                push(Qt.resolvedUrl("walkthrough/FirstRunWalkthrough.qml"));
             }
             else
                 push(rootComponent);

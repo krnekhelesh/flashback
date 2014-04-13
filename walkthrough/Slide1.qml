@@ -25,10 +25,6 @@ Component {
     Item {
         id: slide1Container
 
-        UbuntuNumberAnimation on x {
-            from: isForward ? width : -width; to: 0;
-        }
-
         UbuntuShape {
             anchors {
                 bottom: textColumn.top
@@ -56,7 +52,7 @@ Component {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             Label {
-                text: "Flashback"
+                text: appName
                 font.bold: true
                 height: contentHeight
                 font.pixelSize: units.dp(50)

@@ -72,7 +72,7 @@ Page {
                 iconFrame: false
                 showDivider: false
                 iconSource: Qt.resolvedUrl("../graphics/help.png")
-                onClicked: pagestack.push(Qt.resolvedUrl("../walkthrough/Walkthrough.qml"), {"isFirstRun": false})
+                onClicked: pagestack.push(Qt.resolvedUrl("../walkthrough/FirstRunWalkthrough.qml"), {"isFirstRun": false})
             }
 
             Header { text: i18n.tr("About") }

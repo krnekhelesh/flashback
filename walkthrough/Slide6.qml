@@ -24,58 +24,45 @@ Component {
     id: slide6
     Item {
         id: slide6Container
-        
-        UbuntuNumberAnimation on x {
-            from: isForward ? width : -width; to: 0;
-        }
-        
-        UbuntuShape {
-            id: logo
-            anchors {
-                top: parent.top
-                topMargin: units.gu(5)
-                horizontalCenter: parent.horizontalCenter
-            }
-            
-            image: Image {
-                smooth: true
-                antialiasing: true
-                fillMode: Image.PreserveAspectFit
-                source: Qt.resolvedUrl("../flashback.png")
-            }
-        }
-        
+
         Column {
             id: textColumn
             
             spacing: units.gu(6)
-            anchors {
-                top: logo.bottom
-                topMargin: units.gu(5)
-                left: parent.left
-                right: parent.right
-                margins: units.gu(4)
-            }
-            
+            anchors.fill: parent
+
             Label {
-                text: "Flashback"
+                id: introductionText
+                text: "Trakt Account"
                 height: contentHeight
-                font.pixelSize: units.dp(50)
+                font.bold: true
+                fontSize: "x-large"
                 horizontalAlignment: Text.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
             }
+
+            Image {
+                id: centerImage
+                height: parent.height - introductionText.height - body.contentHeight - 4*textColumn.spacing
+                fillMode: Image.PreserveAspectFit
+                source: Qt.resolvedUrl("../graphics/account.png")
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
             Label {
+                id: body
                 text: "Your personal assistant is almost ready! To get started log in or sign up to Trakt\n\nYou can also swipe ahead without a Trakt account. However you will miss out on certain features."
-                height: contentHeight
                 width: parent.width
                 wrapMode: Text.WordWrap
-                font.pixelSize: units.dp(16)
+                font.pixelSize: units.dp(17)
                 horizontalAlignment: Text.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             
             Row {
                 id: buttonRow
+
+                height: units.gu(5)
                 spacing: units.gu(2)
                 anchors.horizontalCenter: parent.horizontalCenter
                 
