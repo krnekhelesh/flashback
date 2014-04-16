@@ -207,12 +207,13 @@ MainView {
         property string showName
 
         Component.onCompleted: {
-            if(String(firstRunDocument.contents.firstrun) === "true") {
-                console.log("[LOG]: Running app for the first time. Opening Walkthrough: " + firstRunDocument.contents.firstrun)
-                push(Qt.resolvedUrl("walkthrough/FirstRunWalkthrough.qml"));
-            }
-            else
-                push(rootComponent);
+//            if(String(firstRunDocument.contents.firstrun) === "true") {
+//                console.log("[LOG]: Running app for the first time. Opening Walkthrough: " + firstRunDocument.contents.firstrun)
+//                push(Qt.resolvedUrl("walkthrough/FirstRunWalkthrough.qml"));
+//            }
+//            else
+//                push(rootComponent);
+            push(Qt.resolvedUrl("ui/SettingPage.qml"))
         }
 
         Component {
