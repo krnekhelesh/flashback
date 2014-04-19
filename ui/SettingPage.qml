@@ -18,25 +18,16 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../components"
+import "../models"
 
 Page {
     id: settings
 
     visible: false
-    flickable: null
+    flickable: flickable
     title: i18n.tr("Settings")
-
-    ListModel {
-        id: webserviceModel
-        ListElement {
-            name: "Trakt"
-            thumb_url: "../graphics/trakt_logo.png"
-            link: "Trakt.qml"
-            db_doc: "traktLogin"
-        }
-    }
 
     Flickable {
         id: flickable
@@ -46,6 +37,7 @@ Page {
 
         Column {
             id: mainColumn
+            spacing: units.gu(2)
             height: childrenRect.height
             anchors {
                 left: parent.left
@@ -54,83 +46,85 @@ Page {
                 margins: units.gu(2)
             }
 
-            Header { text: i18n.tr("Web Services") }
-
-            Subtitled {
-                text: "Trakt"
-                subText: traktLogin.contents.status === "disabled" ? i18n.tr("Not Authenticated") : "<font color='green'>" + i18n.tr("Authenticated") + "</font>"
-                iconSource: Qt.resolvedUrl("../graphics/trakt_logo.png")
-                progression: true
-                showDivider: false
-                onClicked: pagestack.push(Qt.resolvedUrl("Trakt.qml"))
+            TraktAccountSettingsItem {
+                id: traktAccount
             }
 
-            Header { text: i18n.tr("Help") }
-
-            Standard {
-                text: i18n.tr("Show First Run Tutorial")
-                iconFrame: false
-                showDivider: false
-                iconSource: Qt.resolvedUrl("../graphics/help.png")
-                onClicked: pagestack.push(Qt.resolvedUrl("../walkthrough/FirstRunWalkthrough.qml"), {"isFirstRun": false})
-            }
-
-            Header { text: i18n.tr("About") }
-
-            Standard {
-                text: i18n.tr("Credits")
-                iconFrame: false
-                showDivider: false
-                iconSource: Qt.resolvedUrl("../graphics/credits.png")
-                onClicked: pagestack.push(Qt.resolvedUrl("About.qml"))
-            }
-
-            Standard {
-                text: i18n.tr("Tweet us!")
-                showDivider: false
-                iconFrame: false
-                iconSource: Qt.resolvedUrl("../graphics/twitter_logo.png")
-                onClicked: Qt.openUrlExternally("http://twitter.com/home?status=Checkout the Flashback app! It allows you to track Tv Shows and Movies. Get it for your Ubuntu phone at https://launchpad.net/cliffhanger")
-            }
-
-            Standard {
-                text: i18n.tr("Facebook us!")
-                showDivider: false
-                iconFrame: false
-                iconSource: Qt.resolvedUrl("../graphics/facebook_logo.png")
-                onClicked: Qt.openUrlExternally("https://www.facebook.com/sharer/sharer.php?s=100&p%5Btitle%5D=Flashback+for+Ubuntu&p%5Bsummary%5D=An+app+for+tracking+Tv+Shows+and+Movies&p[url]=https://launchpad.net/cliffhanger")
-            }
-
-            Header { text: i18n.tr("Version") }
-
-            Subtitled {
-                text: pagestack.app_name + " " + pagestack.app_version
-                subText: i18n.tr("Thank you for downloading. Enjoy!")
-                iconSource: Qt.resolvedUrl("../flashback.png")
-                showDivider: false
-            }
-
-            Header { text: i18n.tr("Disclaimer") }
-
-            Column {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-
-                Standard {
-                    text: i18n.tr("This product uses the TMDb API but is not\nendorsed or certified by TMDb.")
-                    showDivider: false
-                }
-
-                Standard {
-                    text: "<b>" + i18n.tr("Click here to report a bug") + "</b><br>Copyright (C) 2014 Flashback Dev Team"
-                    showDivider: false
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: Qt.openUrlExternally("https://bugs.launchpad.net/cliffhanger/+filebug")
+            SettingsItem {
+                id: help
+                title: "Help"
+                contents: [
+                    ListItem.Standard {
+                        text: i18n.tr("Show First Run Tutorial")
+                        iconFrame: false
+                        showDivider: false
+                        progression: true
+                        iconSource: Qt.resolvedUrl("../graphics/help.png")
+                        onClicked: pagestack.push(Qt.resolvedUrl("../walkthrough/FirstRunWalkthrough.qml"), {"isFirstRun": false})
                     }
-                }
+                ]
+            }
+
+            SettingsItem {
+                id: about
+                title: "About"
+                contents: [
+                    ListItem.Standard {
+                        text: i18n.tr("Credits")
+                        iconFrame: false
+                        progression: true
+                        iconSource: Qt.resolvedUrl("../graphics/credits.png")
+                        onClicked: pagestack.push(Qt.resolvedUrl("About.qml"))
+                    },
+
+                    ListItem.Standard {
+                        text: i18n.tr("Tweet us!")
+                        iconFrame: false
+                        progression: true
+                        iconSource: Qt.resolvedUrl("../graphics/twitter_logo.png")
+                        onClicked: Qt.openUrlExternally("http://twitter.com/home?status=Checkout the Flashback app! It allows you to track Tv Shows and Movies. Get it for your Ubuntu phone at https://launchpad.net/cliffhanger")
+                    },
+
+                    ListItem.Standard {
+                        text: i18n.tr("Facebook us!")
+                        showDivider: false
+                        iconFrame: false
+                        progression: true
+                        iconSource: Qt.resolvedUrl("../graphics/facebook_logo.png")
+                        onClicked: Qt.openUrlExternally("https://www.facebook.com/sharer/sharer.php?s=100&p%5Btitle%5D=Flashback+for+Ubuntu&p%5Bsummary%5D=An+app+for+tracking+Tv+Shows+and+Movies&p[url]=https://launchpad.net/cliffhanger")
+                    }
+                ]
+            }
+
+            SettingsItem {
+                title: "Version"
+                contents: [
+                    ListItem.Subtitled {
+                        text: pagestack.app_name + " " + pagestack.app_version
+                        subText: i18n.tr("Thank you for downloading. Enjoy!")
+                        iconSource: Qt.resolvedUrl("../flashback.png")
+                        showDivider: false
+                    }
+                ]
+            }
+
+            SettingsItem {
+                title: "Disclaimer"
+                contents: [
+                    ListItem.Standard {
+                        text: i18n.tr("This product uses the TMDb API but is not\nendorsed or certified by TMDb.")
+                        showDivider: false
+                    },
+
+                    ListItem.Standard {
+                        text: "<b>" + i18n.tr("Click here to report a bug") + "</b><br>Copyright (C) 2014 Flashback Dev Team"
+                        showDivider: false
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: Qt.openUrlExternally("https://bugs.launchpad.net/cliffhanger/+filebug")
+                        }
+                    }
+                ]
             }
         }
     }
