@@ -195,9 +195,9 @@ MainView {
         id: pagestack
 
         // Properties to hold the application details which are then used throughout the application for consistency
-        property string app_version: "0.3.3"
+        property string app_version: "0.3.4 Alpha 2"
         property string app_name: "Flashback"
-        property string last_updated: "28 March 2014"
+        property string last_updated: "20 April 2014"
 
         // Property to hold the trakt account status to allow for detecting account changes after the app is open
         property string account_status
@@ -207,13 +207,12 @@ MainView {
         property string showName
 
         Component.onCompleted: {
-//            if(String(firstRunDocument.contents.firstrun) === "true") {
-//                console.log("[LOG]: Running app for the first time. Opening Walkthrough: " + firstRunDocument.contents.firstrun)
-//                push(Qt.resolvedUrl("walkthrough/FirstRunWalkthrough.qml"));
-//            }
-//            else
-//                push(rootComponent);
-            push(Qt.resolvedUrl("ui/SettingPage.qml"))
+            if(String(firstRunDocument.contents.firstrun) === "true") {
+                console.log("[LOG]: Running app for the first time. Opening Walkthrough: " + firstRunDocument.contents.firstrun)
+                push(Qt.resolvedUrl("walkthrough/FirstRunWalkthrough.qml"));
+            }
+            else
+                push(rootComponent);
         }
 
         Component {
