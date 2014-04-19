@@ -18,8 +18,9 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../components"
+import "../models"
 
 Page {
     id: settings
@@ -27,16 +28,6 @@ Page {
     visible: false
     flickable: flickable
     title: i18n.tr("Settings")
-
-    ListModel {
-        id: webserviceModel
-        ListElement {
-            name: "Trakt"
-            thumb_url: "../graphics/trakt_logo.png"
-            link: "Trakt.qml"
-            db_doc: "traktLogin"
-        }
-    }
 
     Flickable {
         id: flickable
@@ -55,25 +46,15 @@ Page {
                 margins: units.gu(2)
             }
 
-            SettingsItem {
-                title: "Web Services"
-                contents: [
-                    Subtitled {
-                        text: "Trakt"
-                        subText: traktLogin.contents.status === "disabled" ? i18n.tr("Not Authenticated") : "<font color='green'>" + i18n.tr("Authenticated") + "</font>"
-                        iconSource: Qt.resolvedUrl("../graphics/trakt_logo.png")
-                        progression: true
-                        showDivider: false
-                        onClicked: pagestack.push(Qt.resolvedUrl("Trakt.qml"))
-                    }
-                ]
+            TraktAccountSettingsItem {
+                id: traktAccount
             }
 
             SettingsItem {
                 id: help
                 title: "Help"
                 contents: [
-                    Standard {
+                    ListItem.Standard {
                         text: i18n.tr("Show First Run Tutorial")
                         iconFrame: false
                         showDivider: false
@@ -88,7 +69,7 @@ Page {
                 id: about
                 title: "About"
                 contents: [
-                    Standard {
+                    ListItem.Standard {
                         text: i18n.tr("Credits")
                         iconFrame: false
                         progression: true
@@ -96,7 +77,7 @@ Page {
                         onClicked: pagestack.push(Qt.resolvedUrl("About.qml"))
                     },
 
-                    Standard {
+                    ListItem.Standard {
                         text: i18n.tr("Tweet us!")
                         iconFrame: false
                         progression: true
@@ -104,7 +85,7 @@ Page {
                         onClicked: Qt.openUrlExternally("http://twitter.com/home?status=Checkout the Flashback app! It allows you to track Tv Shows and Movies. Get it for your Ubuntu phone at https://launchpad.net/cliffhanger")
                     },
 
-                    Standard {
+                    ListItem.Standard {
                         text: i18n.tr("Facebook us!")
                         showDivider: false
                         iconFrame: false
@@ -118,7 +99,7 @@ Page {
             SettingsItem {
                 title: "Version"
                 contents: [
-                    Subtitled {
+                    ListItem.Subtitled {
                         text: pagestack.app_name + " " + pagestack.app_version
                         subText: i18n.tr("Thank you for downloading. Enjoy!")
                         iconSource: Qt.resolvedUrl("../flashback.png")
@@ -130,12 +111,12 @@ Page {
             SettingsItem {
                 title: "Disclaimer"
                 contents: [
-                    Standard {
+                    ListItem.Standard {
                         text: i18n.tr("This product uses the TMDb API but is not\nendorsed or certified by TMDb.")
                         showDivider: false
                     },
 
-                    Standard {
+                    ListItem.Standard {
                         text: "<b>" + i18n.tr("Click here to report a bug") + "</b><br>Copyright (C) 2014 Flashback Dev Team"
                         showDivider: false
                         MouseArea {

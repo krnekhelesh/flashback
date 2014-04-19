@@ -143,6 +143,10 @@ function traktCreateAccount() {
     return credentials.trakt_baseUrl + "/account/create/" + credentials.trakt_apiKey
 }
 
+function traktAccountSettings() {
+    return credentials.trakt_baseUrl + "/account/settings/" + credentials.trakt_apiKey
+}
+
 function userActivity(username) {
     return credentials.trakt_baseUrl + "/user/watching.json/" + credentials.trakt_apiKey + "/" + username
 }

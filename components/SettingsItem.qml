@@ -74,8 +74,12 @@ UbuntuShape {
         }
     }
 
-    ListItem.ThinDivider {
-        anchors.top: _titleContainer.bottom
+    Rectangle {
+        id: customDivider
+        anchors .top: _titleContainer.bottom
+        width: parent.width
+        height: units.gu(0.1)
+        color: UbuntuColors.orange
     }
 
     Column {
