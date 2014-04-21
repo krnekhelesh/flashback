@@ -1,3 +1,11 @@
+flashback (0.4~alpha2) trusty; urgency=medium
+
+  * Revamped Settings Page
+  * Revamped Login Page
+  * Improved behaviour and experience of initial walkthrough
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Sat, 19 Apr 2014 23:02:12 +0200
+
 flashback (0.4~alpha1) trusty; urgency=medium
 
   [Nekhelesh Ramananthan]

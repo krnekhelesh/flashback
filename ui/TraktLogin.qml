@@ -18,6 +18,8 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import Ubuntu.Components.Themes.Ambiance 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../backend/backend.js" as Backend
 import "../backend/sha1.js" as Encrypt
 import "../components"
@@ -100,6 +102,7 @@ Page {
 
         Column {
             id: detailsColumn
+
             anchors {
                 left: parent.left
                 right: parent.right
@@ -107,121 +110,190 @@ Page {
                 margins: units.gu(4)
             }
             height: childrenRect.height
-            spacing: units.gu(2)
+            spacing: units.gu(4)
 
-            UbuntuShape {
+
+            Image {
                 id: logo
-                width: traktLoginPage.height > units.gu(60) ? units.gu(20) : units.gu(10)
-                height: width
                 anchors.horizontalCenter: parent.horizontalCenter
-                image: Image {
-                    source: Qt.resolvedUrl("../graphics/trakt_logo.png")
-                    fillMode: Image.PreserveAspectFit
-                }
+                width: traktLoginPage.height > units.gu(60) ? units.gu(20) : units.gu(10)
+                source: Qt.resolvedUrl("../graphics/account.png")
+                fillMode: Image.PreserveAspectFit
 
                 Behavior on width {
                     UbuntuNumberAnimation { duration: UbuntuAnimation.BriskDuration }
                 }
             }
 
-            Label {
-                text: "Trakt"
-                fontSize: "x-large"
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
+            SettingsItem {
+                id: loginBox
 
-            Column {
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: units.gu(1)
+                title: isLogin ? i18n.tr("Sign in") : i18n.tr("Create your Trakt Account")
+                contentSpacing: units.gu(0)
 
-                TextField {
-                    id: username
-                    maximumLength: 20
-                    placeholderText: i18n.tr("Username")
-                    inputMethodHints: Qt.ImhNoAutoUppercase
-                    onFocusChanged: {
-                        if(!focus && username.length < 3)
-                            color = "Red"
-                        else
-                            color = "Grey"
-                    }
-                    primaryItem: Image {
-                        height: parent.height/2;
-                        fillMode: Image.PreserveAspectFit
-                        source: Qt.resolvedUrl("../graphics/user.png")
-                    }
-                }
+                contents: [
+                    TextField {
+                        id: username
 
-                TextField {
-                    id: password
-                    hasClearButton: false
-                    placeholderText: i18n.tr("Password")
-                    echoMode: TextInput.Password
-                    onTextChanged: !isLogin ? password_timer.restart() : undefined
-                    primaryItem: Image {
-                        height: parent.height/2;
-                        fillMode: Image.PreserveAspectFit
-                        source: Qt.resolvedUrl("../graphics/password.png")
-                    }
-                    secondaryItem: Image {
-                        visible: password.text !== ""
-                        height: parent.height/1.5;
-                        fillMode: Image.PreserveAspectFit
-                        source: password.echoMode === TextInput.Password ? Qt.resolvedUrl("../graphics/watched_gray.png") : Qt.resolvedUrl("../graphics/unwatched_gray.png")
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: password.echoMode = password.echoMode === TextInput.Password ? TextInput.Normal : TextInput.Password
+                        maximumLength: 20
+                        placeholderText: i18n.tr("Username")
+                        inputMethodHints: Qt.ImhNoAutoUppercase
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: units.gu(2)
+                        height: units.gu(5)
+
+                        style: TextFieldStyle {
+                            background: Rectangle {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.margins: -units.gu(2)
+                                color: username.focus ? "White" : Qt.rgba(0,0,0,0)
+                            }
                         }
-                    }
-                }
 
-                TextField {
-                    id: confirmPassword
-
-                    width: parent.width
-                    echoMode: TextInput.Password
-                    placeholderText: "confirm password"
-                    onTextChanged: password_timer.restart()
-                    Component.onCompleted: visible = !isLogin
-
-                    primaryItem: Image {
-                        height: parent.height/2;
-                        fillMode: Image.PreserveAspectFit
-                        source: Qt.resolvedUrl("../graphics/password.png")
-                    }
-
-                    onFocusChanged: {
-                        if(focus)
-                            confirmPassword.color = "Grey"
-                        else {
-                            if(confirmPassword.text === password.text)
-                                confirmPassword.color = "Green"
+                        onFocusChanged: {
+                            if(!focus && username.length < 3)
+                                color = "Red"
                             else
-                                confirmPassword.color = "Red"
+                                color = "Grey"
                         }
-                    }
-                }
 
-                TextField {
-                    id: email
-                    width: parent.width
-                    placeholderText: "email address"
-                    Component.onCompleted: visible = !isLogin
-                    inputMethodHints: Qt.ImhEmailCharactersOnly
+                        primaryItem: Image {
+                            height: parent.height/2;
+                            fillMode: Image.PreserveAspectFit
+                            source: Qt.resolvedUrl("../graphics/user.png")
+                        }
+                    },
 
-                    primaryItem: Image {
-                        height: parent.height/2;
-                        fillMode: Image.PreserveAspectFit
-                        source: Qt.resolvedUrl("../graphics/email.png")
+                    ListItem.ThinDivider {},
+
+                    TextField {
+                        id: password
+
+                        hasClearButton: false
+                        placeholderText: i18n.tr("Password")
+                        echoMode: TextInput.Password
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: units.gu(2)
+                        height: units.gu(5)
+                        onTextChanged: !isLogin ? password_timer.restart() : undefined
+
+                        style: TextFieldStyle {
+                            background: Rectangle {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.margins: -units.gu(2)
+                                color: password.focus ? "White" : Qt.rgba(0,0,0,0)
+                            }
+                        }
+
+                        primaryItem: Image {
+                            height: parent.height/2;
+                            fillMode: Image.PreserveAspectFit
+                            source: Qt.resolvedUrl("../graphics/password.png")
+                        }
+
+                        secondaryItem: Image {
+                            visible: password.text !== ""
+                            height: parent.height/1.5;
+                            fillMode: Image.PreserveAspectFit
+                            source: password.echoMode === TextInput.Password ? Qt.resolvedUrl("../graphics/watched_gray.png") : Qt.resolvedUrl("../graphics/unwatched_gray.png")
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: password.echoMode = password.echoMode === TextInput.Password ? TextInput.Normal : TextInput.Password
+                            }
+                        }
+                    },
+
+                    ListItem.ThinDivider {
+                        visible: !isLogin
+                    },
+
+                    TextField {
+                        id: confirmPassword
+
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: units.gu(2)
+                        echoMode: TextInput.Password
+                        placeholderText: "confirm password"
+                        onTextChanged: password_timer.restart()
+                        Component.onCompleted: visible = !isLogin
+                        height: units.gu(5)
+
+                        style: TextFieldStyle {
+                            background: Rectangle {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.margins: -units.gu(2)
+                                color: confirmPassword.focus ? "White" : Qt.rgba(0,0,0,0)
+                            }
+                        }
+
+                        primaryItem: Image {
+                            height: parent.height/2;
+                            fillMode: Image.PreserveAspectFit
+                            source: Qt.resolvedUrl("../graphics/password.png")
+                        }
+
+                        onFocusChanged: {
+                            if(focus)
+                                confirmPassword.color = "Grey"
+                            else {
+                                if(confirmPassword.text === password.text)
+                                    confirmPassword.color = "Green"
+                                else
+                                    confirmPassword.color = "Red"
+                            }
+                        }
+                    },
+
+                    ListItem.ThinDivider {
+                        visible: !isLogin
+                    },
+
+                    TextField {
+                        id: email
+
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: units.gu(2)
+                        placeholderText: "email address"
+                        Component.onCompleted: visible = !isLogin
+                        inputMethodHints: Qt.ImhEmailCharactersOnly
+                        height: units.gu(5)
+
+                        style: TextFieldStyle {
+                            background: Rectangle {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.margins: -units.gu(2)
+                                color: email.focus ? "White" : Qt.rgba(0,0,0,0)
+                            }
+                        }
+
+                        primaryItem: Image {
+                            height: parent.height/2;
+                            fillMode: Image.PreserveAspectFit
+                            source: Qt.resolvedUrl("../graphics/email.png")
+                        }
+
+                        onFocusChanged: {
+                            if(!focus && email.length < 6)
+                                email.color = "Red"
+                            else
+                                email.color = "Grey"
+                        }
+                    },
+
+                    Item {
+                        width: parent.width
+                        height: units.gu(1)
                     }
 
-                    onFocusChanged: {
-                        if(!focus && email.length < 6)
-                            email.color = "Red"
-                        else
-                            email.color = "Grey"
-                    }
-                }
+                ]
             }
         }
     }
@@ -273,7 +345,7 @@ Page {
                 }
                 traktAccountModel.sendMessage()
             }
-        }        
+        }
     }
 
     // A custom toolbar is used in this page

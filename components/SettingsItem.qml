@@ -29,6 +29,9 @@ UbuntuShape {
     // Property to set the header of the settings item
     property string title: "Default"
 
+    // Property to set the vertical spacing in the contents column
+    property alias contentSpacing: _contents.spacing
+
     radius: "medium"
     color: Qt.rgba(0,0,0,0.25)
     height: _titleContainer.height + _contentsContainer.height + units.gu(2)
