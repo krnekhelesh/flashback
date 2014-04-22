@@ -33,6 +33,10 @@ Page {
 
     property bool isLogin: true
 
+    // Disable automatic orientation during walkthough and enable it after the login
+    Component.onCompleted: mainView.automaticOrientation = false
+    Component.onDestruction: mainView.automaticOrientation = true
+
     TraktAccount {
         id: traktAccountModel
 
@@ -90,15 +94,13 @@ Page {
 
     Flickable {
         id: flickable
+
         anchors {
-            top: parent.top
-            bottom: buttonRow.top
-            left: parent.left
-            right: parent.right
+            fill: parent
             bottomMargin: units.gu(2)
         }
 
-        contentHeight: detailsColumn.height + units.gu(10)
+        contentHeight: detailsColumn.height
 
         Column {
             id: detailsColumn
@@ -107,16 +109,17 @@ Page {
                 left: parent.left
                 right: parent.right
                 top: parent.top
-                margins: units.gu(4)
+                topMargin: Qt.inputMethod.visible ? units.gu(2) : units.gu(8)
+                margins: units.gu(2)
             }
             height: childrenRect.height
-            spacing: units.gu(4)
+            spacing: Qt.inputMethod.visible ? units.gu(2) : units.gu(8)
 
 
             Image {
                 id: logo
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: traktLoginPage.height > units.gu(60) ? units.gu(20) : units.gu(10)
+                width: traktLoginPage.height > units.gu(60) ? units.gu(30) : units.gu(10)
                 source: Qt.resolvedUrl("../graphics/account.png")
                 fillMode: Image.PreserveAspectFit
 
@@ -295,55 +298,51 @@ Page {
 
                 ]
             }
-        }
-    }
 
-    Row {
-        id: buttonRow
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            bottom: parent.bottom
-            bottomMargin: traktLoginPage.height > units.gu(60) ? units.gu(10) : units.gu(2)
-        }
+            Row {
+                id: buttonRow
 
-        spacing: units.gu(2)
-        width: childrenRect.width
-        height: childrenRect.height
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: units.gu(2)
+                width: childrenRect.width
+                height: childrenRect.height
 
-        Button {
-            id: cancelButton
-            color: UbuntuColors.warmGrey
-            height: units.gu(5)
-            width: loginButton.width
-            text: i18n.tr("Cancel")
-            onClicked: pageStack.pop()
-        }
-
-        Button {
-            id: loginButton
-            color: "green"
-            height: units.gu(5)
-            width: units.gu(15)
-            text: isLogin ? i18n.tr("Login") : i18n.tr("Create Account")
-            onClicked: {
-                accountIndicator.visible = true
-                if(isLogin) {
-                    traktAccountModel.source = Backend.traktVerifyUrl()
-                    traktAccountModel.createMessage(username.text, Encrypt.sha1(password.text))
+                Button {
+                    id: cancelButton
+                    color: UbuntuColors.warmGrey
+                    height: units.gu(5)
+                    width: loginButton.width
+                    text: i18n.tr("Cancel")
+                    onClicked: pageStack.pop()
                 }
-                else {
-                    if(password.text === confirmPassword.text && password.text !== "" && username.length >= 3 && email.length >= 6) {
-                        traktAccountModel.source = Backend.traktCreateAccount()
-                        traktAccountModel.createAccountMessage(username.text, Encrypt.sha1(password.text), email.text)
-                    }
-                    else {
-                        loginNotification.messageTitle = i18n.tr("Invalid Input")
-                        loginNotification.message = i18n.tr("Please ensure that all fields are filled correctly before proceeding")
-                        accountIndicator.visible = false
-                        loginNotification.visible = true
+
+                Button {
+                    id: loginButton
+                    color: "green"
+                    height: units.gu(5)
+                    width: units.gu(15)
+                    text: isLogin ? i18n.tr("Login") : i18n.tr("Create Account")
+                    onClicked: {
+                        accountIndicator.visible = true
+                        if(isLogin) {
+                            traktAccountModel.source = Backend.traktVerifyUrl()
+                            traktAccountModel.createMessage(username.text, Encrypt.sha1(password.text))
+                        }
+                        else {
+                            if(password.text === confirmPassword.text && password.text !== "" && username.length >= 3 && email.length >= 6) {
+                                traktAccountModel.source = Backend.traktCreateAccount()
+                                traktAccountModel.createAccountMessage(username.text, Encrypt.sha1(password.text), email.text)
+                            }
+                            else {
+                                loginNotification.messageTitle = i18n.tr("Invalid Input")
+                                loginNotification.message = i18n.tr("Please ensure that all fields are filled correctly before proceeding")
+                                accountIndicator.visible = false
+                                loginNotification.visible = true
+                            }
+                        }
+                        traktAccountModel.sendMessage()
                     }
                 }
-                traktAccountModel.sendMessage()
             }
         }
     }

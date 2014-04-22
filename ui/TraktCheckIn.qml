@@ -45,6 +45,10 @@ Page {
 
     property string type
 
+    // Disable automatic orientation during walkthough and enable it after the checkin
+    Component.onCompleted: mainView.automaticOrientation = false
+    Component.onDestruction: mainView.automaticOrientation = true
+
     LoadingIndicator {
         id: checkInLoader
         loadingText: i18n.tr("Checking-in. Please wait..")
@@ -76,14 +80,11 @@ Page {
     Flickable {
         id: flickable
         anchors {
-            top: parent.top
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
+            fill: parent
             bottomMargin: units.gu(2)
         }
 
-        contentHeight: Qt.inputMethod.visible ? detailsColumn.height + units.gu(30) : detailsColumn.height
+        contentHeight: detailsColumn.height
 
         Column {
             id: detailsColumn
@@ -92,19 +93,19 @@ Page {
                 right: parent.right
                 top: parent.top
                 margins: units.gu(2)
-                topMargin: units.gu(6)
+                topMargin: Qt.inputMethod.visible ? units.gu(2) : units.gu(8)
             }
             height: childrenRect.height
-            spacing: Qt.inputMethod.visible ? units.gu(4) : units.gu(6)
+            spacing: Qt.inputMethod.visible ? units.gu(2) : units.gu(8)
 
             Image {
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: traktCheckInPage.height > units.gu(60) ? units.gu(20) : 0
+                width: traktCheckInPage.height > units.gu(60) ? units.gu(20) : units.gu(10)
                 source: Qt.resolvedUrl("../graphics/checkin.png")
                 fillMode: Image.PreserveAspectFit
 
                 Behavior on width {
-                    UbuntuNumberAnimation {}
+                    UbuntuNumberAnimation { duration: UbuntuAnimation.BriskDuration }
                 }
             }
 
