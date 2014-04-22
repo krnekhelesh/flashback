@@ -18,6 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../backend/backend.js" as Backend
 import "../components"
 import "../models"
@@ -76,13 +77,13 @@ Page {
         id: flickable
         anchors {
             top: parent.top
-            bottom: buttonRow.top
+            bottom: parent.bottom
             left: parent.left
             right: parent.right
             bottomMargin: units.gu(2)
         }
 
-        contentHeight: detailsColumn.height + units.gu(10)
+        contentHeight: Qt.inputMethod.visible ? detailsColumn.height + units.gu(30) : detailsColumn.height
 
         Column {
             id: detailsColumn
@@ -90,89 +91,74 @@ Page {
                 left: parent.left
                 right: parent.right
                 top: parent.top
-                margins: units.gu(4)
+                margins: units.gu(2)
+                topMargin: units.gu(6)
             }
             height: childrenRect.height
-            spacing: units.gu(2)
+            spacing: Qt.inputMethod.visible ? units.gu(4) : units.gu(6)
 
-            UbuntuShape {
-                id: logo
-                width: traktCheckInPage.height > units.gu(60) ? units.gu(20) : units.gu(10)
-                height: width
+            Image {
                 anchors.horizontalCenter: parent.horizontalCenter
-                image: Image {
-                    source: Qt.resolvedUrl("../graphics/trakt_logo.png")
-                    fillMode: Image.PreserveAspectFit
-                }
+                width: traktCheckInPage.height > units.gu(60) ? units.gu(20) : 0
+                source: Qt.resolvedUrl("../graphics/checkin.png")
+                fillMode: Image.PreserveAspectFit
 
                 Behavior on width {
-                    UbuntuNumberAnimation { duration: UbuntuAnimation.BriskDuration }
+                    UbuntuNumberAnimation {}
                 }
             }
 
-            Label {
-                text: "Check-in"
-                fontSize: "x-large"
+            SettingsItem {
+                title: "Check in"
+                contents: [
+                    TextArea {
+                        id: checkinMessage
+                        placeholderText: i18n.tr("Check-in review (Optional)")
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: units.gu(1)
+                        height: units.gu(10)
+                    }
+                ]
+            }
+
+            Row {
+                id: buttonRow
+
                 anchors.horizontalCenter: parent.horizontalCenter
-            }
+                spacing: units.gu(2)
+                width: childrenRect.width
+                height: childrenRect.height
 
-            TextArea {
-                id: checkinMessage
-                placeholderText: i18n.tr("Check-in review (Optional)")
-                anchors.horizontalCenter: parent.horizontalCenter
-                height: traktCheckInPage.height/4
-                width: traktCheckInPage.width/1.5
-
-                Behavior on width {
-                    UbuntuNumberAnimation { duration: UbuntuAnimation.BriskDuration }
+                Button {
+                    id: cancelButton
+                    color: UbuntuColors.warmGrey
+                    height: units.gu(5)
+                    width: loginButton.width
+                    text: i18n.tr("Cancel")
+                    onClicked: pageStack.pop()
                 }
 
-                Behavior on height {
-                    UbuntuNumberAnimation { duration: UbuntuAnimation.BriskDuration }
+                Button {
+                    id: loginButton
+                    color: "green"
+                    height: units.gu(5)
+                    width: units.gu(15)
+                    text: i18n.tr("Check-in")
+                    onClicked: {
+                        if (type === "Movie") {
+                            traktCheckIn.source = Backend.traktCheckInUrl("movie")
+                            traktCheckIn.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, id, movieTitle, year, checkinMessage.text, pagestack.app_version, pagestack.last_updated)
+                            traktCheckIn.sendMessage()
+                        }
+                        else if(type === "Episode") {
+                            traktCheckIn.source = Backend.traktCheckInUrl("show")
+                            traktCheckIn.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, id, episodeTitle, year, season, episode, checkinMessage.text, pagestack.app_version, pagestack.last_updated)
+                            traktCheckIn.sendMessage()
+                        }
+                        checkInLoader.visible = true
+                    }
                 }
-            }
-        }
-    }
-
-    Row {
-        id: buttonRow
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            bottom: parent.bottom
-            bottomMargin: traktCheckInPage.height > units.gu(60) ? units.gu(10) : units.gu(2)
-        }
-
-        spacing: units.gu(2)
-        width: childrenRect.width
-        height: childrenRect.height
-
-        Button {
-            id: cancelButton
-            color: UbuntuColors.warmGrey
-            height: units.gu(5)
-            width: loginButton.width
-            text: i18n.tr("Cancel")
-            onClicked: pageStack.pop()
-        }
-
-        Button {
-            id: loginButton
-            color: "green"
-            height: units.gu(5)
-            width: units.gu(15)
-            text: i18n.tr("Check-in")
-            onClicked: {
-                if (type === "Movie") {
-                    traktCheckIn.source = Backend.traktCheckInUrl("movie")
-                    traktCheckIn.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, id, movieTitle, year, checkinMessage.text, pagestack.app_version, pagestack.last_updated)
-                    traktCheckIn.sendMessage()
-                }
-                else if(type === "Episode") {
-                    traktCheckIn.source = Backend.traktCheckInUrl("show")
-                    traktCheckIn.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, id, episodeTitle, year, season, episode, checkinMessage.text, pagestack.app_version, pagestack.last_updated)
-                    traktCheckIn.sendMessage()
-                }
-                checkInLoader.visible = true
             }
         }
     }
