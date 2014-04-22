@@ -25,19 +25,58 @@ import Ubuntu.Components 0.1
 Rectangle {
     id: loadingContainer
 
+    // Property to set the loading message
     property alias loadingText: _loadingLabel.text
 
-    width: units.gu(30)
-    height: units.gu(10)    
-    radius: units.gu(0.5)
+    // Property to show/hide the indicator
+    property bool isShown: false
 
-    opacity: 0.7
-    color: "Black"
+    // Property to animate the entrance and exit of the indicator
+    property bool animate: false
 
-    anchors.centerIn: parent
+    width: _dataRow.width + units.gu(9)
+    height: _dataRow.height + units.gu(3)
+    radius: units.gu(15)
+
+    y: -units.gu(20)
     z: parent.z + 1
+    anchors.horizontalCenter: parent.horizontalCenter
+
+    opacity: 0
+    color: Qt.rgba(0,0,0,0.9)
+
+    states: [
+        State {
+            name: "shown"
+            when: loadingContainer.isShown
+            PropertyChanges { target: loadingContainer; y: parent.height/2 - loadingContainer.height }
+            PropertyChanges { target: loadingContainer; opacity: 1 }
+
+        },
+
+        State {
+            name: "hide"
+            when: !loadingContainer.isShown
+            PropertyChanges { target: loadingContainer; y: -units.gu(20) }
+            PropertyChanges { target: loadingContainer; opacity: 0 }
+        }
+    ]
+
+    transitions: Transition {
+        enabled: loadingContainer.animate
+        SequentialAnimation {
+            PauseAnimation { duration: 250 }
+            ParallelAnimation {
+                UbuntuNumberAnimation { properties: "y"; duration: UbuntuAnimation.SlowDuration }
+                UbuntuNumberAnimation { properties: "opacity"; duration: 200 }
+            }
+        }
+    }
 
     Row {
+        id: _dataRow
+
+        width: childrenRect.width
         anchors.centerIn: parent
         spacing: units.gu(2)
 
@@ -48,7 +87,7 @@ Rectangle {
 
         Label {
             id: _loadingLabel
-            text: i18n.tr("Loading...")
+            text: i18n.tr("Loading ...")
             anchors.verticalCenter: _indicator.verticalCenter
         }
     }
