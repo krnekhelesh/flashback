@@ -51,6 +51,9 @@ Column {
         width: backgroundWidth
         height: backgroundHeight
 
+        anchors.left: parent.left
+        anchors.leftMargin: units.gu(2)
+
         Thumbnail {
             id: _poster
             width: parent.width/3.3
