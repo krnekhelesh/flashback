@@ -23,7 +23,7 @@ import "../models"
 import "../backend/backend.js" as Backend
 
 Page {
-    flickable: null
+    flickable: flickable
 
     Component.onCompleted: console.log("[LOG]: TV Tab Loaded")
 
@@ -113,6 +113,7 @@ Page {
     }
 
     Flickable {
+        id: flickable
         clip: true
         anchors.fill: parent
         contentHeight: mainColumn.height + units.gu(5)
@@ -124,7 +125,6 @@ Page {
                 left: parent.left;
                 right: parent.right;
                 top: parent.top;
-                margins: units.gu(1)
             }
 
             spacing: units.gu(1)

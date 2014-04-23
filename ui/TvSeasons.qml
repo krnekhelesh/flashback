@@ -38,10 +38,7 @@ Page {
         id: list
 
         clip: true
-        anchors {
-            fill: parent
-            margins: units.gu(2)
-        }
+        anchors.fill: parent
 
         delegate: Standard {
             text: season == 0 ? i18n.tr("Season Specials") : i18n.tr("Season") + " " + season

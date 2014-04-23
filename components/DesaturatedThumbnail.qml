@@ -30,6 +30,8 @@ UbuntuShape {
     property alias thumbSource: thumbPic.source
     property alias ready: loading.running
 
+    radius: "medium"
+
     image: Image {
         id: thumbPic
         fillMode: Image.PreserveAspectFit

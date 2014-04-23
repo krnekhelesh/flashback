@@ -237,15 +237,11 @@ Page {
 
                     Subtitled {
                         id: episodeItem
-                        showDivider: false
+                        showDivider: true
                         text: episodes.model.get(index).episode_name
                         iconSource: episodes.model.get(index).thumb_url
                         subText: i18n.tr("Episode") + " " + episodes.model.get(index).episode
                         onClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"seasonDetailsPage": seasonPage, "tv_id": tv_id, "season_number": season_number, "episode_number": episodes.model.get(index).episode, "watched": episodes.model.get(index).watched})
-                        anchors {
-                            left: parent.left
-                            right: watchedStatus.left
-                        }
                     }
 
                     Image {

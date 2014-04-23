@@ -31,15 +31,14 @@ Page {
 
     ListView {
         id: list
-        anchors {
-            fill: parent
-            margins: units.gu(2)
-        }
+
+        anchors.fill: parent
         clip: true
 
         delegate: Subtitled {
             text: name
             subText: department
+            progression: true
             onClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": id})
         }
     }
