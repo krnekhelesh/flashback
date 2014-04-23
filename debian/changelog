@@ -1,3 +1,12 @@
+flashback (0.4~alpha3) trusty; urgency=medium
+
+  * Revamped check-in page
+  * Added animation to the notification entrance/exit
+  * Tweaked margin of carousel, detailcarousel and now watching components
+  * Locked screen orientation in login and checkin pages
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Wed, 23 Apr 2014 16:02:21 +0200
+
 flashback (0.4~alpha2) trusty; urgency=medium
 
   * Revamped Settings Page
