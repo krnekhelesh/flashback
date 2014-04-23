@@ -192,6 +192,7 @@ Rectangle {
             margins: units.gu(-2)
         }
 
+        antialiasing: true
         source: Qt.resolvedUrl("../graphics/close.png")
         fillMode: Image.PreserveAspectFit
         smooth: true
