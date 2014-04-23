@@ -51,10 +51,7 @@ Page {
         id: popular
         dataModel: popularPeople.model
         header: i18n.tr("Popular")
-        anchors {
-            fill: parent
-            margins: units.gu(2)
-        }
+        anchors.fill: parent
         onThumbClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": model.id})
     }
 

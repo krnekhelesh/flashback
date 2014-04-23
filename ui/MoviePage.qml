@@ -440,7 +440,7 @@ Page {
                 left: parent.left
                 right: parent.right
                 top: ratingsRow.bottom
-                margins: units.gu(2)
+                topMargin: units.gu(2)
             }
 
             Header { text: i18n.tr("Details") }
