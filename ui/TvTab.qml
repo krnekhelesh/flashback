@@ -109,7 +109,7 @@ Page {
     }
 
     LoadingIndicator {
-        visible: !trending.visible
+        isShown: !trendingShowsModel.count > 0
     }
 
     Flickable {

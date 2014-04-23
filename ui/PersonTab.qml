@@ -44,7 +44,7 @@ Page {
     ]
 
     LoadingIndicator {
-        visible: !popular.visible
+        isShown: !popularPeople.count > 0
     }
 
     Grid {

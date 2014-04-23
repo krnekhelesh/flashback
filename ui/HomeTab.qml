@@ -163,7 +163,7 @@ Page {
     }
 
     LoadingIndicator {
-        visible: !createAccountMessage.visible ? (!nowPlaying.visible ? true : false) : false
+        isShown: !createAccountMessage.visible ? (!nowPlayingMoviesModel.count > 0 ? true : false) : false
     }
 
     Flickable {

@@ -67,7 +67,7 @@ Page {
                     loginNotification.message = username.text + i18n.tr(" is already a registered username")
                 }
 
-                loginNotification.visible = true
+                loginNotification.isShown = true
             }
         }
     }
@@ -113,13 +113,13 @@ Page {
                 margins: units.gu(2)
             }
             height: childrenRect.height
-            spacing: Qt.inputMethod.visible ? units.gu(2) : units.gu(8)
+            spacing: Qt.inputMethod.visible ? units.gu(2) : isLogin ? units.gu(8) : units.gu(4)
 
 
             Image {
                 id: logo
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: traktLoginPage.height > units.gu(60) ? units.gu(30) : units.gu(10)
+                width: traktLoginPage.height > units.gu(60) ? units.gu(20) : units.gu(10)
                 source: Qt.resolvedUrl("../graphics/account.png")
                 fillMode: Image.PreserveAspectFit
 
@@ -337,7 +337,7 @@ Page {
                                 loginNotification.messageTitle = i18n.tr("Invalid Input")
                                 loginNotification.message = i18n.tr("Please ensure that all fields are filled correctly before proceeding")
                                 accountIndicator.visible = false
-                                loginNotification.visible = true
+                                loginNotification.isShown = true
                             }
                         }
                         traktAccountModel.sendMessage()

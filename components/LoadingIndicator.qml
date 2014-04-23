@@ -25,25 +25,36 @@ import Ubuntu.Components 0.1
 Rectangle {
     id: loadingContainer
 
+    // Property to set the loading message
     property alias loadingText: _loadingLabel.text
 
-    width: units.gu(30)
-    height: units.gu(10)    
-    radius: units.gu(0.5)
+    // Property to show/hide the indicator
+    property bool isShown: false
 
-    opacity: 0.7
-    color: "Black"
+    width: _dataRow.width + units.gu(8)
+    height: _dataRow.height + units.gu(3)
+    radius: units.gu(15)
 
-    anchors.centerIn: parent
     z: parent.z + 1
+    anchors.centerIn: parent
+
+    opacity: isShown ? 1 : 0
+    color: Qt.rgba(0,0,0,0.9)
+
+    Behavior on opacity {
+        UbuntuNumberAnimation {}
+    }
 
     Row {
+        id: _dataRow
+
+        width: childrenRect.width
         anchors.centerIn: parent
         spacing: units.gu(2)
 
         ActivityIndicator {
             id: _indicator
-            running: true
+            running: isShown
         }
 
         Label {
