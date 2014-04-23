@@ -59,7 +59,6 @@ Page {
     ]
 
     LoadingIndicator {
-        animate: true
         isShown: !nowPlayingMoviesModel.count > 0 || !upcomingMoviesModel.count > 0 || !trendingMoviesModel.count > 0
     }
 

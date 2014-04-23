@@ -38,27 +38,46 @@ Rectangle {
     // Property to set the notification timeout (in seconds). By default set to 10 seconds
     property int timeout: 10
 
-    //
+    // Property to show/hide the notification
+    property bool isShown: false
 
     height: _mainColumn.height + units.gu(5)
-    anchors.centerIn: parent
     width: parent.width/1.2
     radius: units.gu(0.5)
+
+    y: -units.gu(20)
     z: parent.z + 1
-    visible: false
-    opacity: 0.8
-    color: "Black"
+    anchors.horizontalCenter: parent.horizontalCenter
 
-    // When notification is visible, start the internal timer
-    onVisibleChanged: visible == true ? _countDownTimer.restart() : undefined
+    opacity: 0
+    color: Qt.rgba(0,0,0,0.9)
 
-    Behavior on width {
-        UbuntuNumberAnimation { duration: UbuntuAnimation.BriskDuration }
+    states: [
+        State {
+            name: "shown"
+            when: _notificationContainer.isShown
+            PropertyChanges { target: _notificationContainer; y: parent.height/2.2 }
+            PropertyChanges { target: _notificationContainer; opacity: 1 }
+
+        },
+
+        State {
+            name: "hide"
+            when: !_notificationContainer.isShown
+            PropertyChanges { target: _notificationContainer; y: -units.gu(20) }
+            PropertyChanges { target: _notificationContainer; opacity: 0 }
+        }
+    ]
+
+    transitions: Transition {
+        ParallelAnimation {
+            NumberAnimation { properties: "y"; duration: 650; easing.type: Easing.OutCirc }
+            NumberAnimation { properties: "opacity"; duration: 300 }
+        }
     }
 
-    Behavior on height {
-        UbuntuNumberAnimation { duration: UbuntuAnimation.BriskDuration }
-    }
+    // When notification is shown, start the internal timer
+    onIsShownChanged: isShown == true ? _countDownTimer.restart() : undefined
 
     // Timer to show the time countdown to the user (updated every second)
     Timer {
@@ -75,7 +94,7 @@ Rectangle {
             if(_countDown == 0) {
                 _countDownTimer.stop()
                 _visualCountDownAnimation.complete()
-                _notificationContainer.visible = false
+                _notificationContainer.isShown = false
                 _countDown = timeout
             }
         }
@@ -182,7 +201,7 @@ Rectangle {
             onClicked: {
                 _countDownTimer.stop()
                 _visualCountDownAnimation.complete()
-                _notificationContainer.visible = false
+                _notificationContainer.isShown = false
                 _countDownTimer._countDown = timeout
             }
         }

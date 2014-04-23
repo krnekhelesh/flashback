@@ -44,7 +44,6 @@ Page {
     ]
 
     LoadingIndicator {
-        animate: true
         isShown: !popularPeople.count > 0
     }
 

@@ -109,7 +109,6 @@ Page {
     }
 
     LoadingIndicator {
-        animate: true
         isShown: !trendingShowsModel.count > 0
     }
 

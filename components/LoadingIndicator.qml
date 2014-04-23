@@ -31,46 +31,18 @@ Rectangle {
     // Property to show/hide the indicator
     property bool isShown: false
 
-    // Property to animate the entrance and exit of the indicator
-    property bool animate: false
-
-    width: _dataRow.width + units.gu(9)
+    width: _dataRow.width + units.gu(8)
     height: _dataRow.height + units.gu(3)
     radius: units.gu(15)
 
-    y: -units.gu(20)
     z: parent.z + 1
-    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.centerIn: parent
 
-    opacity: 0
+    opacity: isShown ? 1 : 0
     color: Qt.rgba(0,0,0,0.9)
 
-    states: [
-        State {
-            name: "shown"
-            when: loadingContainer.isShown
-            PropertyChanges { target: loadingContainer; y: parent.height/2 - loadingContainer.height }
-            PropertyChanges { target: loadingContainer; opacity: 1 }
-
-        },
-
-        State {
-            name: "hide"
-            when: !loadingContainer.isShown
-            PropertyChanges { target: loadingContainer; y: -units.gu(20) }
-            PropertyChanges { target: loadingContainer; opacity: 0 }
-        }
-    ]
-
-    transitions: Transition {
-        enabled: loadingContainer.animate
-        SequentialAnimation {
-            PauseAnimation { duration: 250 }
-            ParallelAnimation {
-                UbuntuNumberAnimation { properties: "y"; duration: UbuntuAnimation.SlowDuration }
-                UbuntuNumberAnimation { properties: "opacity"; duration: 200 }
-            }
-        }
+    Behavior on opacity {
+        UbuntuNumberAnimation {}
     }
 
     Row {
@@ -82,12 +54,12 @@ Rectangle {
 
         ActivityIndicator {
             id: _indicator
-            running: true
+            running: isShown
         }
 
         Label {
             id: _loadingLabel
-            text: i18n.tr("Loading ...")
+            text: i18n.tr("Loading...")
             anchors.verticalCenter: _indicator.verticalCenter
         }
     }

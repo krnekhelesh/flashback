@@ -163,7 +163,6 @@ Page {
     }
 
     LoadingIndicator {
-        animate: true
         isShown: !createAccountMessage.visible ? (!nowPlayingMoviesModel.count > 0 ? true : false) : false
     }
 
