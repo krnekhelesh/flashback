@@ -52,7 +52,7 @@ Column {
         height: backgroundHeight
 
         anchors.left: parent.left
-        anchors.leftMargin: units.gu(2)
+        anchors.leftMargin: units.gu(1)
 
         Thumbnail {
             id: _poster
