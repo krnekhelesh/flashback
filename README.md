@@ -8,7 +8,7 @@ Flashback is an Ubuntu Touch Entertainment application
 Flashback is hosted on a PPA for Ubuntu 14.04 through which one can install and receive updates on the desktop.
 
 ```
-sudo apt-get add-apt-repository ppa:ubuntu-touch-community-dev/ppa
+sudo add-apt-repository ppa:ubuntu-touch-community-dev/ppa
 sudo apt-get update
 sudo apt-get install flashback
 ```
