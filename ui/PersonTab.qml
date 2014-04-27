@@ -44,7 +44,7 @@ Page {
     ]
 
     LoadingIndicator {
-        isShown: !popularPeople.count > 0
+        isShown: popularPeople.loading
     }
 
     Grid {

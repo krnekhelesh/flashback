@@ -109,7 +109,7 @@ Page {
     }
 
     LoadingIndicator {
-        isShown: !trendingShowsModel.count > 0
+        isShown: trendingShowsModel.loading || userWatchlistShowsModel.loading || airingShowsModel.loading
     }
 
     Flickable {
