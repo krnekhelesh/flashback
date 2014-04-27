@@ -59,7 +59,7 @@ Page {
     ]
 
     LoadingIndicator {
-        isShown: !nowPlayingMoviesModel.count > 0 || !upcomingMoviesModel.count > 0 || !trendingMoviesModel.count > 0
+        isShown: nowPlayingMoviesModel.loading || upcomingMoviesModel.loading || trendingMoviesModel.loading
     }
 
     Flickable {

@@ -27,32 +27,36 @@ Item {
     property ListModel model: ListModel { id: model }
     property alias count: model.count
 
+    property bool loading: false
+
     signal updated()
 
     onSourceChanged: {
-      var xhr = new XMLHttpRequest;
-      xhr.open("GET", source);
-      xhr.onreadystatechange = function() {
-        status = xhr.readyState;
-        if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200)
-            json = xhr.responseText;
-      }
-      xhr.send();
+        loading = true
+        var xhr = new XMLHttpRequest;
+        xhr.open("GET", source);
+        xhr.onreadystatechange = function() {
+            status = xhr.readyState;
+            if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200)
+                json = xhr.responseText;
+        }
+        xhr.send();
     }
 
     onJsonChanged: {
-      if ( json != "" ) {
-        updateJSONModel();
-        updated();
-      }
+        if ( json != "" ) {
+            updateJSONModel();
+            updated();
+        }
+        loading = false
     }
 
     function thumbnail_url(thumb_path, type) {
-      if (thumb_path)
-          return "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/" + "w185/" + thumb_path;
-      else if (type !== "person")
-          return Qt.resolvedUrl("../graphics/no-poster.jpg");
-      else if (type === "person")
-          return Qt.resolvedUrl("../graphics/no-passport.png");
+        if (thumb_path)
+            return "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/" + "w185/" + thumb_path;
+        else if (type !== "person")
+            return Qt.resolvedUrl("../graphics/no-poster.jpg");
+        else if (type === "person")
+            return Qt.resolvedUrl("../graphics/no-passport.png");
     }
 }
