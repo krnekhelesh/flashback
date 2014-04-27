@@ -227,8 +227,6 @@ MainView {
                         tvLoader.source = Qt.resolvedUrl("ui/TvTab.qml")
                     else if(root.selectedTab == peopleTab)
                         peopleLoader.source = Qt.resolvedUrl("ui/PersonTab.qml")
-                    else if(root.selectedTab == userTab)
-                        userLoader.source = Qt.resolvedUrl("ui/UserTab.qml")
                 }
 
                 Tab {
@@ -270,20 +268,6 @@ MainView {
                     title: i18n.tr("Celeb")
                     page: Loader {
                         id: peopleLoader
-                        parent: peopleTab
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            bottom: parent.bottom
-                        }
-                    }
-                }
-
-                Tab {
-                    id: userTab
-                    title: i18n.tr("You")
-                    page: Loader {
-                        id: userLoader
                         parent: peopleTab
                         anchors {
                             left: parent.left
