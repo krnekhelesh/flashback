@@ -195,7 +195,7 @@ MainView {
         id: pagestack
 
         // Properties to hold the application details which are then used throughout the application for consistency
-        property string app_version: "0.4 Alpha 3"
+        property string app_version: "0.4 Alpha 4"
         property string app_name: "Flashback"
         property string last_updated: "23 April 2014"
 

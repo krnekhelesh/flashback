@@ -1,3 +1,10 @@
+flashback (0.4~alpha4) trusty; urgency=medium
+
+  * Revamped empty state messages
+  * Better detection of loading status of JSON data models
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Mon, 28 Apr 2014 12:43:53 +0200
+
 flashback (0.4~alpha3) trusty; urgency=medium
 
   * Revamped check-in page
