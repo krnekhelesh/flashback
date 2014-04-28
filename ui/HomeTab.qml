@@ -260,20 +260,12 @@ Page {
         }
     }
 
-    Label {
+    EmptyState {
         id: createAccountMessage
-        text: i18n.tr("Trakt Account not authenticated.\nPlease set up an account using the add \"Accounts\" button.")
+        logo: Qt.resolvedUrl("../graphics/account.png")
+        header: i18n.tr("No Trakt Account")
+        message: i18n.tr("Please set up an account using the add \"Accounts\" button.")
         visible: traktLogin.contents.status === "disabled"
-        elide: Text.ElideRight
-        wrapMode: Text.WordWrap
-        horizontalAlignment: Text.AlignHCenter
-        fontSize: "large"
-        anchors {
-            verticalCenter: parent.verticalCenter
-            left: parent.left
-            right: parent.right
-            margins: units.gu(2)
-        }
     }
 
     Image {
