@@ -74,11 +74,12 @@ Page {
         visible: true
     }
 
-    Label {
+    EmptyState {
         id: noCommentsMessages
-        text: "No comments found"
-        anchors.centerIn: parent
         visible: false
+        logo: Qt.resolvedUrl("../graphics/emptyComment.png")
+        header: i18n.tr("No Comments Yet")
+        message: i18n.tr("This space feels empty. Be the first to comment!")
     }
 
     ListView {
