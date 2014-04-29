@@ -1,27 +1,30 @@
 #!/bin/bash
 
+# Function to remove common files from both deb and click package folders
 clean_root() {
-	echo "[PACKAGE]: Removing common files"
+	echo "[PACKAGE]: Cleaning up source folder (git, developer assets, temp files etc.)"
 	sudo rm .git* .excludes *.*~ package.sh design.jpg README.md *.qmlproject.user -r -f
 }
 
+# Function to prepare the folder for debian packaging
 prep_deb() {
 	echo "[PACKAGE]: Preparing folder for debian packaging"
 	cp . $1 -r
 	cd $1
 	clean_root
-	sed -i "s/@APP_VERSION@/${2}/g" Flashback.qml 
+	sed -i "s/@APP_VERSION@/${2}/g" Flashback.qml
 	mv flashback-deb.desktop Flashback.desktop
 	mv flashback-shadowed.png flashback.png
 }
 
+# Function to prepare the folder for click packaging
 prep_click() {
 	echo "[PACKAGE]: Preparing folder for click packaging"
 	cp . $1 -r
 	cd $1
 	clean_root
 	sudo rm debian flashback-deb.desktop flashback-shadowed.png -r -f
-	sed -i "s/@APP_VERSION@/${2}/g" Flashback.qml 
+	sed -i "s/@APP_VERSION@/${2}/g" Flashback.qml
 	sed -i "s/@APP_VERSION@/${2}/g" manifest.json
 }
 
@@ -32,22 +35,22 @@ build_deb() {
 	debuild -S -sa
 	echo "[PACKAGE]: Uploading to Ubuntu Touch Community Dev PPA"
 	cd ..
-	#dput ppa:ubuntu-touch-community-dev/ppa $1	 
+	dput ppa:ubuntu-touch-community-dev/ppa $1
 }
 
 # Function to build the click package
 build_click() {
 	echo "[PACKAGE]: Building Click Package"
 	cd ..
-	click build $1	
+	click build $1
 }
 
 #CASE: HELP ARGUMENT
 if [ "$1" == "-h" ]; then
-	echo "Usage: `basename $0` -[OPTION 1] value -[OPTION 2] value"
+	echo "Usage: `basename $0` -v [version_number] -f [pkg_format"]
 	echo "   -v: pkg version [REQUIRED]"
 	echo "   -f: pkg format (deb,click,all) [REQUIRED]"
-	echo "   -h: displays this help message"	
+	echo "   -h: displays this help message"
 	echo "   -a: displays information about the script"
 	exit 0
 
@@ -61,8 +64,11 @@ elif [ "$1" == "-a" ]; then
 	echo "Written by Nekhelesh Ramananthan"
 	exit 0
 
-#CASE: VERSION ARGUMENT
+#CASE: VERSION && FORMAT ARGUMENT
 elif [ "$1" == "-v" ] || [ "$1" == "-f" ]; then
+	VERSION=undefined
+	FORMAT=undefined
+
 	while getopts v:f: option
 		do
 			case "${option}"
@@ -71,8 +77,15 @@ elif [ "$1" == "-v" ] || [ "$1" == "-f" ]; then
 				f) FORMAT=${OPTARG};;
 			esac
 		done
+
+	if [ "$VERSION" == "undefined" ] || [ "$FORMAT" == "undefined" ]; then
+		echo "Please enter a valid version AND format!"
+		echo "Example Usage: ./package.sh -v 1.2 -f deb"
+		echo "Exiting"
+		exit 0
+	fi
 	
-	## PREPARATORY STEPS
+	## CREATE RELEASE FOLDERS
 	RELEASE_DIR=../releases/flashback/v$VERSION
 	SOURCE_CHANGE=flashback_${VERSION}_source.changes
 	mkdir -p ../releases/flashback
