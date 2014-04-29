@@ -49,6 +49,12 @@ Item {
         }
     }
 
+    LoadingIndicator {
+        id: loadingIndicator
+        loadingText: i18n.tr("Searching...")
+        isShown: search_model.loading
+    }
+
     ListView {
         id: _searchResultsList
         clip: true

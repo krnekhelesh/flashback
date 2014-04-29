@@ -54,7 +54,7 @@ Page {
         id: showSee
         function updateJSONModel() {
             if(reply.status === "success") {
-                loadingIndicator.visible = false
+                loadingIndicator.isShown = false
                 console.log("[LOG]: Show watch success")
             }
         }
@@ -64,7 +64,7 @@ Page {
         id: showWatchlist
         function updateJSONModel() {
             if(reply.status === "success") {
-                loadingIndicator.visible = false
+                loadingIndicator.isShown = false
                 var tempData = watchlistActivityDocument.contents
                 if(!isShowWatchlisted) {
                     console.log("[LOG]: Show watchlist success")
@@ -83,7 +83,9 @@ Page {
 
     LoadingIndicator {
         id: loadingIndicator
-        visible: false
+        isShown: tvCast.loading ||
+                 tvSeasons.loading ||
+                 show.loading
     }
 
     Component {
@@ -94,14 +96,14 @@ Page {
             watchlistMessage: isShowWatchlisted ? i18n.tr("Remove show from watchlist") : i18n.tr("Add show to watchlist")
             onWatched: {
                 loadingIndicator.loadingText = i18n.tr("Marking show as seen")
-                loadingIndicator.visible = true
+                loadingIndicator.isShown = true
                 showSee.source = Backend.traktSeenUrl("show")
                 showSee.createShowMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, show.imdb_id, show.name, show.year)
                 showSee.sendMessage()
             }
             onWatchlisted:  {
                 loadingIndicator.loadingText = !isShowWatchlisted ? i18n.tr("Adding show to watchlist") : i18n.tr("Removing show from watchlist")
-                loadingIndicator.visible = true
+                loadingIndicator.isShown = true
                 if(!isShowWatchlisted) {
                     showWatchlist.source = Backend.traktWatchlistUrl("show")
                     showWatchlist.createShowMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, show.name, show.year)

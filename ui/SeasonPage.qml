@@ -63,7 +63,7 @@ Page {
 
     LoadingIndicator {
         id: loadingIndicator
-        isShown: episodes.model.count === 0
+        isShown: episodes.loading
     }
 
     actions: [
