@@ -2,7 +2,7 @@
 Version=1.0
 Name=Flashback
 Comment=My project description
-Exec=qmlscene $@ Flashback.qml
+Exec=qmlscene $@ /usr/share/flashback/Flashback.qml
 Icon=flashback.png
 Terminal=false
 Type=Application
