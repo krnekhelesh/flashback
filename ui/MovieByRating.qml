@@ -35,7 +35,7 @@ Page {
     }
 
     LoadingIndicator {
-        visible: !movieList.visible
+        isShown: topRatedMovieModel.loading
     }
 
     Grid {

@@ -88,6 +88,12 @@ Page {
 
     LoadingIndicator {
         id: loadingIndicator
+        isShown: movie.loading ||
+                 traktMovieDetails.loading ||
+                 similarMoviesModel.loading ||
+                 movieCast.loading ||
+                 movieCrew.loading ||
+                 movieTrailer.loading
     }
 
     BasePostModel {

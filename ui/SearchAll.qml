@@ -35,6 +35,12 @@ Page {
     Movies { id: movie_search_results  }
     People { id: person_search_results }
 
+    LoadingIndicator {
+        id: loadingIndicator
+        loadingText: i18n.tr("Searching...")
+        isShown: show_search_results.loading || movie_search_results.loading || person_search_results.loading
+    }
+
     Flickable {
         id: mainFlickable
         clip: true
@@ -54,10 +60,10 @@ Page {
                 show_search_results.model.clear()
                 movie_search_results.model.clear()
                 person_search_results.model.clear()
-                show_search_results.source = Backend.searchUrl("tv", _searchBox.search_term)
-                movie_search_results.source = Backend.searchUrl("movie", _searchBox.search_term)
-                person_search_results.source = Backend.searchUrl("person", _searchBox.search_term)
                 if(_searchBox.search_term !== "") {
+                    show_search_results.source = Backend.searchUrl("tv", _searchBox.search_term)
+                    movie_search_results.source = Backend.searchUrl("movie", _searchBox.search_term)
+                    person_search_results.source = Backend.searchUrl("person", _searchBox.search_term)
                     show_search_results.createMessage(traktLogin.contents.username, traktLogin.contents.password)
                     show_search_results.sendMessage()
                 }

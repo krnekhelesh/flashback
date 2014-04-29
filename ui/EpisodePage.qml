@@ -142,6 +142,7 @@ Page {
 
     LoadingIndicator {
         id: loadingIndicator
+        isShown: episodeDetails.loading
     }
 
     Component {

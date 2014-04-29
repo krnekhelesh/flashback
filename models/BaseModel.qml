@@ -47,8 +47,8 @@ Item {
         if ( json != "" ) {
             updateJSONModel();
             updated();
+            loading = false
         }
-        loading = false
     }
 
     function thumbnail_url(thumb_path, type) {

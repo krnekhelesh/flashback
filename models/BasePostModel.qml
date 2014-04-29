@@ -62,7 +62,7 @@ Item {
         if ( json != "" ) {
             reply = JSON.parse(json)
             updateJSONModel();
+            loading = false
         }
-        loading = false
     }
 }
