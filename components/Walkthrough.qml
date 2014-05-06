@@ -39,6 +39,9 @@ Page {
     Component.onCompleted: mainView.automaticOrientation = false
     Component.onDestruction: mainView.automaticOrientation = true
 
+    // Page Background
+    Background {}
+
     // ListView to show the slides
     ListView {
         id: listView

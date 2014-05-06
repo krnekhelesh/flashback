@@ -29,6 +29,9 @@ Page {
     visible: false
     flickable: null
 
+    // Page Background
+    Background {}
+
     Movies {
         id: topRatedMovieModel
         source: Backend.topRatedMoviesUrl()

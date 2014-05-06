@@ -26,9 +26,9 @@ import "../models"
 Page {
     id: commentsPage
 
-    visible: false
-
     title: i18n.tr("Comments")
+    visible: false
+    flickable: null
 
     property string id
     property string type
@@ -36,6 +36,9 @@ Page {
     property string year
     property string season
     property string episode
+
+    // Page Background
+    Background {}
 
     TraktUserComment {
         id: usercomments

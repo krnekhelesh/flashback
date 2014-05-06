@@ -43,6 +43,9 @@ Page {
     Trailer { id: movieTrailer }
     Movies { id: similarMoviesModel }
 
+    // Page Background
+    Background {}
+
     Movie {
         id: movie
         source: Backend.movieUrl(movie_id, {appendToResponse: ['credits', 'similar_movies', 'trailers']})
@@ -257,6 +260,7 @@ Page {
             width: units.gu(18)
             height: width + units.gu(10)
             thumbSource: movie.attributes.thumb_url
+
             anchors {
                 top: parent.top
                 left: parent.left
@@ -332,8 +336,10 @@ Page {
             }
 
             back: Rectangle {
-                color: UbuntuColors.coolGrey
+                color: "Transparent"
                 anchors.fill: parent
+
+                Background{}
 
                 Flickable {
                     id: summaryFlickable

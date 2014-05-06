@@ -27,6 +27,9 @@ Page {
     visible: false
     title: i18n.tr("Default")
 
+    // Page Background
+    Background {}
+
     property alias dataModel: list.model
 
     ListView {

@@ -27,6 +27,9 @@ Page {
     visible: false
     title: i18n.tr("Default")
 
+    // Page Background
+    Background {}
+
     // Property to set the data model of the listview
     property alias dataModel: list.model
 
