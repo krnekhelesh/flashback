@@ -1,3 +1,10 @@
+flashback (0.4~beta1) trusty; urgency=medium
+
+  * Added a new usertab
+  * Revamped app background
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Wed, 07 May 2014 00:49:57 +0200
+
 flashback (0.4~alpha4) trusty; urgency=medium
 
   * Revamped empty state messages
