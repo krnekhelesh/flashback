@@ -29,6 +29,9 @@ Page {
     visible: false
     flickable: null
 
+    // Page Background
+    Background {}
+
     // Properties to hold the movie/episode details respectively
     property string id
     property string movieTitle
