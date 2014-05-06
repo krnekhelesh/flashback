@@ -227,21 +227,6 @@ MainView {
                 }
 
                 Tab {
-                    id: youTab
-                    title: i18n.tr("You")
-                    onActiveChanged: userLoader.source = Qt.resolvedUrl("ui/UserTab.qml")
-                    page: Loader {
-                        id: userLoader
-                        parent: youTab
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            bottom: parent.bottom
-                        }
-                    }
-                }
-
-                Tab {
                     id: moviesTab
                     title: i18n.tr("Movies")
                     onActiveChanged: movieLoader.source = Qt.resolvedUrl("ui/MovieTab.qml")
@@ -286,7 +271,20 @@ MainView {
                     }
                 }
 
-
+                Tab {
+                    id: youTab
+                    title: i18n.tr("You")
+                    onActiveChanged: userLoader.source = Qt.resolvedUrl("ui/UserTab.qml")
+                    page: Loader {
+                        id: userLoader
+                        parent: youTab
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            bottom: parent.bottom
+                        }
+                    }
+                }
             }
         }
     }
