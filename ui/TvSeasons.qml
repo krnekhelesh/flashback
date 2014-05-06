@@ -24,14 +24,18 @@ import "../components"
 Page {
     id: tvSeasonPage
 
-    visible: false
     title: i18n.tr("Default")
+    visible: false
+    flickable: null
 
     property alias dataModel: list.model
     property string tv_id
     property string imdb_id
     property string name
     property string year
+
+    // Page Background
+    Background {}
 
     // Season List
     ListView {

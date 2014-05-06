@@ -50,6 +50,9 @@ Page {
         }
     ]
 
+    // Page Background
+    Background {}
+
     TraktSeen {
         id: showSee
         function updateJSONModel() {
@@ -245,8 +248,10 @@ Page {
             }
 
             back: Rectangle {
-                color: UbuntuColors.coolGrey
+                color: "Transparent"
                 anchors.fill: parent
+
+                Background{}
 
                 Flickable {
                     id: summaryFlickable
