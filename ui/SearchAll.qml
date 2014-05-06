@@ -35,6 +35,9 @@ Page {
     Movies { id: movie_search_results  }
     People { id: person_search_results }
 
+    // Page Background
+    Background {}
+
     LoadingIndicator {
         id: loadingIndicator
         loadingText: i18n.tr("Searching...")

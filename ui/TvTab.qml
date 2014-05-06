@@ -23,7 +23,7 @@ import "../models"
 import "../backend/backend.js" as Backend
 
 Page {
-    flickable: flickable
+    flickable: null
 
     Component.onCompleted: console.log("[LOG]: TV Tab Loaded")
 
@@ -37,6 +37,9 @@ Page {
             onTriggered: pageStack.push(Qt.resolvedUrl("SearchTv.qml"))
         }
     ]
+
+    // Tab Background
+    Background {}
 
     Shows {
         id: trendingShowsModel

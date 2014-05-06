@@ -28,6 +28,9 @@ Page {
     visible: false
     title: i18n.tr("Search Movie")
 
+    // Page Background
+    Background {}
+
     Movies {
       id: search_results
     }

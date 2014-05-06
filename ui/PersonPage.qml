@@ -34,6 +34,9 @@ Page {
     PersonCast { id: personCast }
     PersonCrew { id: personCrew }
 
+    // Page Background
+    Background {}
+
     Person {
         id: person
         source: Backend.personUrl(person_id, {appendToResponse: ['combined_credits']})

@@ -23,9 +23,12 @@ import "../models"
 import "../backend/backend.js" as Backend
 
 Page {
-    id: personPage
+    id: personTab
 
     Component.onCompleted: console.log("[LOG]: People Tab Loaded")
+
+    // Tab Background
+    Background {}
 
     People {
         id: popularPeople

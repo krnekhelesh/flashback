@@ -28,6 +28,9 @@ Page {
     visible: false
     title: i18n.tr("Search TV Show")
 
+    // Page Background
+    Background {}
+
     Shows {
       id: search_results
     }

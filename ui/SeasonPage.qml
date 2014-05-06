@@ -73,6 +73,9 @@ Page {
         }
     ]
 
+    // Page Background
+    Background {}
+
     TraktSeen {
         id: seasonSee
         function updateJSONModel() {

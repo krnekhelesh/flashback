@@ -24,9 +24,9 @@ import "../components"
 import "../models"
 
 Page {
-    id: homePage
+    id: homeTab
 
-    flickable: flickable
+    flickable: null
 
     Component.onCompleted: console.log("[LOG]: Home Tab Loaded")
 
@@ -49,6 +49,9 @@ Page {
             onTriggered: pageStack.push(Qt.resolvedUrl("SearchAll.qml"))
         }
     ]
+
+    // Tab Background
+    Background {}
 
     Movies {
         id: nowPlayingMoviesModel

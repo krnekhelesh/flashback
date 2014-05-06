@@ -18,27 +18,11 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import "../components"
-import "../models"
 
-// Page to search for persons
-Page {
-    id: searchMoviePage
-
-    visible: false
-    title: i18n.tr("Search Celeb")
-
-    // Page Background
-    Background {}
-
-    People {
-      id: search_results
-    }
-
-    SearchPage {
-        anchors.fill: parent
-        type: "person"
-        search_model: search_results 
-        onResultClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": model.id, "type": "person"})
-    }
+Rectangle {
+    id: _customDivider
+    property string mode: "horizontal"
+    width: mode === "horizontal" ? parent.width : units.gu(0.3)
+    height: mode === "vertical" ? parent.height : units.gu(0.3)
+    color: UbuntuColors.orange
 }

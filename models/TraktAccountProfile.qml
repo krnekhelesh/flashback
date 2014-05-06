@@ -17,28 +17,14 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import "../components"
-import "../models"
+import "../backend/backend.js" as Backend
 
-// Page to search for persons
-Page {
-    id: searchMoviePage
+BasePostModel {
+    id: traktAccountProfile
 
-    visible: false
-    title: i18n.tr("Search Celeb")
-
-    // Page Background
-    Background {}
-
-    People {
-      id: search_results
-    }
-
-    SearchPage {
-        anchors.fill: parent
-        type: "person"
-        search_model: search_results 
-        onResultClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": model.id, "type": "person"})
+    function fetchData(username, password) {
+        source = Backend.traktAccountProfile(username)
+        createMessage(username, password)
+        sendMessage()
     }
 }

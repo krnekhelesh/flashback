@@ -18,6 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import "../components"
 
 Page {
     id: traktPage
@@ -26,6 +27,9 @@ Page {
 
     visible: false
     flickable: null
+
+    // Page Background
+    Background {}
 
     // Function to logout of the trakt user account
     function logout() {

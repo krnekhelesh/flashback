@@ -18,27 +18,20 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import "../components"
-import "../models"
 
-// Page to search for persons
-Page {
-    id: searchMoviePage
+Image {
+    id: _background
 
-    visible: false
-    title: i18n.tr("Search Celeb")
+    z: -1
+    fillMode: Image.PreserveAspectCrop
+    source: Qt.resolvedUrl("../graphics/wall-motionblur.jpg")
 
-    // Page Background
-    Background {}
-
-    People {
-      id: search_results
-    }
-
-    SearchPage {
-        anchors.fill: parent
-        type: "person"
-        search_model: search_results 
-        onResultClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": model.id, "type": "person"})
+    anchors {
+        top: parent.top
+        bottom: parent.bottom
+        left: parent.left
+        right: parent.right
+        topMargin: -units.gu(10)
+        bottomMargin: -units.gu(2)
     }
 }

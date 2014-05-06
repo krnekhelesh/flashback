@@ -46,7 +46,6 @@ SettingsItem {
         }
         function updateJSONModel() {
             if(traktLogin.contents.status !== "disabled") {
-                console.log(reply.profile.username + ":" + reply.status)
                 primaryDetail.text = reply.profile.full_name ? reply.profile.full_name : reply.profile.username
                 secondaryDetail.text= reply.profile.location ? reply.profile.location : "Authenticated into Trakt"
                 profileImage.thumbSource = reply.profile.avatar

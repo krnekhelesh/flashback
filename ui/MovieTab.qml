@@ -25,9 +25,12 @@ import "../backend/backend.js" as Backend
 
 Page {
 
-    flickable: flickable
+    flickable: null
 
     Component.onCompleted: console.log("[LOG]: Movie Tab Loaded")
+
+    // Tab Background
+    Background {}
 
     TrendingMovies {
         id: trendingMoviesModel

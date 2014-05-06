@@ -71,6 +71,9 @@ Page {
         }
     }
 
+    // Page Background
+    Background {}
+
     TraktSeen {
         id: episodeSee
         function updateJSONModel() {
@@ -215,7 +218,7 @@ Page {
         // Filler component to ensure that the episode thumb shown is not bigger than required
         Rectangle {
             id: backgroundFill
-            color: backgroundColor
+            color: "Transparent"
             height: episodeThumb.height
             z: episodeThumb.z + 1
             anchors {
