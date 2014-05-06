@@ -25,6 +25,7 @@ Page {
     id: crewPage
 
     visible: false
+    flickable: null
     title: i18n.tr("Default")
 
     // Page Background

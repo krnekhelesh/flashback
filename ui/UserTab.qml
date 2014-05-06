@@ -31,6 +31,26 @@ Page {
 
     Component.onCompleted: console.log("[LOG]: TV Tab Loaded")
 
+    actions: [
+        Action {
+            id: setupAccountAction
+            text: i18n.tr("Account")
+            keywords: i18n.tr("Setup;Create;Account;Trakt")
+            description: i18n.tr("Setup a Trakt Account")
+            iconSource: Qt.resolvedUrl("../graphics/add.png")
+            onTriggered: pageStack.push(Qt.resolvedUrl("Trakt.qml"))
+        },
+
+        Action {
+            id: refreshAccountAction
+            text: i18n.tr("Refresh")
+            keywords: i18n.tr("Reload;Refresh;New;Trakt")
+            description: i18n.tr("Refresh Account Information")
+            iconName: "reload"
+            onTriggered: traktAccountModel.fetchData(traktLogin.contents.username, traktLogin.contents.password)
+        }
+    ]
+
     // Page Background
     Background {}
 
@@ -317,6 +337,30 @@ Page {
                     category: "Movies"
                 }
             }
+        }
+    }
+
+    tools: ToolbarItems {
+        id: toolbarUser
+
+        locked: createAccountMessage.visible
+
+        ToolbarButton {
+            id: settings
+            action: appSettingsAction
+            visible: !account.visible
+        }
+
+        ToolbarButton {
+            id: refresh
+            action: refreshAccountAction
+            visible: !account.visible
+        }
+
+        ToolbarButton {
+            id: account
+            action: setupAccountAction
+            visible: createAccountMessage.visible
         }
     }
 }
