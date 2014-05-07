@@ -29,6 +29,9 @@ UbuntuShape {
     // Property to set the header of the settings item
     property string title: "Default"
 
+    // Property to set the icon of the settings item header
+    property alias icon: _icon.source
+
     // Property to set the vertical spacing in the contents column
     property alias contentSpacing: _contents.spacing
 
@@ -64,15 +67,27 @@ UbuntuShape {
             }
         }
         
-        Label {
-            id: _title
-            text: title
-            font.pixelSize: units.dp(17)
+        Row {
+            spacing: units.gu(1)
             anchors {
                 left: parent.left
                 leftMargin: units.gu(2)
                 top: parent.top
                 topMargin: units.gu(1.5)
+            }
+
+            Image {
+                id: _icon
+                source: ""
+                height: _title.height
+                fillMode: Image.PreserveAspectFit
+                visible: source == "" ? false : true
+            }
+
+            Label {
+                id: _title
+                text: title
+                font.pixelSize: units.dp(17)
             }
         }
     }

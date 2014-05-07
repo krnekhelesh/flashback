@@ -7,7 +7,7 @@ Column {
     property alias value: _statValue.text
     property alias category: _statHeader.text
 
-    width: parent.width/4
+    width: parent.width/3
     anchors.verticalCenter: parent.verticalCenter
 
     Label {
@@ -15,7 +15,6 @@ Column {
         fontSize: "large"
         font.bold: true
         width: parent.width
-        color: UbuntuColors.coolGrey
         horizontalAlignment: Text.AlignHCenter
     }
     
@@ -23,7 +22,6 @@ Column {
         id: _statHeader
         width: parent.width
         fontSize: "small"
-        color: Qt.lighter(UbuntuColors.coolGrey)
         horizontalAlignment: Text.AlignHCenter
     }
 }

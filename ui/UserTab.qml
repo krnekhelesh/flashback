@@ -68,8 +68,8 @@ Page {
                 field2.text= reply.location ? reply.location
                                             : reply.about ? reply.about
                                                           : reply.url
-                stat1.text = reply.stats.friends
-                stat2.text = reply.stats.episodes.checkins + reply.stats.movies.checkins
+                stat1.value = reply.stats.friends
+                stat2.value = reply.stats.episodes.checkins + reply.stats.movies.checkins
 
                 watchStat1.value = reply.stats.episodes.watched
                 watchStat2.value = reply.stats.shows.watched
@@ -88,7 +88,7 @@ Page {
             else {
                 field1.text = "JohnDoe"
                 field2.text = "Linux"
-                stat1.text = stat2.text = "?"
+                stat1.value = stat2.value = "?"
                 watchStat1.value = watchStat2.value = watchStat3.value = "?"
                 rateStat1.value = rateStat2.value = rateStat3.value = "?"
                 collectStat1.value = collectStat2.value = collectStat3.value = "?"
@@ -109,236 +109,205 @@ Page {
         visible: traktLogin.contents.status === "disabled"
     }
 
-    Item {
-        id: _background
-        z: -1
-        width: parent.width
-        height: 0.45 * userTab.height
-        anchors.top: parent.top
-        anchors.topMargin: -units.gu(9)
-    }
-
-    Rectangle {
-        id: _transparentStrip
-        z: _background.z + 1
-        width: parent.width
-        color: Qt.rgba(0,0,0,0.4)
-        height: statRow.height + units.gu(2)
-        anchors.bottom: _background.bottom
-        visible: traktLogin.contents.status !== "disabled"
-    }
-
-    Rectangle {
-        id: _whiteStrip
-        width: parent.width
-        height: field1.height + field2.height + units.gu(2)
-        color: "White"
-        anchors.top: _background.bottom
-        visible: traktLogin.contents.status !== "disabled"
-    }
-
-    Thumbnail {
-        id: _profilePicture
-        width: height
-        height: 0.25 * userTab.height
-        visible: traktLogin.contents.status !== "disabled"
-        anchors {
-            left: parent.left
-            bottom: _transparentStrip.bottom
-            bottomMargin: units.gu(1)
-            leftMargin: units.gu(2)
+    Image {
+        id: arrow
+        source: Qt.resolvedUrl("../graphics/arrow.png")
+        width: units.gu(8)
+        height: width
+        smooth: true
+        visible: createAccountMessage.visible
+        transform: Rotation {
+            axis { x: 0; y: 0; z: 1 }
+            angle: 90
         }
-    }
-
-    Column {
-        id: profileFieldColumn
-        visible: traktLogin.contents.status !== "disabled"
         anchors {
-            left: parent.left
             right: parent.right
-            margins: units.gu(2)
-            verticalCenter: _whiteStrip.verticalCenter
-        }
-        Label {
-            id: field1
-            font.bold: true
-            fontSize: "large"
-            color: UbuntuColors.coolGrey
+            bottom: parent.bottom
+            rightMargin: units.gu(-7.5)
         }
 
-        Label {
-            id: field2
-            color: Qt.lighter(UbuntuColors.coolGrey)
-            MouseArea {
-                enabled: field2.text.indexOf("http://") > -1 ? true : false
-                anchors.fill: parent
-                onClicked: Qt.openUrlExternally(field2.text)
+        SequentialAnimation on anchors.bottomMargin {
+            running: createAccountMessage.visible
+            loops: 5
+            NumberAnimation { from: units.gu(0); to: units.gu(3); duration: 1000 }
+            PauseAnimation { duration: 250 }
+            NumberAnimation { from: units.gu(3); to: units.gu(0); duration: 1000 }
+        }
+    }
+
+    Flickable {
+        id: flickable
+        clip: true
+        anchors.fill: parent
+        contentHeight: mainColumn.height + units.gu(5)
+
+        Column {
+            id: mainColumn
+            spacing: units.gu(2)
+            height: childrenRect.height
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+                margins: units.gu(2)
+            }
+
+            SettingsItem {
+                title: i18n.tr("Profile Details")
+                icon: Qt.resolvedUrl("../graphics/user_white.png")
+                visible: traktLogin.contents.status !== "disabled"
+                contents: [
+                    Row {
+                        id: profileRow
+                        spacing: units.gu(1)
+                        height: profileFieldColumn.height
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            margins: units.gu(1)
+                        }
+
+                        Thumbnail {
+                            id: _profilePicture
+                            width: height
+                            height: parent.height
+                        }
+
+                        Column {
+                            id: profileFieldColumn
+                            Label {
+                                id: field1
+                                font.bold: true
+                                fontSize: "large"
+                            }
+
+                            Label {
+                                id: field2
+                                width: profileRow.width - _profilePicture.width - units.gu(2)
+                                elide: Text.ElideRight
+                                MouseArea {
+                                    enabled: field2.text.indexOf("http://") > -1 ? true : false
+                                    anchors.fill: parent
+                                    onClicked: Qt.openUrlExternally(field2.text)
+                                }
+                            }
+
+                            Item {
+                                width: parent.width
+                                height: units.gu(1)
+                            }
+
+                            Row {
+                                id: statRow
+                                width: profileRow.width - _profilePicture.width - units.gu(2)
+                                height: stat1.height
+
+                                StatColumn {
+                                    id: stat1
+                                    width: parent.width/2
+                                    category: "Friends"
+                                }
+
+                                StatColumn {
+                                    id: stat2
+                                    width: parent.width/2
+                                    category: "Check-ins"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+
+            SettingsItem {
+                title: i18n.tr("Watched")
+                icon: Qt.resolvedUrl("../graphics/watched.png")
+                visible: traktLogin.contents.status !== "disabled"
+                contents: [
+                    Row {
+                        id: watchRow
+                        width: parent.width
+                        height: watchStat1.height
+
+                        StatColumn {
+                            id: watchStat1
+                            category: "Episodes"
+                        }
+
+
+                        StatColumn {
+                            id: watchStat2
+                            category: "Shows"
+                        }
+
+                        StatColumn {
+                            id: watchStat3
+                            category: "Movies"
+                        }
+                    }
+                ]
+            }
+
+            SettingsItem {
+                title: i18n.tr("Rated")
+                icon: Qt.resolvedUrl("../graphics/heart-0.png")
+                visible: traktLogin.contents.status !== "disabled"
+                contents: [
+                    Row {
+                        id: rateRow
+                        width: parent.width
+                        height: rateStat1.height
+
+                        StatColumn {
+                            id: rateStat1
+                            category: "Episodes"
+                        }
+
+
+                        StatColumn {
+                            id: rateStat2
+                            category: "Shows"
+                        }
+
+                        StatColumn {
+                            id: rateStat3
+                            category: "Movies"
+                        }
+                    }
+                ]
+            }
+
+            SettingsItem {
+                title: i18n.tr("Collected")
+                icon: Qt.resolvedUrl("../graphics/collection_white.png")
+                visible: traktLogin.contents.status !== "disabled"
+                contents: [
+                    Row {
+                        id: collectionRow
+                        width: parent.width
+                        height: collectStat1.height
+
+                        StatColumn {
+                            id: collectStat1
+                            category: "Episodes"
+                        }
+
+
+                        StatColumn {
+                            id: collectStat2
+                            category: "Shows"
+                        }
+
+                        StatColumn {
+                            id: collectStat3
+                            category: "Movies"
+                        }
+                    }
+                ]
             }
         }
     }
 
-    Row {
-        id: statRow
-        height: stat1.height + stat2.height
-        visible: traktLogin.contents.status !== "disabled"
-        anchors {
-            left: _profilePicture.right
-            right: parent.right
-            margins: units.gu(2)
-            verticalCenter: _transparentStrip.verticalCenter
-        }
-
-        spacing: units.gu(2)
-
-        Column {
-            Label {
-                id: stat1
-                width: stat1field.contentWidth
-                horizontalAlignment: Text.AlignHCenter
-                font.bold: true
-            }
-
-            Label {
-                id: stat1field
-                text: "Friends"
-            }
-        }
-
-        Column {
-            Label {
-                id: stat2
-                width: stat2field.contentWidth
-                horizontalAlignment: Text.AlignHCenter
-                font.bold: true
-            }
-
-            Label {
-                id: stat2field
-                text: "Check-ins"
-            }
-        }
-    }
-
-    Rectangle {
-        width: parent.width
-        color: "White"
-        anchors.top: _whiteStrip.bottom
-        anchors.bottom: parent.bottom
-        visible: traktLogin.contents.status !== "disabled"
-
-        Column {
-            anchors.fill: parent
-
-            CustomDivider {
-                color: "#C0392B"
-            }
-
-            Row {
-                id: watchRow
-                width: parent.width
-                height: parent.height/3
-
-                Item {
-                    height: width
-                    width: parent.width/4
-                    anchors.verticalCenter: parent.verticalCenter
-                    Image {
-                        anchors.centerIn: parent
-                        width: parent.width/2
-                        antialiasing: true
-                        fillMode: Image.PreserveAspectFit
-                        source: Qt.resolvedUrl("../graphics/watch.png")
-                    }
-                }
-
-                StatColumn {
-                    id: watchStat1
-                    category: "Episodes"
-                }
-
-
-                StatColumn {
-                    id: watchStat2
-                    category: "Shows"
-                }
-
-                StatColumn {
-                    id: watchStat3
-                    category: "Movies"
-                }
-            }
-
-            Row {
-                id: rateRow
-                width: parent.width
-                height: parent.height/3
-
-                Item {
-                    height: width
-                    width: parent.width/4
-                    anchors.verticalCenter: parent.verticalCenter
-                    Image {
-                        anchors.centerIn: parent
-                        width: parent.width/2
-                        antialiasing: true
-                        fillMode: Image.PreserveAspectFit
-                        source: Qt.resolvedUrl("../graphics/heart.png")
-                    }
-                }
-
-                StatColumn {
-                    id: rateStat1
-                    category: "Episodes"
-                }
-
-
-                StatColumn {
-                    id: rateStat2
-                    category: "Shows"
-                }
-
-                StatColumn {
-                    id: rateStat3
-                    category: "Movies"
-                }
-            }
-
-            Row {
-                id: collectionRow
-                width: parent.width
-                height: parent.height/3
-
-                Item {
-                    height: width
-                    width: parent.width/4
-                    anchors.verticalCenter: parent.verticalCenter
-                    Image {
-                        anchors.centerIn: parent
-                        width: parent.width/2
-                        antialiasing: true
-                        fillMode: Image.PreserveAspectFit
-                        source: Qt.resolvedUrl("../graphics/collection_black.png")
-                    }
-                }
-
-                StatColumn {
-                    id: collectStat1
-                    category: "Episodes"
-                }
-
-
-                StatColumn {
-                    id: collectStat2
-                    category: "Shows"
-                }
-
-                StatColumn {
-                    id: collectStat3
-                    category: "Movies"
-                }
-            }
-        }
-    }
 
     tools: ToolbarItems {
         id: toolbarUser
