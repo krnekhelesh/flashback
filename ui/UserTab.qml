@@ -160,21 +160,22 @@ Page {
                     Row {
                         id: profileRow
                         spacing: units.gu(1)
-                        height: profileFieldColumn.height
+                        height: _profilePicture.height
                         anchors {
                             left: parent.left
                             right: parent.right
-                            margins: units.gu(1)
+                            margins: units.gu(2)
                         }
 
                         Thumbnail {
                             id: _profilePicture
                             width: height
-                            height: parent.height
+                            height: 0.15 * userTab.height
                         }
 
                         Column {
                             id: profileFieldColumn
+                            anchors.verticalCenter: _profilePicture.verticalCenter
                             Label {
                                 id: field1
                                 font.bold: true
@@ -191,28 +192,31 @@ Page {
                                     onClicked: Qt.openUrlExternally(field2.text)
                                 }
                             }
+                        }
+                    },
 
-                            Item {
-                                width: parent.width
-                                height: units.gu(1)
+                    ListItem.ThinDivider {},
+
+                    ListItem.Empty {
+                        height: statRow.height
+                        showDivider: false
+
+                        Row {
+                            id: statRow
+                            width: parent.width
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            height: stat1.height
+
+                            StatColumn {
+                                id: stat1
+                                width: parent.width/2
+                                category: "Friends"
                             }
 
-                            Row {
-                                id: statRow
-                                width: profileRow.width - _profilePicture.width - units.gu(2)
-                                height: stat1.height
-
-                                StatColumn {
-                                    id: stat1
-                                    width: parent.width/2
-                                    category: "Friends"
-                                }
-
-                                StatColumn {
-                                    id: stat2
-                                    width: parent.width/2
-                                    category: "Check-ins"
-                                }
+                            StatColumn {
+                                id: stat2
+                                width: parent.width/2
+                                category: "Check-ins"
                             }
                         }
                     }
