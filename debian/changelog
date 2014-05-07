@@ -1,3 +1,10 @@
+flashback (0.4) trusty; urgency=medium
+
+  * Improved user tab design to be in line with the other pages and tabs.
+  * Fixed cast and crew page header color
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Wed, 07 May 2014 14:02:44 +0200
+
 flashback (0.4~beta1) trusty; urgency=medium
 
   * Added a new usertab
