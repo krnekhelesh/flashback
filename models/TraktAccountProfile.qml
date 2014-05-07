@@ -17,33 +17,14 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
-import "../components"
+import "../backend/backend.js" as Backend
 
-Page {
-    id: crewPage
+BasePostModel {
+    id: traktAccountProfile
 
-    visible: false
-    flickable: null
-    title: i18n.tr("Default")
-
-    // Page Background
-    Background {}
-
-    property alias dataModel: list.model
-
-    ListView {
-        id: list
-
-        anchors.fill: parent
-        clip: true
-
-        delegate: Subtitled {
-            text: name
-            subText: department
-            progression: true
-            onClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": id})
-        }
+    function fetchData(username, password) {
+        source = Backend.traktAccountProfile(username)
+        createMessage(username, password)
+        sendMessage()
     }
 }

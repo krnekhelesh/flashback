@@ -28,6 +28,9 @@ Page {
     visible: false
     title: i18n.tr("Search Celeb")
 
+    // Page Background
+    Background {}
+
     People {
       id: search_results
     }

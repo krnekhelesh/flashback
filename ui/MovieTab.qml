@@ -29,6 +29,9 @@ Page {
 
     Component.onCompleted: console.log("[LOG]: Movie Tab Loaded")
 
+    // Tab Background
+    Background {}
+
     TrendingMovies {
         id: trendingMoviesModel
         Component.onCompleted: {
@@ -59,10 +62,11 @@ Page {
     ]
 
     LoadingIndicator {
-        visible: !(nowPlaying.visible && upcomingMovies.visible && trendingMovies.visible)
+        isShown: nowPlayingMoviesModel.loading || upcomingMoviesModel.loading || trendingMoviesModel.loading
     }
 
     Flickable {
+        id: flickable
         clip: true
         anchors.fill: parent
         contentHeight: mainHomeColumn.height + units.gu(5)
@@ -75,7 +79,6 @@ Page {
                 left: parent.left;
                 right: parent.right;
                 top: parent.top;
-                margins: units.gu(1)
             }
 
             spacing: units.gu(1)

@@ -18,32 +18,11 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
-import "../components"
 
-Page {
-    id: crewPage
-
-    visible: false
-    flickable: null
-    title: i18n.tr("Default")
-
-    // Page Background
-    Background {}
-
-    property alias dataModel: list.model
-
-    ListView {
-        id: list
-
-        anchors.fill: parent
-        clip: true
-
-        delegate: Subtitled {
-            text: name
-            subText: department
-            progression: true
-            onClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": id})
-        }
-    }
+Rectangle {
+    id: _customDivider
+    property string mode: "horizontal"
+    width: mode === "horizontal" ? parent.width : units.gu(0.3)
+    height: mode === "vertical" ? parent.height : units.gu(0.3)
+    color: UbuntuColors.orange
 }

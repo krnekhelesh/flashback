@@ -1,3 +1,41 @@
+flashback (0.4) trusty; urgency=medium
+
+  * Improved user tab design to be in line with the other pages and tabs.
+  * Fixed cast and crew page header color
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Wed, 07 May 2014 14:02:44 +0200
+
+flashback (0.4~beta1) trusty; urgency=medium
+
+  * Added a new usertab
+  * Revamped app background
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Wed, 07 May 2014 00:49:57 +0200
+
+flashback (0.4~alpha4) trusty; urgency=medium
+
+  * Revamped empty state messages
+  * Better detection of loading status of JSON data models
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Mon, 28 Apr 2014 12:43:53 +0200
+
+flashback (0.4~alpha3) trusty; urgency=medium
+
+  * Revamped check-in page
+  * Added animation to the notification entrance/exit
+  * Tweaked margin of carousel, detailcarousel and now watching components
+  * Locked screen orientation in login and checkin pages
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Wed, 23 Apr 2014 16:02:21 +0200
+
+flashback (0.4~alpha2) trusty; urgency=medium
+
+  * Revamped Settings Page
+  * Revamped Login Page
+  * Improved behaviour and experience of initial walkthrough
+
+ -- Nekhelesh Ramananthan <krnekhelesh@gmail.com>  Sat, 19 Apr 2014 23:02:12 +0200
+
 flashback (0.4~alpha1) trusty; urgency=medium
 
   [Nekhelesh Ramananthan]

@@ -26,9 +26,9 @@ import "../models"
 Page {
     id: commentsPage
 
-    visible: false
-
     title: i18n.tr("Comments")
+    visible: false
+    flickable: null
 
     property string id
     property string type
@@ -37,13 +37,16 @@ Page {
     property string season
     property string episode
 
+    // Page Background
+    Background {}
+
     TraktUserComment {
         id: usercomments
         function updateJSONModel() {
             if(reply.status === "success") {
                 console.log("[LOG]: User comment posted successfully")
                 comments.model.insert(0, {"comment": userComment.text, "inserted": parseInt(new Date().getTime()/1000), "username": traktLogin.contents.username, "thumb_url": "../graphics/user.png"})
-                commentsLoading.visible = false
+                commentsLoading.isShown = false
                 noCommentsMessages.visible = false
                 addCommentBox.visible = false
                 userComment.text = ""
@@ -62,23 +65,19 @@ Page {
             else if(type === "Episode")
                 source = Backend.traktEpisodeCommentsUrl(id, season, episode)
         }
-        onUpdated: {
-            if (comments.model.count === 0)
-                noCommentsMessages.visible = true
-            commentsLoading.visible = false
-        }
     }
 
     LoadingIndicator {
         id: commentsLoading
-        visible: true
+        isShown: comments.loading
     }
 
-    Label {
+    EmptyState {
         id: noCommentsMessages
-        text: "No comments found"
-        anchors.centerIn: parent
-        visible: false
+        visible: comments.loading ? false : comments.model.count === 0 ? true : false
+        logo: Qt.resolvedUrl("../graphics/emptyComment.png")
+        header: i18n.tr("No Comments Yet")
+        message: i18n.tr("This space feels empty. Be the first to comment!")
     }
 
     ListView {
@@ -263,7 +262,7 @@ Page {
                 height: spoilerRow.height
                 onClicked: {
                     commentsLoading.loadingText = i18n.tr("Submitting comment.\nPlease wait..")
-                    commentsLoading.visible = true
+                    commentsLoading.isShown = true
                     if(type === "Episode") {
                         usercomments.source = Backend.traktAddCommentUrl("episode")
                         usercomments.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, id, name, year, season, episode, userComment.text, isSpoiler.checked)

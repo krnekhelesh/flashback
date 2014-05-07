@@ -31,23 +31,26 @@ Page {
 
     property string person_id
 
-    PersonCast {
-        id: personCast
-    }
+    PersonCast { id: personCast }
+    PersonCrew { id: personCrew }
 
-    PersonCrew {
-        id: personCrew
-    }
+    // Page Background
+    Background {}
 
     Person {
         id: person
-
         source: Backend.personUrl(person_id, {appendToResponse: ['combined_credits']})
-
         onUpdated: {
             personCast.json = person.attributes.combinedCreditsJson;
             personCrew.json = person.attributes.combinedCreditsJson;
         }
+    }
+
+    LoadingIndicator {
+        id: loadingIndicator
+        isShown: personCast.loading ||
+                 personCrew.loading ||
+                 person.loading
     }
 
     Flickable {

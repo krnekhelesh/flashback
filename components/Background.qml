@@ -18,32 +18,20 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
-import "../components"
 
-Page {
-    id: crewPage
+Image {
+    id: _background
 
-    visible: false
-    flickable: null
-    title: i18n.tr("Default")
+    z: -1
+    fillMode: Image.PreserveAspectCrop
+    source: Qt.resolvedUrl("../graphics/wall-motionblur.jpg")
 
-    // Page Background
-    Background {}
-
-    property alias dataModel: list.model
-
-    ListView {
-        id: list
-
-        anchors.fill: parent
-        clip: true
-
-        delegate: Subtitled {
-            text: name
-            subText: department
-            progression: true
-            onClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": id})
-        }
+    anchors {
+        top: parent.top
+        bottom: parent.bottom
+        left: parent.left
+        right: parent.right
+        topMargin: -units.gu(10)
+        bottomMargin: -units.gu(2)
     }
 }

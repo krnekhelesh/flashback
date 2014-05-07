@@ -29,6 +29,9 @@ Page {
     visible: false
     flickable: null
 
+    // Page Background
+    Background {}
+
     property string genre_id
 
     Movies {

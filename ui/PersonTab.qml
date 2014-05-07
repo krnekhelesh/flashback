@@ -23,9 +23,12 @@ import "../models"
 import "../backend/backend.js" as Backend
 
 Page {
-    id: personPage
+    id: personTab
 
     Component.onCompleted: console.log("[LOG]: People Tab Loaded")
+
+    // Tab Background
+    Background {}
 
     People {
         id: popularPeople
@@ -44,17 +47,14 @@ Page {
     ]
 
     LoadingIndicator {
-        visible: !popular.visible
+        isShown: popularPeople.loading
     }
 
     Grid {
         id: popular
         dataModel: popularPeople.model
         header: i18n.tr("Popular")
-        anchors {
-            fill: parent
-            margins: units.gu(2)
-        }
+        anchors.fill: parent
         onThumbClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": model.id})
     }
 

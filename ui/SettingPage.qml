@@ -26,8 +26,11 @@ Page {
     id: settings
 
     visible: false
-    flickable: flickable
+    flickable: null
     title: i18n.tr("Settings")
+
+    // Tab Background
+    Background {}
 
     Flickable {
         id: flickable

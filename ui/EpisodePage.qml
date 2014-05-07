@@ -71,11 +71,14 @@ Page {
         }
     }
 
+    // Page Background
+    Background {}
+
     TraktSeen {
         id: episodeSee
         function updateJSONModel() {
             if(reply.status === "success") {
-                loadingIndicator.visible = false
+                loadingIndicator.isShown = false
                 console.log("[LOG]: Episode watch success")
                 episodeSeen()
                 episodeSeenActivityDocument.contents = {
@@ -89,7 +92,7 @@ Page {
         id: episodeUnsee
         function updateJSONModel() {
             if(reply.status === "success") {
-                loadingIndicator.visible = false
+                loadingIndicator.isShown = false
                 console.log("[LOG]: Episode unwatch success")
                 episodeUnseen()
             }
@@ -142,7 +145,7 @@ Page {
 
     LoadingIndicator {
         id: loadingIndicator
-        visible: false
+        isShown: episodeDetails.loading
     }
 
     Component {
@@ -162,7 +165,7 @@ Page {
             }
             onWatched: {
                 loadingIndicator.loadingText = !isEpisodeSeen ? i18n.tr("Marking episode as seen") : i18n.tr("Marking episode as unseen")
-                loadingIndicator.visible = true
+                loadingIndicator.isShown = true
                 if(!isEpisodeSeen) {
                     episodeSee.source = Backend.traktSeenUrl("show/episode")
                     episodeSee.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, episodeDetails.attributes.id, episodeDetails.attributes.imdb_id, episodeDetails.attributes.name, episodeDetails.attributes.year, episodeDetails.attributes.season, episodeDetails.attributes.episode)
@@ -215,7 +218,7 @@ Page {
         // Filler component to ensure that the episode thumb shown is not bigger than required
         Rectangle {
             id: backgroundFill
-            color: backgroundColor
+            color: "Transparent"
             height: episodeThumb.height
             z: episodeThumb.z + 1
             anchors {

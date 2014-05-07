@@ -54,7 +54,9 @@ Column {
     ListView {
         id: carouselList
 
-        width: parent.width
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: units.gu(1)
         height: 1.5*carousel.size + units.gu(5)
         orientation: Qt.Horizontal
         spacing: units.gu(2)

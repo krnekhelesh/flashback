@@ -44,7 +44,7 @@ MainView {
     */
     anchorToKeyboard: true
 
-    width: units.gu(50)
+    width: units.gu(45)
     height: units.gu(80)
 
     // TODO: This is a temporary app background. Final background color needs to be decided.
@@ -195,9 +195,9 @@ MainView {
         id: pagestack
 
         // Properties to hold the application details which are then used throughout the application for consistency
-        property string app_version: "0.3.4 Alpha 2"
+        property string app_version: "@APP_VERSION@"
         property string app_name: "Flashback"
-        property string last_updated: "20 April 2014"
+        property string last_updated: "23 April 2014"
 
         // Property to hold the trakt account status to allow for detecting account changes after the app is open
         property string account_status
@@ -213,21 +213,12 @@ MainView {
             }
             else
                 push(rootComponent);
-        }
+       }
 
         Component {
             id: rootComponent
             Tabs {
                 id: root
-
-                onSelectedTabChanged: {
-                    if(root.selectedTab == moviesTab)
-                        movieLoader.source = Qt.resolvedUrl("ui/MovieTab.qml")
-                    else if(root.selectedTab == tvTab)
-                        tvLoader.source = Qt.resolvedUrl("ui/TvTab.qml")
-                    else if(root.selectedTab == peopleTab)
-                        peopleLoader.source = Qt.resolvedUrl("ui/PersonTab.qml")
-                }
 
                 Tab {
                     id: homeTab
@@ -238,6 +229,7 @@ MainView {
                 Tab {
                     id: moviesTab
                     title: i18n.tr("Movies")
+                    onActiveChanged: movieLoader.source = Qt.resolvedUrl("ui/MovieTab.qml")
                     page: Loader {
                         id: movieLoader
                         parent: moviesTab
@@ -252,6 +244,7 @@ MainView {
                 Tab {
                     id: tvTab
                     title: i18n.tr("TV")
+                    onActiveChanged: tvLoader.source = Qt.resolvedUrl("ui/TvTab.qml")
                     page: Loader {
                         id: tvLoader
                         parent: tvTab
@@ -266,9 +259,25 @@ MainView {
                 Tab {
                     id: peopleTab
                     title: i18n.tr("Celeb")
+                    onActiveChanged: peopleLoader.source = Qt.resolvedUrl("ui/PersonTab.qml")
                     page: Loader {
                         id: peopleLoader
                         parent: peopleTab
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            bottom: parent.bottom
+                        }
+                    }
+                }
+
+                Tab {
+                    id: youTab
+                    title: i18n.tr("You")
+                    onActiveChanged: userLoader.source = Qt.resolvedUrl("ui/UserTab.qml")
+                    page: Loader {
+                        id: userLoader
+                        parent: youTab
                         anchors {
                             left: parent.left
                             right: parent.right

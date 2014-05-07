@@ -24,8 +24,9 @@ import "../components"
 Page {
     id: tvSeasonPage
 
-    visible: false
     title: i18n.tr("Default")
+    visible: false
+    flickable: null
 
     property alias dataModel: list.model
     property string tv_id
@@ -33,15 +34,15 @@ Page {
     property string name
     property string year
 
+    // Page Background
+    Background {}
+
     // Season List
     ListView {
         id: list
 
         clip: true
-        anchors {
-            fill: parent
-            margins: units.gu(2)
-        }
+        anchors.fill: parent
 
         delegate: Standard {
             text: season == 0 ? i18n.tr("Season Specials") : i18n.tr("Season") + " " + season

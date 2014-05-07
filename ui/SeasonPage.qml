@@ -63,7 +63,7 @@ Page {
 
     LoadingIndicator {
         id: loadingIndicator
-        visible: episodes.model.count === 0
+        isShown: episodes.loading
     }
 
     actions: [
@@ -73,11 +73,14 @@ Page {
         }
     ]
 
+    // Page Background
+    Background {}
+
     TraktSeen {
         id: seasonSee
         function updateJSONModel() {
             if(reply.status === "success") {
-                loadingIndicator.visible = false
+                loadingIndicator.isShown = false
                 console.log("[LOG]: Season watch success")
                 watched_count = episodes.model.count
                 for (var i=0; i<episodes.model.count; i++) {
@@ -97,7 +100,7 @@ Page {
             onWatched: {
                 if(!isSeasonSeen) {
                     loadingIndicator.loadingText = i18n.tr("Marking season as seen")
-                    loadingIndicator.visible = true
+                    loadingIndicator.isShown = true
                     seasonSee.source = Backend.traktSeenUrl("show/season")
                     seasonSee.createSeasonMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, imdb_id, name, year, season_number)
                     seasonSee.sendMessage()
@@ -110,6 +113,7 @@ Page {
         id: episodeSee
         function updateJSONModel() {
             if(reply.status === "success") {
+                loadingIndicator.isShown = false
                 console.log("[LOG]: Episode watch success")
                 watched_count = watched_count + 1
                 episodes.model.setProperty(currentSeenEpisode, "watched", "true")
@@ -124,6 +128,7 @@ Page {
         id: episodeUnsee
         function updateJSONModel() {
             if(reply.status === "success") {
+                loadingIndicator.isShown = false
                 console.log("[LOG]: Episode unwatch success")
                 watched_count = watched_count - 1
                 episodes.model.setProperty(currentSeenEpisode, "watched", "false")
@@ -235,15 +240,11 @@ Page {
 
                     Subtitled {
                         id: episodeItem
-                        showDivider: false
+                        showDivider: true
                         text: episodes.model.get(index).episode_name
                         iconSource: episodes.model.get(index).thumb_url
                         subText: i18n.tr("Episode") + " " + episodes.model.get(index).episode
                         onClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"seasonDetailsPage": seasonPage, "tv_id": tv_id, "season_number": season_number, "episode_number": episodes.model.get(index).episode, "watched": episodes.model.get(index).watched})
-                        anchors {
-                            left: parent.left
-                            right: watchedStatus.left
-                        }
                     }
 
                     Image {
@@ -264,11 +265,15 @@ Page {
                             onClicked: {
                                 currentSeenEpisode = index
                                 if(episodes.model.get(index).watched === "true") {
+                                    loadingIndicator.loadingText = i18n.tr("Marking episodes as unseen")
+                                    loadingIndicator.isShown = true
                                     episodeUnsee.source = Backend.cancelTraktSeen("show/episode")
                                     episodeUnsee.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, imdb_id, name, year, season_number, episodes.model.get(index).episode)
                                     episodeUnsee.sendMessage()
                                 }
                                 else {
+                                    loadingIndicator.loadingText = i18n.tr("Marking episodes as seen")
+                                    loadingIndicator.isShown = true
                                     episodes.model.setProperty(index, "watched", "true")
                                     episodeSee.source = Backend.traktSeenUrl("show/episode")
                                     episodeSee.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, imdb_id, name, year, season_number, episodes.model.get(index).episode)

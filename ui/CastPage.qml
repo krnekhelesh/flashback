@@ -25,23 +25,29 @@ Page {
     id: castPage
 
     visible: false
+    flickable: null
     title: i18n.tr("Default")
 
+    // Page Background
+    Background {}
+
+    // Property to set the data model of the listview
     property alias dataModel: list.model
+
+    // Property to check if more actor details are available
     property bool getActorDetail: true
 
     ListView {
         id: list
-        anchors {
-            fill: parent
-            margins: units.gu(2)
-        }
+
+        anchors.fill: parent
         clip: true
 
         delegate: Subtitled {
             text: name
             subText: character
             iconSource: thumb_url
+            progression: getActorDetail
             onClicked: getActorDetail ? pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": id}) : undefined
         }
     }

@@ -24,7 +24,7 @@ import "../components"
 import "../models"
 
 Page {
-    id: homePage
+    id: homeTab
 
     flickable: null
 
@@ -49,6 +49,9 @@ Page {
             onTriggered: pageStack.push(Qt.resolvedUrl("SearchAll.qml"))
         }
     ]
+
+    // Tab Background
+    Background {}
 
     Movies {
         id: nowPlayingMoviesModel
@@ -163,10 +166,15 @@ Page {
     }
 
     LoadingIndicator {
-        visible: !createAccountMessage.visible ? (!nowPlaying.visible ? true : false) : false
+        isShown: !createAccountMessage.visible ? (nowPlayingMoviesModel.loading
+                                                  || airedShowsModel.loading
+                                                  || airingShowsModel.loading
+                                                  || userWatchlistModel.loading ? true : false)
+                                               : false
     }
 
     Flickable {
+        id: flickable
         clip: true
         anchors.fill: parent
         contentHeight: mainColumn.height + units.gu(5)
@@ -181,7 +189,6 @@ Page {
                 left: parent.left;
                 right: parent.right;
                 top: parent.top;
-                margins: units.gu(1)
             }
 
             NowWatching {
@@ -256,20 +263,12 @@ Page {
         }
     }
 
-    Label {
+    EmptyState {
         id: createAccountMessage
-        text: i18n.tr("Trakt Account not authenticated.\nPlease set up an account using the add \"Accounts\" button.")
+        logo: Qt.resolvedUrl("../graphics/account.png")
+        header: i18n.tr("No Trakt Account")
+        message: i18n.tr("Please set up an account using the add \"Accounts\" button.")
         visible: traktLogin.contents.status === "disabled"
-        elide: Text.ElideRight
-        wrapMode: Text.WordWrap
-        horizontalAlignment: Text.AlignHCenter
-        fontSize: "large"
-        anchors {
-            verticalCenter: parent.verticalCenter
-            left: parent.left
-            right: parent.right
-            margins: units.gu(2)
-        }
     }
 
     Image {

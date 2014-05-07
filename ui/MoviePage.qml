@@ -43,6 +43,9 @@ Page {
     Trailer { id: movieTrailer }
     Movies { id: similarMoviesModel }
 
+    // Page Background
+    Background {}
+
     Movie {
         id: movie
         source: Backend.movieUrl(movie_id, {appendToResponse: ['credits', 'similar_movies', 'trailers']})
@@ -88,7 +91,12 @@ Page {
 
     LoadingIndicator {
         id: loadingIndicator
-        visible: false
+        isShown: movie.loading ||
+                 traktMovieDetails.loading ||
+                 similarMoviesModel.loading ||
+                 movieCast.loading ||
+                 movieCrew.loading ||
+                 movieTrailer.loading
     }
 
     BasePostModel {
@@ -107,7 +115,7 @@ Page {
         id: movieSee
         function updateJSONModel() {
             if(reply.status === "success") {
-                loadingIndicator.visible = false
+                loadingIndicator.isShown = false
                 console.log("[LOG]: Movie watch success")
                 isMovieSeen = true
             }
@@ -118,7 +126,7 @@ Page {
         id: movieUnsee
         function updateJSONModel() {
             if(reply.status === "success") {
-                loadingIndicator.visible = false
+                loadingIndicator.isShown = false
                 console.log("[LOG]: Movie unwatch success")
                 isMovieSeen = false
             }
@@ -129,7 +137,7 @@ Page {
         id: movieWatchlist
         function updateJSONModel() {
             if(reply.status === "success") {
-                loadingIndicator.visible = false
+                loadingIndicator.isShown = false
                 var tempData = watchlistActivityDocument.contents
                 if(!isMovieWatchlisted) {
                     console.log("[LOG]: Movie watchlist success")
@@ -163,7 +171,7 @@ Page {
             }
             onWatched: {
                 loadingIndicator.loadingText = !isMovieSeen ? i18n.tr("Marking movie as seen") : i18n.tr("Marking movie as unseen")
-                loadingIndicator.visible = true
+                loadingIndicator.isShown = true
                 if(!isMovieSeen) {
                     movieSee.source = Backend.traktSeenUrl("movie")
                     movieSee.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, movie.attributes.imdb_id, movie.attributes.title, movie.attributes.releaseDate.split('-')[0])
@@ -177,7 +185,7 @@ Page {
             }
             onWatchlisted:  {
                 loadingIndicator.loadingText = !isMovieWatchlisted ? i18n.tr("Adding movie to watchlist") : i18n.tr("Removing movie from watchlist")
-                loadingIndicator.visible = true
+                loadingIndicator.isShown = true
                 if(!isMovieWatchlisted) {
                     movieWatchlist.source = Backend.traktWatchlistUrl("movie")
                     movieWatchlist.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, movie.attributes.imdb_id, movie.attributes.title, movie.attributes.releaseDate.split('-')[0])
@@ -252,6 +260,7 @@ Page {
             width: units.gu(18)
             height: width + units.gu(10)
             thumbSource: movie.attributes.thumb_url
+
             anchors {
                 top: parent.top
                 left: parent.left
@@ -327,8 +336,10 @@ Page {
             }
 
             back: Rectangle {
-                color: UbuntuColors.coolGrey
+                color: "Transparent"
                 anchors.fill: parent
+
+                Background{}
 
                 Flickable {
                     id: summaryFlickable
@@ -441,7 +452,7 @@ Page {
                 left: parent.left
                 right: parent.right
                 top: ratingsRow.bottom
-                margins: units.gu(2)
+                topMargin: units.gu(2)
             }
 
             Header { text: i18n.tr("Details") }

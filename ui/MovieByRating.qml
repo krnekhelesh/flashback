@@ -29,13 +29,16 @@ Page {
     visible: false
     flickable: null
 
+    // Page Background
+    Background {}
+
     Movies {
         id: topRatedMovieModel
         source: Backend.topRatedMoviesUrl()
     }
 
     LoadingIndicator {
-        visible: !movieList.visible
+        isShown: topRatedMovieModel.loading
     }
 
     Grid {

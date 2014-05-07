@@ -28,6 +28,9 @@ Page {
     visible: false
     flickable: null
 
+    // Page Background
+    Background {}
+
     TraktRecommendedMovies {
         id: recommendedMoviesModel
         Component.onCompleted: {
@@ -37,7 +40,7 @@ Page {
     }
 
     LoadingIndicator {
-        visible: !movieList.visible
+        isShown: recommendedMoviesModel.loading
     }
 
     Grid {

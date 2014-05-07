@@ -33,6 +33,8 @@ Item {
     property ListModel model: ListModel { id: model }
     property alias count: model.count
 
+    property bool loading: false
+
     signal updated()
 
     function createMessage(username, password) {
@@ -44,6 +46,7 @@ Item {
     }
 
     function sendMessage() {
+        loading = true
         var xhr = new XMLHttpRequest();
         xhr.open("POST", source);
 
@@ -59,6 +62,7 @@ Item {
         if ( json != "" ) {
             reply = JSON.parse(json)
             updateJSONModel();
+            loading = false
         }
     }
 }
