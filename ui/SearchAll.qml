@@ -18,7 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 1.1
-import Ubuntu.Components.ListItems 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../backend/backend.js" as Backend
 import "../components"
 import "../models"
@@ -88,7 +88,7 @@ Page {
                 model: movie_search_results.model
                 count: movie_search_results.model.count
                 header: "Movies (%1)".arg(count)
-                delegateItem: Standard {
+                delegateItem: ListItem.Standard {
                     text: name
                     iconSource: thumb_url
                     onClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
@@ -100,7 +100,7 @@ Page {
                 model: show_search_results.model
                 count: show_search_results.model.count
                 header: "TV Shows (%1)".arg(count)
-                delegateItem: Standard {
+                delegateItem: ListItem.Standard {
                     text: name
                     iconSource: thumb_url
                     onClicked: pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
@@ -112,7 +112,7 @@ Page {
                 model: person_search_results.model
                 count: person_search_results.model.count
                 header: "Celebs (%1)".arg(count)
-                delegateItem: Standard {
+                delegateItem: ListItem.Standard {
                     text: name
                     iconSource: thumb_url
                     onClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": model.id, "type": "person"})

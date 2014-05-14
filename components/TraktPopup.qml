@@ -19,7 +19,7 @@
 import QtQuick 2.0
 import Ubuntu.Components 1.1
 import Ubuntu.Components.Popups 1.0
-import Ubuntu.Components.ListItems 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 
 /*
   Popup component to expose Trakt actions such as check-in, seen and configuring account.
@@ -63,7 +63,7 @@ Popover {
             right: parent.right
         }
 
-        Standard {
+        ListItem.Standard {
             id: _configureTraktAction
             text: i18n.tr("Authenticate Trakt to perform \ncheck-ins, comment and rating.")
             visible: showConfigureAction
@@ -74,7 +74,7 @@ Popover {
             }
         }
 
-        Standard {
+        ListItem.Standard {
             id: _checkInAction
             visible: showCheckInAction
             iconSource: Qt.resolvedUrl("../graphics/checkmark_black.png")
@@ -85,7 +85,7 @@ Popover {
             }
         }
 
-        Standard {
+        ListItem.Standard {
             id: _watchlistAction
             visible: showWatchlistAction
             iconSource: Qt.resolvedUrl("../graphics/watchlist_black.png")
@@ -96,7 +96,7 @@ Popover {
             }
         }
 
-        Standard {
+        ListItem.Standard {
             id: _seenAction
             visible: showSeenAction
             iconSource: Qt.resolvedUrl("../graphics/watched_black.png")
@@ -107,7 +107,7 @@ Popover {
             }
         }
 
-        Standard {
+        ListItem.Standard {
             id: _commentAction
             visible: showCommentAction
             iconSource: Qt.resolvedUrl("../graphics/comment.png")

@@ -18,7 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 1.1
-import Ubuntu.Components.ListItems 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import '../models'
 import '../components'
 import '../backend/backend.js' as Backend
@@ -267,7 +267,7 @@ Page {
                 model: personCast.model
                 count: personCast.model.count
                 header: "Acting (%1)".arg(count)
-                delegateItem: Subtitled {
+                delegateItem: ListItem.Subtitled {
                     iconSource: thumb_url
                     text: title
                     subText: character
@@ -285,7 +285,7 @@ Page {
                 model: personCrew.model
                 count: personCrew.model.count
                 header: "Production (%1)".arg(count)
-                delegateItem: Subtitled {
+                delegateItem: ListItem.Subtitled {
                     iconSource: thumb_url
                     text: title
                     subText: department

@@ -18,7 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 1.1
-import Ubuntu.Components.ListItems 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 
 Item {
     id: grid
@@ -63,7 +63,7 @@ Item {
             leftMargin: units.gu(3)
         }
 
-        Header {
+        ListItem.Header {
             id: header
             text: i18n.tr("Default Header Title")
             visible: text !== i18n.tr("Default Header Title")

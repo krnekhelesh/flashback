@@ -19,7 +19,7 @@
 import QtQuick 2.0
 import Ubuntu.Components 1.1
 import Ubuntu.Components.Popups 1.0
-import Ubuntu.Components.ListItems 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../backend/backend.js" as Backend
 import "../components"
 import "../models"
@@ -238,7 +238,7 @@ Page {
                         right: parent.right
                     }
 
-                    Subtitled {
+                    ListItem.Subtitled {
                         id: episodeItem
                         showDivider: true
                         text: episodes.model.get(index).episode_name

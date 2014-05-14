@@ -19,7 +19,7 @@
 import QtQuick 2.0
 import Ubuntu.Components 1.1
 import Ubuntu.Components.Popups 1.0
-import Ubuntu.Components.ListItems 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
 import "../models"
 import "../backend/backend.js" as Backend
@@ -213,7 +213,7 @@ Page {
                 }
                 Repeater {
                     model: movieTrailer.model.count
-                    delegate: Subtitled {
+                    delegate: ListItem.Subtitled {
                         text: movieTrailer.model.get(index).name
                         iconSource: Qt.resolvedUrl("../graphics/trailer2.png")
                         iconFrame: true
@@ -455,34 +455,34 @@ Page {
                 topMargin: units.gu(2)
             }
 
-            Header { text: i18n.tr("Details") }
+            ListItem.Header { text: i18n.tr("Details") }
 
-            MultiValue {
+            ListItem.MultiValue {
                 id: genres
                 text: i18n.tr("Genres")
                 values: movie.attributes.genres.map(function(o) { return o.name })
                 visible: movie.attributes.genres.length > 0
             }
 
-            Subtitled {
+            ListItem. Subtitled {
                 id: releaseDate
                 text: i18n.tr("Release Date")
                 subText: Qt.formatDate(new Date(movie.attributes.releaseDate), 'dd MMMM yyyy')
                 visible: movie.attributes.releaseDate
             }
 
-            Subtitled {
+            ListItem.Subtitled {
                 id: theme
                 text: i18n.tr("Tagline")
                 subText: movie.attributes.tagline
                 visible: movie.attributes.tagline
             }
 
-            Header { text: i18n.tr("Casts") }
+            ListItem.Header { text: i18n.tr("Casts") }
 
             Repeater {
                 model: (movieCast.count > 3 ? 3 : movieCast.count)
-                delegate: Subtitled {
+                delegate: ListItem.Subtitled {
                     text: movieCast.model.get(index).name
                     iconSource: movieCast.model.get(index).thumb_url
                     progression: true
@@ -491,18 +491,18 @@ Page {
                 }
             }
 
-            Standard {
+            ListItem.Standard {
                 id: allCast
                 text: i18n.tr("Full Cast")
                 progression: true
                 onClicked: pageStack.push(Qt.resolvedUrl("CastPage.qml"), {"title": i18n.tr("Full Cast"), "dataModel": movieCast.model})
             }
 
-            Header { text: i18n.tr("Production Crew") }
+            ListItem.Header { text: i18n.tr("Production Crew") }
 
             Repeater {
                 model: (movieCrew.count > 3 ? 3 : movieCrew.count)
-                delegate: Subtitled {
+                delegate: ListItem.Subtitled {
                     text: movieCrew.model.get(index).name
                     progression: true
                     subText: movieCrew.model.get(index).department
@@ -510,7 +510,7 @@ Page {
                 }
             }
 
-            Standard {
+            ListItem.Standard {
                 id: fullCrew
                 text: i18n.tr("Full Crew")
                 progression: true

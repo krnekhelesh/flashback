@@ -18,7 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 1.1
-import Ubuntu.Components.ListItems 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 
 /*
   The Detail Carousel is very similar to Carousel. It shows additional information such as Episode title,
@@ -47,7 +47,7 @@ Column {
     visible: _carouselList.model.count > 0
     height: _header.height + _carouselList.height
 
-    Header {
+    ListItem.Header {
         id: _header
         text: i18n.tr("Default Header Title")
     }

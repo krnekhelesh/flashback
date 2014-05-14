@@ -19,7 +19,6 @@
 import QtQuick 2.0
 import Ubuntu.Components 1.1
 import Ubuntu.Components.Popups 1.0
-import Ubuntu.Components.ListItems 1.0
 import "../backend/backend.js" as Backend
 import "../components"
 import "../models"

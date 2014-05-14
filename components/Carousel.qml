@@ -18,7 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 1.1
-import Ubuntu.Components.ListItems 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 
 /*
   The carousel is an element which displays a header title with a flickable row of ubuntu shape thumbnails.
@@ -46,7 +46,7 @@ Column {
     visible: carouselList.model.count > 0
     height: header.height + carouselList.height
 
-    Header {
+    ListItem.Header {
         id: header
         text: i18n.tr("Default Header Title")
     }

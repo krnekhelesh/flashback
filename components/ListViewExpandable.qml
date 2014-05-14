@@ -18,10 +18,10 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 1.1
-import Ubuntu.Components.ListItems 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 
 // Expandable List Element
-Expandable {
+ListItem.Expandable {
     id: listviewExpandable
 
     // Property to set the model of the search results listview

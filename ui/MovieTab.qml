@@ -18,7 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 1.1
-import Ubuntu.Components.ListItems 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
 import "../models"
 import "../backend/backend.js" as Backend
@@ -106,19 +106,19 @@ Page {
 
             Header { text: i18n.tr("Filter") }
 
-            Standard {
+            ListItem.Standard {
                 text: i18n.tr("By Genre")
                 progression: true
                 onClicked: pageStack.push(Qt.resolvedUrl("MovieByGenre.qml"))
             }
 
-            Standard {
+            ListItem.Standard {
                 text: i18n.tr("Top Rated")
                 progression: true
                 onClicked: pageStack.push(Qt.resolvedUrl("MovieByRating.qml"))
             }
 
-            Standard {
+            ListItem.Standard {
                 text: i18n.tr("Recommended")
                 progression: true
                 visible: traktLogin.contents.status !== "disabled"
