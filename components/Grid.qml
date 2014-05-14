@@ -17,8 +17,8 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0 as ListItem
 
 Item {
     id: grid
@@ -30,7 +30,23 @@ Item {
     property alias dataModel: gridView.model
 
     // Grid Thumbnail size
-    property int size: units.gu(12)
+    property int size: {
+        if (width >= units.gu(170))
+            return (width - 9*container.spacing)/8
+        if (width >= units.gu(150))
+            return (width - 8*container.spacing)/7
+        else if (width >= units.gu(130))
+            return (width - 7*container.spacing)/6
+        else if (width > units.gu(80))
+            return (width - 5*container.spacing)/4
+        else if (width >= units.gu(60))
+            return (width - 4*container.spacing)/3
+        else
+            return (width - 3*container.spacing)/2
+    }
+
+    // Grid Thumbnail height
+    property int gridHeight: 1.5*size
 
     // Signal triggered when a thumb
     signal thumbClicked(var model)
@@ -41,22 +57,30 @@ Item {
     Column {
         id: container
 
-        anchors.fill: parent
-        spacing: units.gu(1)
+        spacing: units.gu(3)
+        anchors {
+            fill: parent
+            leftMargin: units.gu(3)
+        }
 
-        Header {
+        ListItem.Header {
             id: header
             text: i18n.tr("Default Header Title")
-            visible: text != i18n.tr("Default Header Title")
+            visible: text !== i18n.tr("Default Header Title")
+            anchors {
+                left: parent.left
+                right: parent.right
+                margins: -units.gu(3)
+            }
         }
 
         Component {
-            id: gridDelegate
+            id: gridCarouselDelegate
             Item {
                 id: thumbContainer
 
-                width: grid.size + units.gu(2)
-                height: thumbColumn.height
+                width: grid.size
+                height: grid.gridHeight + units.gu(5)
 
                 Column {
                     id: thumbColumn
@@ -66,8 +90,9 @@ Item {
                     // Widget to curve edges and encase the thumbnail
                     Thumbnail {
                         id: gridThumb
+                        radius: "medium"
                         width: grid.size
-                        height: grid.size + units.gu(5)
+                        height: grid.gridHeight
                         thumbSource: thumb_url
 
                         MouseArea {
@@ -82,6 +107,7 @@ Item {
 
                         text: name
                         maximumLineCount: 2
+                        visible: true
                         elide: Text.ElideRight
                         wrapMode: Text.WordWrap
                         width: gridThumb.width
@@ -102,13 +128,13 @@ Item {
 
             clip: true
             width: parent.width
-            height: header.visible ? parent.height - header.height - parent.spacing : parent.height - parent.spacing
+            height: header.visible ? parent.height - header.height - parent.spacing : parent.height
             snapMode: GridView.SnapToRow
 
-            cellHeight: grid.size + units.gu(12)
+            cellHeight: grid.gridHeight + units.gu(5)
             cellWidth: grid.size + container.spacing
 
-            delegate: gridDelegate
+            delegate: gridCarouselDelegate
         }
 
     }

@@ -17,9 +17,9 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.Popups 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.Popups 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
 import "../models"
 import "../backend/backend.js" as Backend
@@ -391,40 +391,40 @@ Page {
                 topMargin: units.gu(2)
             }
 
-            Header { text: i18n.tr("Details") }
+            ListItem.Header { text: i18n.tr("Details") }
 
-            Subtitled {
+            ListItem.Subtitled {
                 text: i18n.tr("Status")
                 subText: show.attributes.in_production === "Continuing" ? "<font color='lightgreen'>" + i18n.tr("Continuing") + "</font>" : "<font color='orange'>" + i18n.tr("Ended") + "</font>"
                 visible: show.attributes.in_production !== undefined
             }
 
-            MultiValue {
+            ListItem.MultiValue {
                 id: genres
                 text: i18n.tr("Genres")
                 values: show.attributes.genres.map(function(o) { return o })
                 visible: show.attributes.genres.length > 0
             }
 
-            Subtitled {
+            ListItem.Subtitled {
                 id: releaseDate
                 text: i18n.tr("First Air Date")
                 subText: Qt.formatDate(new Date(show.attributes.first_air_date*1000), 'dd MMMM yyyy')
                 visible: show.attributes.first_air_date
             }
 
-            Header { text: i18n.tr("Casts") }
+            ListItem.Header { text: i18n.tr("Casts") }
 
             Repeater {
                 model: (tvCast.count > 3 ? 3 : tvCast.count)
-                delegate: Subtitled {
+                delegate: ListItem.Subtitled {
                     text: tvCast.model.get(index).name
                     iconSource: tvCast.model.get(index).thumb_url
                     subText: tvCast.model.get(index).character
                 }
             }
 
-            Standard {
+            ListItem.Standard {
                 id: allCast
                 text: i18n.tr("Full Cast")
                 progression: true

@@ -17,8 +17,8 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
 
 Page {
@@ -49,28 +49,28 @@ Page {
             height: childrenRect.height
             spacing: units.gu(1)
 
-            Subtitled {
+            ListItem.Subtitled {
                 text: "Nekhelesh Ramananthan"
                 subText: i18n.tr("Author, Developer")
                 iconSource: Qt.resolvedUrl("../graphics/author.jpg")
                 showDivider: false
             }
 
-            Subtitled {
+            ListItem.Subtitled {
                 text: "Arash Badie Modiri"
                 subText: i18n.tr("Developer")
                 iconSource: Qt.resolvedUrl("../graphics/no-passport.png")
                 showDivider: false
             }
 
-            Subtitled {
+            ListItem.Subtitled {
                 text: "Lucas Romero Di Benedetto"
                 subText: i18n.tr("UI Designer")
                 iconSource: Qt.resolvedUrl("../graphics/designer.jpg")
                 showDivider: false
             }
 
-            Subtitled {
+            ListItem.Subtitled {
                 text: "Andrea Del Sarto"
                 subText: i18n.tr("Assets Designer")
                 iconSource: Qt.resolvedUrl("../graphics/icon_designer.jpg")

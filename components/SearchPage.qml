@@ -17,8 +17,8 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../backend/backend.js" as Backend
 
 Item {
@@ -71,7 +71,7 @@ Item {
 
         model: search_model.model
 
-        delegate: Standard {
+        delegate: ListItem.Standard {
             text: name
             iconSource: thumb_url
             onClicked: _searchTemplate.resultClicked(model)
