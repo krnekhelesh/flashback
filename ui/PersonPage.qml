@@ -28,7 +28,7 @@ Page {
 
     visible: false
     flickable: null
-    title: person.attributes.name
+    title: person.attributes.name ? person.attributes.name : "Celeb"
 
     property string person_id
 
