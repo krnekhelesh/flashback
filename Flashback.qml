@@ -44,10 +44,18 @@ MainView {
     */
     anchorToKeyboard: true
 
+    /*
+      This property enabled the new header and disables the old toolbar
+    */
+    useDeprecatedToolbar: false
+
     width: units.gu(45)
     height: units.gu(80)
 
-    // TODO: This is a temporary app background. Final background color needs to be decided.
+    /*
+      The background is now a image texture file. The background color is used to
+      set the color of the text.
+     */
     backgroundColor: UbuntuColors.coolGrey
 
     actions: [
@@ -62,6 +70,7 @@ MainView {
         Action {
             id: returnHomeAction
             text: i18n.tr("Home")
+            visible: pagestack.depth > 2
             keywords: i18n.tr("Return;Navigate;Home;Page;Tab")
             description: i18n.tr("Get back to the first page")
             iconSource: Qt.resolvedUrl("graphics/home.png")

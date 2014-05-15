@@ -29,6 +29,7 @@ Page {
 
     visible: false
     flickable: null
+    title: show.attributes.name ? show.attributes.name : i18n.tr("TV Show")
 
     property string tv_id
     property int userVote: 0
@@ -159,6 +160,8 @@ Page {
 
     Flickable {
         id: flickable
+
+        clip: true
         anchors.fill: parent
         flickableDirection: Flickable.VerticalFlick
         contentHeight: tvThumb.height + ratingsRow.height + detailsColumn.height + units.gu(10)
@@ -181,13 +184,8 @@ Page {
         }
 
         Label {
-            id: name
-            text: show.attributes.name
-            fontSize: "large"
-            width: tvColumn.width
-            maximumLineCount: 2
-            elide: Text.ElideRight
-            wrapMode: Text.WordWrap
+            id: summary
+
             anchors {
                 top: parent.top
                 left: tvThumb.right
@@ -196,117 +194,27 @@ Page {
                 rightMargin: units.gu(2)
                 topMargin: units.gu(2)
             }
-        }
 
-        Rotater {
-            id: overviewContainer
-
-            flipHeight: tvPage.height
-            height: tvThumb.height/5
-            anchors {
-                top: name.bottom
-                left: name.left
-                right: name.right
-                topMargin: units.gu(2)
-            }
-
+            elide: Text.ElideRight
+            wrapMode: Text.WordWrap
             visible: show.attributes.overview
+            text: show.attributes.overview
+            height: tvThumb.height/2.5
 
-            onFlippedChanged: {
-                if (!overviewContainer.flipped)
-                    flickable.interactive =  flickable.contentHeight > tvPage.height
-                else
-                    flickable.interactive = false
-            }
-
-            front: Label {
-                id: overview
-                text: show.attributes.overview
-                fontSize: "medium"
+            MouseArea {
                 anchors.fill: parent
-                elide: Text.ElideRight
-                wrapMode: Text.WordWrap
-
-                MouseArea {
-                    anchors.fill: parent
-                    enabled: {
-                        if (!overviewContainer.flipped)
-                            if(overview.truncated)
-                                return true
-                            else
-                                return false
-                        else
-                            return false
-                    }
-                    onClicked: {
-                        overviewContainer.flipped = !overviewContainer.flipped
-
-                        if(!flickable.atYBeginning)
-                            flickable.contentY = 0
-                    }
-                }
-            }
-
-            back: Rectangle {
-                color: "Transparent"
-                anchors.fill: parent
-
-                Background{}
-
-                Flickable {
-                    id: summaryFlickable
-                    anchors.fill: parent
-                    flickableDirection: Flickable.VerticalFlick
-                    contentHeight: mainColumn.height > parent.height ? mainColumn.height + units.gu(10) : parent.height
-                    interactive: contentHeight > parent.height
-
-                    Column {
-                        id: mainColumn
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            top: parent.top
-                            margins: units.gu(2)
-                        }
-
-                        spacing: units.gu(2)
-
-                        Label {
-                            id: header
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: i18n.tr("Full Summary")
-                            fontSize: "x-large"
-                        }
-
-                        Label {
-                            id: fullOverview
-                            text: show.attributes.overview
-                            visible: show.attributes.overview
-                            fontSize: "medium"
-                            anchors {
-                                left: parent.left
-                                right: parent.right
-                            }
-
-                            elide: Text.ElideRight
-                            wrapMode: Text.WordWrap
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: overviewContainer.flipped
-                        onClicked: overviewContainer.flipped = !overviewContainer.flipped
-                    }
-                }
+                enabled: summary.truncated
+                onClicked: pagestack.push(Qt.resolvedUrl("SummaryPage.qml"), {"summary": show.attributes.overview})
             }
         }
 
         Column {
             id: tvColumn
             anchors {
-                left: name.left
-                right: name.right
+                left: tvThumb.right
+                right: parent.right
+                leftMargin: units.gu(2)
+                rightMargin: units.gu(2)
                 bottom: tvThumb.bottom
             }
             spacing: units.gu(1)
@@ -438,7 +346,6 @@ Page {
 
         ToolbarButton {
             id: returnHome
-            visible: pageStack.depth > 2
             action: returnHomeAction
         }
 

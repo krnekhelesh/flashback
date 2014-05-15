@@ -166,10 +166,4 @@ Page {
             }
         }
     }
-
-    // A custom toolbar is used in this page
-    tools: ToolbarItems {
-        locked: true
-        opened: false
-    }
 }

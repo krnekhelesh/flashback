@@ -29,6 +29,7 @@ Page {
 
     visible: false
     flickable: null
+    title: season_number === "0" ? "Season Specials" : "Season " + season_number
 
     property string season_number
     property string season_poster
@@ -148,6 +149,8 @@ Page {
 
     Flickable {
         id: flickable
+
+        clip: true
         anchors.fill: parent
         contentHeight: seasonThumb.height + detailsColumn.height + units.gu(10)
         interactive: contentHeight > parent.height
@@ -165,13 +168,8 @@ Page {
         }
 
         Label {
-            id: title
-            text: season_number === "0" ? "Season Specials" : "Season " + season_number
-            fontSize: "large"
-            maximumLineCount: 2
-            elide: Text.ElideRight
-            wrapMode: Text.WordWrap
-            visible: season_number !== ""
+            id: totalEpisodeCount
+            text: "Episode count: " + episodes.model.count
             anchors {
                 top: parent.top
                 left: seasonThumb.right
@@ -183,25 +181,14 @@ Page {
         }
 
         Label {
-            id: totalEpisodeCount
-            text: "Episode count: " + episodes.model.count
-            anchors {
-                top: title.bottom
-                topMargin: units.gu(2)
-                left: title.left
-                right: title.right
-            }
-        }
-
-        Label {
             id: watchedEpisodeCount
             text: "Episodes watched: " + watched_count
             visible: traktLogin.contents.status !== "disabled"
             anchors {
                 top: totalEpisodeCount.bottom
                 topMargin: units.gu(0)
-                left: title.left
-                right: title.right
+                left: totalEpisodeCount.left
+                right: totalEpisodeCount.right
             }
         }
 
@@ -214,8 +201,8 @@ Page {
             height: units.gu(3)
             anchors {
                 top: watchedEpisodeCount.bottom
-                left: title.left
-                right: title.right
+                left: totalEpisodeCount.left
+                right: totalEpisodeCount.right
                 topMargin: units.gu(1)
             }
         }
@@ -297,7 +284,6 @@ Page {
 
         ToolbarButton {
             id: returnHome
-            visible: pageStack.depth > 2
             action: returnHomeAction
         }
     }

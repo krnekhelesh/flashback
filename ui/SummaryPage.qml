@@ -18,45 +18,36 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 1.1
-import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
 
 Page {
-    id: tvSeasonPage
+    id: summaryPage
 
-    title: i18n.tr("Default")
     visible: false
     flickable: null
+    title: i18n.tr("Full Summary")
 
-    property alias dataModel: list.model
-    property string tv_id
-    property string imdb_id
-    property string name
-    property string year
+    property alias summary: _summary.text
 
     // Page Background
     Background {}
 
-    // Season List
-    ListView {
-        id: list
+    Flickable {
+        id: flickable
 
         clip: true
         anchors.fill: parent
+        flickableDirection: Flickable.VerticalFlick
+        contentHeight: _summary.height + units.gu(5)
 
-        delegate: ListItem.Standard {
-            text: season == 0 ? i18n.tr("Season Specials") : i18n.tr("Season") + " " + season
-            iconSource: thumb_url
-            onClicked: pageStack.push(Qt.resolvedUrl("SeasonPage.qml"), {"tv_id": tv_id, "imdb_id": imdb_id, "name": name, "year": year, "season_number": season, "season_poster": thumb_url})
-        }
-    }
+        Label {
+            id: _summary
 
-    tools: ToolbarItems {
-        id: toolbarSeasons
-
-        ToolbarButton {
-            id: returnHome
-            action: returnHomeAction
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: units.gu(2)
+            wrapMode: Text.WordWrap
         }
     }
 }
