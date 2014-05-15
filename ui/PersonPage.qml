@@ -56,9 +56,10 @@ Page {
 
     Flickable {
         id: flickable
+
         clip: true
         anchors.fill: parent
-        contentHeight: personThumb.height + personColumn.height + biographyContainer.height + detailsColumn.height
+        contentHeight: personThumb.height + personColumn.height + summary.height + detailsColumn.height
         interactive: contentHeight > parent.height
 
         Thumbnail {
@@ -130,10 +131,9 @@ Page {
             }
         }
 
-        Rotater {
-            id: biographyContainer
+        Label {
+            id: summary
 
-            flipHeight: personPage.height
             anchors {
                 top: personColumn.bottom
                 left: parent.left
@@ -141,112 +141,28 @@ Page {
                 margins: units.gu(2)
             }
 
-            onFlippedChanged: {
-                if (!biographyContainer.flipped)
-                    flickable.interactive =  flickable.contentHeight > personPage.height
-                else
-                    flickable.interactive = false
+            elide: Text.ElideRight
+            wrapMode: Text.WordWrap
+            text: person.attributes.biography ? person.attributes.biography : i18n.tr("No biography found")
+
+            onTextChanged: summary.height = text.length < 500 ? summary.implicitHeight : units.gu(20)
+
+            Connections {
+                target: personPage
+                onWidthChanged: summary.height = summary.text.length < 500 ? summary.implicitHeight : units.gu(20)
             }
 
-            front: Label {
-                id: overview
-                text: person.attributes.biography ? person.attributes.biography : i18n.tr("No biography found")
-                fontSize: "medium"
+            MouseArea {
                 anchors.fill: parent
-                elide: Text.ElideRight
-                wrapMode: Text.WordWrap
-
-                onTextChanged: biographyContainer.height = text.length < 500 ? overview.implicitHeight : units.gu(20)
-
-                Connections {
-                    target: personPage
-                    onWidthChanged: biographyContainer.height = overview.text.length < 500 ? overview.implicitHeight : units.gu(20)
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    enabled: {
-                        if (!biographyContainer.flipped)
-                            if(overview.truncated)
-                                return true
-                            else
-                                return false
-                        else
-                            return false
-                    }
-                    onClicked: {
-                        biographyContainer.flipped = !biographyContainer.flipped
-
-                        if(!flickable.atYBeginning)
-                            flickable.contentY = 0
-                    }
-                }
-            }
-
-            back: Rectangle {
-                color: "Transparent"
-
-                anchors {
-                    fill: parent
-                    leftMargin: units.gu(-2)
-                    rightMargin: units.gu(-2)
-                }
-
-                Background{}
-
-                Flickable {
-                    id: summaryFlickable
-                    anchors.fill: parent
-                    flickableDirection: Flickable.VerticalFlick
-                    contentHeight: mainColumn.height > parent.height ? mainColumn.height + units.gu(5) : parent.height
-                    interactive: contentHeight > parent.height
-
-                    Column {
-                        id: mainColumn
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            top: parent.top
-                            margins: units.gu(2)
-                        }
-
-                        spacing: units.gu(2)
-
-                        Label {
-                            id: header
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: i18n.tr("Full Summary")
-                            fontSize: "x-large"
-                        }
-
-                        Label {
-                            id: fullOverview
-                            text: person.attributes.biography
-                            visible: person.attributes.biography
-                            fontSize: "medium"
-                            anchors {
-                                left: parent.left
-                                right: parent.right
-                            }
-
-                            elide: Text.ElideRight
-                            wrapMode: Text.WordWrap
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: biographyContainer.flipped
-                        onClicked: biographyContainer.flipped = !biographyContainer.flipped
-                    }
-                }
+                enabled: summary.truncated
+                onClicked: pagestack.push(Qt.resolvedUrl("SummaryPage.qml"), {"summary": person.attributes.biography})
             }
         }
 
         Column {
             id: detailsColumn
             anchors {
-                top: biographyContainer.bottom
+                top: summary.bottom
                 left: parent.left
                 right: parent.right
                 margins: units.gu(2)
