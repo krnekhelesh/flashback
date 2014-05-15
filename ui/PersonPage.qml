@@ -28,6 +28,7 @@ Page {
 
     visible: false
     flickable: null
+    title: person.attributes.name
 
     property string person_id
 
@@ -74,6 +75,7 @@ Page {
 
         Column {
             id: personColumn
+
             height: personThumb.height
             width: parent.width - personThumb.width
             anchors {
@@ -83,62 +85,47 @@ Page {
                 margins: units.gu(2)
             }
 
-            spacing: units.gu(2)
-
             Label {
-                id: name
-                text: person.attributes.name
-                fontSize: "large"
+                id: birthPlace
+                text: person.attributes.placeOfBirth
+                visible: person.attributes.placeOfBirth
+                fontSize: "medium"
                 width: personColumn.width
-                maximumLineCount: 2
                 elide: Text.ElideRight
                 wrapMode: Text.WordWrap
             }
 
-            Column {
-                Label {
-                    id: birthPlace
-                    text: person.attributes.placeOfBirth
-                    visible: person.attributes.placeOfBirth
-                    fontSize: "medium"
-                    width: personColumn.width
-                    elide: Text.ElideRight
-                    wrapMode: Text.WordWrap
-                }
+            Label {
+                id: birthYear
+                text: i18n.tr("Birth") + ": " + person.attributes.birthday.split('-')[0]
+                fontSize: "medium"
+                visible: person.attributes.birthday
+                width: personColumn.width
+                elide: Text.ElideRight
+                wrapMode: Text.WordWrap
+            }
 
-                Label {
-                    id: birthYear
-                    text: i18n.tr("Birth") + ": " + person.attributes.birthday.split('-')[0]
-                    fontSize: "medium"
-                    visible: person.attributes.birthday
-                    width: personColumn.width
-                    elide: Text.ElideRight
-                    wrapMode: Text.WordWrap
-                }
+            Label {
+                id: deathYear
+                text: i18n.tr("Death") + ": " + person.attributes.deathday.split('-')[0]
+                fontSize: "medium"
+                visible: person.attributes.deathday
+                width: personColumn.width
+                elide: Text.ElideRight
+                wrapMode: Text.WordWrap
+            }
 
-                Label {
-                    id: deathYear
-                    text: i18n.tr("Death") + ": " + person.attributes.deathday.split('-')[0]
-                    fontSize: "medium"
-                    visible: person.attributes.deathday
-                    width: personColumn.width
-                    elide: Text.ElideRight
-                    wrapMode: Text.WordWrap
-                }
-
-                Label {
-                    id: contact
-                    text: person.attributes.homepage
-                    visible: person.attributes.homepage
-                    fontSize: "medium"
-                    width: personColumn.width
-                    elide: Text.ElideRight
-                    wrapMode: Text.WordWrap
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: person.attributes.homepage
-                        onClicked: Qt.openUrlExternally(contact.text)
-                    }
+            Label {
+                id: contact
+                text: person.attributes.homepage
+                visible: person.attributes.homepage
+                fontSize: "medium"
+                width: personColumn.width
+                wrapMode: Text.WrapAnywhere
+                MouseArea {
+                    anchors.fill: parent
+                    enabled: person.attributes.homepage
+                    onClicked: Qt.openUrlExternally(contact.text)
                 }
             }
         }
@@ -197,12 +184,15 @@ Page {
             }
 
             back: Rectangle {
-                color: UbuntuColors.coolGrey
+                color: "Transparent"
+
                 anchors {
                     fill: parent
                     leftMargin: units.gu(-2)
                     rightMargin: units.gu(-2)
                 }
+
+                Background{}
 
                 Flickable {
                     id: summaryFlickable
@@ -305,7 +295,6 @@ Page {
 
         ToolbarButton {
             id: returnHome
-            visible: pageStack.depth > 2
             action: returnHomeAction
         }
     }
