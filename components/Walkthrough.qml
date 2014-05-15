@@ -129,10 +129,4 @@ Page {
             }
         }
     }
-
-    // Disable the toolbar during the walkthrough
-    tools: ToolbarItems {
-        locked: true
-        opened: false
-    }
 }

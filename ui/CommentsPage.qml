@@ -285,13 +285,13 @@ Page {
         Action {
             id: commentAction
             text: i18n.tr("Comment")
+            visible: traktLogin.contents.status !== "disabled"
             keywords: i18n.tr("Add;Comment;Comments;Submit")
             description: i18n.tr("Add comment")
             iconSource: Qt.resolvedUrl("../graphics/add.png")
             onTriggered: {
                 commentsList.state = "addcomment"
                 addCommentBox.visible = true
-                toolbarComment.opened = false
                 userComment.forceActiveFocus()
             }
         }
@@ -302,13 +302,11 @@ Page {
 
         ToolbarButton {
             id: comment
-            visible: traktLogin.contents.status !== "disabled"
             action: commentAction
         }
 
         ToolbarButton {
             id: returnHome
-            visible: pageStack.depth > 2
             action: returnHomeAction
         }
     }

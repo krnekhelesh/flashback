@@ -56,7 +56,6 @@ Page {
 
         ToolbarButton {
             id: returnHome
-            visible: pageStack.depth > 2
             action: returnHomeAction
         }
     }

@@ -104,7 +104,7 @@ Page {
                 onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
             }
 
-            Header { text: i18n.tr("Filter") }
+            ListItem.Header { text: i18n.tr("Filter") }
 
             ListItem.Standard {
                 text: i18n.tr("By Genre")
