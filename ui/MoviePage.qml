@@ -29,6 +29,7 @@ Page {
 
     visible: false
     flickable: null
+    title: movie.attributes.title ? movie.attributes.title : i18n.tr("Movie")
 
     property string movie_id
     property bool isMovieSeen
@@ -247,6 +248,7 @@ Page {
 
     Flickable {
         id: flickable
+        clip: true
         anchors.fill: parent
         flickableDirection: Flickable.VerticalFlick
         contentHeight: movieThumb.height + ratingsRow.height + detailsColumn.height + units.gu(10)
@@ -269,12 +271,8 @@ Page {
         }
 
         Label {
-            id: title
-            text: movie.attributes.title
-            fontSize: "large"
-            maximumLineCount: 2
-            elide: Text.ElideRight
-            wrapMode: Text.WordWrap
+            id: summary
+
             anchors {
                 top: parent.top
                 left: movieThumb.right
@@ -283,118 +281,27 @@ Page {
                 rightMargin: units.gu(2)
                 topMargin: units.gu(2)
             }
-        }
 
-        Rotater {
-            id: overviewContainer
-
-            flipHeight: moviePage.height
-            height: movieThumb.height/2
-            anchors {
-                top: title.bottom
-                left: title.left
-                right: title.right
-                topMargin: units.gu(2)
-            }
-
+            elide: Text.ElideRight
+            wrapMode: Text.WordWrap
             visible: movie.attributes.overview
+            text: movie.attributes.overview
+            height: movieThumb.height/1.3
 
-            onFlippedChanged: {
-                if (!overviewContainer.flipped)
-                    flickable.interactive =  flickable.contentHeight > moviePage.height
-                else
-                    flickable.interactive = false
-            }
-
-            front: Label {
-                id: overview
-                text: movie.attributes.overview
-                visible: movie.attributes.overview
-                fontSize: "medium"
+            MouseArea {
                 anchors.fill: parent
-                elide: Text.ElideRight
-                wrapMode: Text.WordWrap
-
-                MouseArea {
-                    anchors.fill: parent
-                    enabled: {
-                        if (!overviewContainer.flipped)
-                            if(overview.truncated)
-                                return true
-                            else
-                                return false
-                        else
-                            return false
-                    }
-                    onClicked: {
-                        overviewContainer.flipped = !overviewContainer.flipped
-
-                        if(!flickable.atYBeginning)
-                            flickable.contentY = 0
-                    }
-                }
-            }
-
-            back: Rectangle {
-                color: "Transparent"
-                anchors.fill: parent
-
-                Background{}
-
-                Flickable {
-                    id: summaryFlickable
-                    anchors.fill: parent
-                    flickableDirection: Flickable.VerticalFlick
-                    contentHeight: mainColumn.height > parent.height ? mainColumn.height + units.gu(10) : parent.height
-                    interactive: contentHeight > parent.height
-
-                    Column {
-                        id: mainColumn
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            top: parent.top
-                            margins: units.gu(2)
-                        }
-
-                        spacing: units.gu(2)
-
-                        Label {
-                            id: header
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: i18n.tr("Full Summary")
-                            fontSize: "x-large"
-                        }
-
-                        Label {
-                            id: fullOverview
-                            text: movie.attributes.overview
-                            visible: movie.attributes.overview
-                            fontSize: "medium"
-                            anchors {
-                                left: parent.left
-                                right: parent.right
-                            }
-
-                            elide: Text.ElideRight
-                            wrapMode: Text.WordWrap
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: overviewContainer.flipped
-                        onClicked: overviewContainer.flipped = !overviewContainer.flipped
-                    }
-                }
+                enabled: summary.truncated
+                onClicked: pagestack.push(Qt.resolvedUrl("SummaryPage.qml"), {"summary": movie.attributes.overview})
             }
         }
 
         Column {
             id: movieColumn
             anchors {
-                left: title.left
-                right: title.right
+                left: movieThumb.right
+                right: parent.right
+                leftMargin: units.gu(2)
+                rightMargin: units.gu(2)
                 bottom: movieThumb.bottom
             }
             spacing: units.gu(1)
@@ -532,7 +439,6 @@ Page {
 
         ToolbarButton {
             id: returnHome
-            visible: pageStack.depth > 2
             action: returnHomeAction
         }
 
