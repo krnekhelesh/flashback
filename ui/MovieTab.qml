@@ -123,7 +123,7 @@ Page {
                 }
 
                 ListItem.Standard {
-                    text: i18n.tr("By Genre")
+                    text: i18n.tr("Genre")
                     progression: true
                     onClicked: pageStack.push(Qt.resolvedUrl("MovieByGenre.qml"))
                 }
