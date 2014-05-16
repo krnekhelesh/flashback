@@ -269,7 +269,7 @@ Item {
             height: header.visible ? parent.height - header.height - parent.spacing : parent.height
             snapMode: GridView.SnapToRow
 
-            cellHeight: !tabletPortraitForm && !tabletLandscapeForm ? grid.gridHeight + units.gu(5) : grid.gridHeight + units.gu(4)
+            cellHeight: !tabletPortraitForm && !tabletLandscapeForm ? grid.gridHeight + units.gu(5) : grid.gridHeight + units.gu(8)
             cellWidth: grid.size + container.spacing
 
             delegate: gridType == "gridCarousel" ? gridCarouselDelegate : gridDetailedCarouselDelegate
