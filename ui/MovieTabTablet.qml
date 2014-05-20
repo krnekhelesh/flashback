@@ -79,8 +79,8 @@ ConditionalLayout {
 
                 SidebarMenuItem {
                     id: nowPlayingTablet
-                    shortenedMenuLabel: i18n.tr("Now")
-                    menuLabel: i18n.tr("Now Playing Movies")
+                    shortenedMenuLabel: i18n.tr("Theatres")
+                    menuLabel: i18n.tr("Playing in Theatres")
                     menuIcon: Qt.resolvedUrl("../graphics/now_playing.png")
                     onClicked: {
                         selectListItem(nowPlayingTablet)
