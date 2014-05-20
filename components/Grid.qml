@@ -98,7 +98,7 @@ Item {
                     // Widget to curve edges and encase the thumbnail
                     Thumbnail {
                         id: gridThumb
-                        radius: "medium"
+                        radius: "small"
                         width: grid.size
                         height: grid.gridHeight
                         thumbSource: thumb_url
@@ -269,7 +269,9 @@ Item {
             height: header.visible ? parent.height - header.height - parent.spacing : parent.height
             snapMode: GridView.SnapToRow
 
-            cellHeight: !tabletPortraitForm && !tabletLandscapeForm ? grid.gridHeight + units.gu(5) : grid.gridHeight + units.gu(8)
+            cellHeight: !tabletPortraitForm && !tabletLandscapeForm ? grid.gridHeight + units.gu(5)
+                                                                    : gridType == "gridCarousel" ? grid.gridHeight + units.gu(8)
+                                                                                                 : grid.gridHeight + units.gu(2)
             cellWidth: grid.size + container.spacing
 
             delegate: gridType == "gridCarousel" ? gridCarouselDelegate : gridDetailedCarouselDelegate
