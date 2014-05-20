@@ -17,6 +17,7 @@
  */
 
 import QtQuick 2.0
+import Ubuntu.Layouts 1.0
 import Ubuntu.Components 1.1
 import "../backend/backend.js" as Backend
 import "../components"
@@ -176,100 +177,109 @@ Page {
         }
     }
 
-    LoadingIndicator {
-        isShown: !createAccountMessage.visible ? (nowPlayingMoviesModel.loading
-                                                  || airedShowsModel.loading
-                                                  || airingShowsModel.loading
-                                                  || userWatchlistModel.loading ? true : false)
-                                               : false
-    }
-
-    Flickable {
-        id: flickable
-        clip: true
+    Layouts {
+        id: homeLayout
         anchors.fill: parent
-        contentHeight: mainColumn.height + units.gu(5)
-        visible: !createAccountMessage.visible
 
-        Column {
-            id: mainColumn
+        layouts: [
+            HomeTabTablet {}
+        ]
 
-            spacing: units.gu(2)
+        LoadingIndicator {
+            isShown: !createAccountMessage.visible ? (nowPlayingMoviesModel.loading
+                                                      || airedShowsModel.loading
+                                                      || airingShowsModel.loading
+                                                      || userWatchlistModel.loading ? true : false)
+                                                   : false
+        }
 
-            anchors {
-                left: parent.left;
-                right: parent.right;
-                top: parent.top;
-            }
+        Flickable {
+            id: flickable
+            clip: true
+            anchors.fill: parent
+            contentHeight: mainColumn.height + units.gu(5)
+            visible: !createAccountMessage.visible
 
-            NowWatching {
-                id: watchingMovie
+            Column {
+                id: mainColumn
 
-                backgroundFanArt: movieActivityDocument.contents.name !== "default" ? movieActivityDocument.contents.fanart : ""
-                posterArt: movieActivityDocument.contents.name !== "default" ? movieActivityDocument.contents.poster : ""
-                title: movieActivityDocument.contents.name !== "default" ? movieActivityDocument.contents.name : ""
-                subtitle: movieActivityDocument.contents.name !== "default" ? "Length: " + movieActivityDocument.contents.runtime + " mins, Year: " + movieActivityDocument.contents.year : ""
-
-                visible: movieActivityDocument.contents.name !== "default"
-                showTrailer: true
-
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": movieActivityDocument.contents.id})
-                onTrailerClicked: Qt.openUrlExternally(movieActivityDocument.contents.trailer)
+                spacing: units.gu(2)
 
                 anchors {
-                    left: parent.left
-                    right: parent.right
+                    left: parent.left;
+                    right: parent.right;
+                    top: parent.top;
                 }
-            }
 
-            NowWatching {
-                id: watchingShow
+                NowWatching {
+                    id: watchingMovie
 
-                backgroundFanArt: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.fanart : ""
-                posterArt: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.poster : ""
-                title: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.name : ""
-                subtitle: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.episode_title : ""
-                extra: showActivityDocument.contents.name !== "default" ? "S" + showActivityDocument.contents.season + "E" + showActivityDocument.contents.number : ""
+                    backgroundFanArt: movieActivityDocument.contents.name !== "default" ? movieActivityDocument.contents.fanart : ""
+                    posterArt: movieActivityDocument.contents.name !== "default" ? movieActivityDocument.contents.poster : ""
+                    title: movieActivityDocument.contents.name !== "default" ? movieActivityDocument.contents.name : ""
+                    subtitle: movieActivityDocument.contents.name !== "default" ? "Length: " + movieActivityDocument.contents.runtime + " mins, Year: " + movieActivityDocument.contents.year : ""
 
-                visible: showActivityDocument.contents.name !== "default"
+                    visible: movieActivityDocument.contents.name !== "default"
+                    showTrailer: true
 
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": showActivityDocument.contents.id, "season_number": showActivityDocument.contents.season, "episode_number": showActivityDocument.contents.number, "episode_name": showActivityDocument.contents.episode_title})
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": movieActivityDocument.contents.id})
+                    onTrailerClicked: Qt.openUrlExternally(movieActivityDocument.contents.trailer)
 
-                anchors {
-                    left: parent.left
-                    right: parent.right
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
                 }
-            }
 
-            DetailCarousel {
-                id: airingShows
-                dataModel: airingShowsModel.model
-                showDate: false
-                header: i18n.tr("Episodes Airing Today")
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": model.id, "season_number": model.season, "episode_number": model.episode, "watched": model.watched})
-            }
+                NowWatching {
+                    id: watchingShow
 
-            DetailCarousel {
-                id: airedShows
-                dataModel: airedShowsModel.model
-                header: i18n.tr("Recently Aired Unwatched Episodes")
-                visible: traktLogin.contents.status !== "disabled" && airedShowsModel.count > 0
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": model.id, "season_number": model.season, "episode_number": model.episode, "watched": model.watched})
-            }
+                    backgroundFanArt: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.fanart : ""
+                    posterArt: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.poster : ""
+                    title: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.name : ""
+                    subtitle: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.episode_title : ""
+                    extra: showActivityDocument.contents.name !== "default" ? "S" + showActivityDocument.contents.season + "E" + showActivityDocument.contents.number : ""
 
-            Carousel {
-                id: userWatchlist
-                dataModel: userWatchlistModel.model
-                header: i18n.tr("Your Movie Watchlist")
-                visible: traktLogin.contents.status !== "disabled" && userWatchlistModel.count > 0
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
-            }
+                    visible: showActivityDocument.contents.name !== "default"
 
-            Carousel {
-                id: nowPlaying
-                dataModel: nowPlayingMoviesModel.model
-                header: i18n.tr("Now Playing In Theatres")
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": showActivityDocument.contents.id, "season_number": showActivityDocument.contents.season, "episode_number": showActivityDocument.contents.number, "episode_name": showActivityDocument.contents.episode_title})
+
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                }
+
+                DetailCarousel {
+                    id: airingShows
+                    dataModel: airingShowsModel.model
+                    showDate: false
+                    header: i18n.tr("Episodes Airing Today")
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": model.id, "season_number": model.season, "episode_number": model.episode, "watched": model.watched})
+                }
+
+                DetailCarousel {
+                    id: airedShows
+                    dataModel: airedShowsModel.model
+                    header: i18n.tr("Recently Aired Unwatched Episodes")
+                    visible: traktLogin.contents.status !== "disabled" && airedShowsModel.count > 0
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": model.id, "season_number": model.season, "episode_number": model.episode, "watched": model.watched})
+                }
+
+                Carousel {
+                    id: userWatchlist
+                    dataModel: userWatchlistModel.model
+                    header: i18n.tr("Your Movie Watchlist")
+                    visible: traktLogin.contents.status !== "disabled" && userWatchlistModel.count > 0
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
+                }
+
+                Carousel {
+                    id: nowPlaying
+                    dataModel: nowPlayingMoviesModel.model
+                    header: i18n.tr("Now Playing In Theatres")
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
+                }
             }
         }
     }
