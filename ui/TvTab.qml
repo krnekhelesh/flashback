@@ -17,6 +17,7 @@
  */
 
 import QtQuick 2.0
+import Ubuntu.Layouts 1.0
 import Ubuntu.Components 1.1
 import "../components"
 import "../models"
@@ -111,48 +112,58 @@ Page {
         }
     }
 
-    LoadingIndicator {
-        isShown: trendingShowsModel.loading || userWatchlistShowsModel.loading || airingShowsModel.loading
-    }
-
-    Flickable {
-        id: flickable
-        clip: true
+    Layouts {
+        id: tvLayout
         anchors.fill: parent
-        contentHeight: mainColumn.height + units.gu(5)
 
-        Column {
-            id: mainColumn
-
-            anchors {
-                left: parent.left;
-                right: parent.right;
-                top: parent.top;
+        layouts: [
+            TvTabTablet {
             }
+        ]
 
-            spacing: units.gu(1)
+        LoadingIndicator {
+            isShown: trendingShowsModel.loading || userWatchlistShowsModel.loading || airingShowsModel.loading
+        }
 
-            DetailCarousel {
-                id: airingShows
-                dataModel: airingShowsModel.model
-                header: i18n.tr("Upcoming Episodes")
-                visible: traktLogin.contents.status !== "disabled" && airingShowsModel.count > 0
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": model.id, "season_number": model.season, "episode_number": model.episode, "watched": model.watched})
-            }
+        Flickable {
+            id: flickable
+            clip: true
+            anchors.fill: parent
+            contentHeight: mainColumn.height + units.gu(5)
 
-            Carousel {
-                id: userLibrary
-                dataModel: userWatchlistShowsModel.model
-                visible: traktLogin.contents.status !== "disabled" && userWatchlistShowsModel.count > 0
-                header: i18n.tr("Your TV Show Watchlist")
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
-            }
+            Column {
+                id: mainColumn
 
-            Carousel {
-                id: trending
-                dataModel: trendingShowsModel.model
-                header: i18n.tr("Trending TV Shows")
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
+                anchors {
+                    left: parent.left;
+                    right: parent.right;
+                    top: parent.top;
+                }
+
+                spacing: units.gu(1)
+
+                DetailCarousel {
+                    id: airingShows
+                    dataModel: airingShowsModel.model
+                    header: i18n.tr("Upcoming Episodes")
+                    visible: traktLogin.contents.status !== "disabled" && airingShowsModel.count > 0
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": model.id, "season_number": model.season, "episode_number": model.episode, "watched": model.watched})
+                }
+
+                Carousel {
+                    id: userLibrary
+                    dataModel: userWatchlistShowsModel.model
+                    visible: traktLogin.contents.status !== "disabled" && userWatchlistShowsModel.count > 0
+                    header: i18n.tr("Your TV Show Watchlist")
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
+                }
+
+                Carousel {
+                    id: trending
+                    dataModel: trendingShowsModel.model
+                    header: i18n.tr("Trending TV Shows")
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
+                }
             }
         }
     }
