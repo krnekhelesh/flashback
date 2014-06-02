@@ -41,7 +41,7 @@ Page {
             text: i18n.tr("Celeb")
             keywords: i18n.tr("Search;Person;Actor;Actors;Actress;Cast;Crew;Find")
             description: i18n.tr("Search for Actors, Actress and Crew")
-            iconSource: Qt.resolvedUrl("../graphics/find.svg")
+            iconName: "search"
             onTriggered: pageStack.push(Qt.resolvedUrl("SearchPerson.qml"))
         }
     ]

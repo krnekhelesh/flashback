@@ -70,7 +70,7 @@ Page {
     actions: [
         TraktAction {
             id: shareSeasonAction
-            onTriggered: PopupUtils.open(sharePopoverComponent, shareSeason)
+            onTriggered: PopupUtils.open(sharePopoverComponent, null)
         }
     ]
 

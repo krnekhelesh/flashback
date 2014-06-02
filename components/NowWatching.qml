@@ -43,7 +43,10 @@ Column {
     property int backgroundWidth: units.gu(35)
     property int backgroundHeight: units.gu(20)
 
-    ListItem.Header { text: i18n.tr("Now Watching") }
+    ListItem.Header {
+        text: i18n.tr("Now Watching")
+        visible: !tabletPortraitForm
+    }
 
     DesaturatedThumbnail {
         id: _backgroundFanArt

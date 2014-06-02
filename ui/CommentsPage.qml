@@ -288,7 +288,7 @@ Page {
             visible: traktLogin.contents.status !== "disabled"
             keywords: i18n.tr("Add;Comment;Comments;Submit")
             description: i18n.tr("Add comment")
-            iconSource: Qt.resolvedUrl("../graphics/add.png")
+            iconName: "add"
             onTriggered: {
                 commentsList.state = "addcomment"
                 addCommentBox.visible = true

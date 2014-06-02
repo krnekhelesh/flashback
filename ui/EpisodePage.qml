@@ -184,7 +184,7 @@ Page {
     actions: [
         TraktAction {
             id: shareEpisodeAction
-            onTriggered: PopupUtils.open(sharePopoverComponent, shareEpisode)
+            onTriggered: PopupUtils.open(sharePopoverComponent, null)
         }
     ]
 

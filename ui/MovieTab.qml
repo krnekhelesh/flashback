@@ -17,6 +17,7 @@
  */
 
 import QtQuick 2.0
+import Ubuntu.Layouts 1.0
 import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
@@ -56,73 +57,89 @@ Page {
             text: i18n.tr("Movie")
             keywords: i18n.tr("Search;Movie;Movies;Find")
             description: i18n.tr("Search for Movies")
-            iconSource: Qt.resolvedUrl("../graphics/find.svg")
+            iconName: "search"
             onTriggered: pageStack.push(Qt.resolvedUrl("SearchMovie.qml"))
         }
     ]
 
-    LoadingIndicator {
-        isShown: nowPlayingMoviesModel.loading || upcomingMoviesModel.loading || trendingMoviesModel.loading
-    }
-
-    Flickable {
-        id: flickable
-        clip: true
+    /*
+      Phone and Tablet UI Definitions
+     */
+    Layouts {
+        id: movieLayout
         anchors.fill: parent
-        contentHeight: mainHomeColumn.height + units.gu(5)
-        interactive: contentHeight > parent.height
 
-        Column {
-            id: mainHomeColumn
+        layouts: [
+            MovieTabTablet {}
+        ]
 
-            anchors {
-                left: parent.left;
-                right: parent.right;
-                top: parent.top;
-            }
+        LoadingIndicator {
+            isShown: nowPlayingMoviesModel.loading || upcomingMoviesModel.loading || trendingMoviesModel.loading
+        }
 
-            spacing: units.gu(1)
+        Flickable {
+            id: flickable
+            clip: true
+            anchors.fill: parent
+            contentHeight: mainHomeColumn.height + units.gu(5)
+            interactive: contentHeight > parent.height
 
-            Carousel {
-                id: trendingMovies
-                dataModel: trendingMoviesModel.model
-                header: i18n.tr("Trending Movies")
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
-            }
+            Column {
+                id: mainHomeColumn
 
-            Carousel {
-                id: nowPlaying
-                dataModel: nowPlayingMoviesModel.model
-                header: i18n.tr("Now Playing In Theatres")
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
-            }
+                anchors {
+                    left: parent.left;
+                    right: parent.right;
+                    top: parent.top;
+                }
 
-            Carousel {
-                id: upcomingMovies
-                dataModel: upcomingMoviesModel.model
-                header: i18n.tr("Upcoming Movies in Theatres")
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
-            }
+                spacing: units.gu(1)
 
-            ListItem.Header { text: i18n.tr("Filter") }
+                Carousel {
+                    id: trendingMovies
+                    dataModel: trendingMoviesModel.model
+                    header: i18n.tr("Trending Movies")
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
+                }
 
-            ListItem.Standard {
-                text: i18n.tr("By Genre")
-                progression: true
-                onClicked: pageStack.push(Qt.resolvedUrl("MovieByGenre.qml"))
-            }
+                Carousel {
+                    id: nowPlaying
+                    dataModel: nowPlayingMoviesModel.model
+                    header: i18n.tr("Now Playing In Theatres")
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
+                }
 
-            ListItem.Standard {
-                text: i18n.tr("Top Rated")
-                progression: true
-                onClicked: pageStack.push(Qt.resolvedUrl("MovieByRating.qml"))
-            }
+                Carousel {
+                    id: upcomingMovies
+                    dataModel: upcomingMoviesModel.model
+                    header: i18n.tr("Upcoming Movies in Theatres")
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
+                }
 
-            ListItem.Standard {
-                text: i18n.tr("Recommended")
-                progression: true
-                visible: traktLogin.contents.status !== "disabled"
-                onClicked: pageStack.push(Qt.resolvedUrl("MovieByRecommendation.qml"))
+                ListItem.Header {
+                    id: filterHeader
+                    Layouts.item: "filter-header"
+                    text: i18n.tr("Filter By")
+                }
+
+                ListItem.Standard {
+                    text: i18n.tr("Genre")
+                    progression: true
+                    onClicked: pageStack.push(Qt.resolvedUrl("MovieByGenre.qml"))
+                }
+
+                ListItem.Standard {
+                    text: i18n.tr("Top Rated")
+                    progression: true
+                    onClicked: pageStack.push(Qt.resolvedUrl("MovieByRating.qml"))
+                }
+
+                ListItem.Standard {
+                    text: i18n.tr("Recommended")
+                    progression: true
+                    visible: traktLogin.contents.status !== "disabled"
+                    onClicked: pageStack.push(Qt.resolvedUrl("MovieByRecommendation.qml"))
+                }
             }
         }
     }

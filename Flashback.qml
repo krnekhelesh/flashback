@@ -49,8 +49,8 @@ MainView {
     */
     useDeprecatedToolbar: false
 
-    width: units.gu(45)
-    height: units.gu(80)
+    width: units.gu(150)
+    height: units.gu(100)
 
     /*
       The background is now a image texture file. The background color is used to
@@ -58,13 +58,22 @@ MainView {
      */
     backgroundColor: UbuntuColors.coolGrey
 
+    // Property to store the aspect ratio of the device
+    property double aspectRatio: (mainView.width/mainView.height).toFixed(1)
+
+    // Property to determine if the tablet view should be shown
+    property bool tabletLandscapeForm: aspectRatio >= 1.3
+    property bool tabletPortraitForm: aspectRatio >= 0.8 && aspectRatio < 1.3
+
+    onAspectRatioChanged: console.log("[LOG]: Aspect Ratio: " + aspectRatio)
+
     actions: [
         Action {
             id: appSettingsAction
             text: i18n.tr("Settings")
             keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
             description: i18n.tr("Application Settings")
-            iconSource: Qt.resolvedUrl("graphics/settings.svg")
+            iconName: "settings"
             onTriggered: pagestack.push(Qt.resolvedUrl("ui/SettingPage.qml"))
         },
         Action {
@@ -222,7 +231,7 @@ MainView {
             }
             else
                 push(rootComponent);
-       }
+        }
 
         Component {
             id: rootComponent
