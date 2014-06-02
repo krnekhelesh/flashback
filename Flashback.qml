@@ -73,7 +73,7 @@ MainView {
             text: i18n.tr("Settings")
             keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
             description: i18n.tr("Application Settings")
-            iconSource: Qt.resolvedUrl("graphics/settings.svg")
+            iconName: "settings"
             onTriggered: pagestack.push(Qt.resolvedUrl("ui/SettingPage.qml"))
         },
         Action {

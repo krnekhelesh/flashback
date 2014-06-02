@@ -236,7 +236,7 @@ Page {
             keywords: i18n.tr("Play;Watch;Trailer;Preview")
             description: i18n.tr("Play Movie Trailer")
             enabled: movieTrailer.model.count > 0
-            iconSource: Qt.resolvedUrl("../graphics/play.svg")
+            iconName: "media-playback-start"
             onTriggered: PopupUtils.open(trailerPopoverComponent, playTrailer)
         },
 

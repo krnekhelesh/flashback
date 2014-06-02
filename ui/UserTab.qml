@@ -38,7 +38,7 @@ Page {
             visible: !createAccountMessage.visible
             keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
             description: i18n.tr("Application Settings")
-            iconSource: Qt.resolvedUrl("../graphics/settings.svg")
+            iconName: "search"
             onTriggered: pagestack.push(Qt.resolvedUrl("SettingPage.qml"))
         },
 
@@ -48,7 +48,7 @@ Page {
             visible: createAccountMessage.visible
             keywords: i18n.tr("Setup;Create;Account;Trakt")
             description: i18n.tr("Setup a Trakt Account")
-            iconSource: Qt.resolvedUrl("../graphics/add.png")
+            iconName: "add"
             onTriggered: pageStack.push(Qt.resolvedUrl("Trakt.qml"))
         },
 

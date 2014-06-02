@@ -34,7 +34,7 @@ Page {
             text: i18n.tr("Tv Show")
             keywords: i18n.tr("Search;Tv;Show;Shows;Find")
             description: i18n.tr("Search for Tv Shows")
-            iconSource: Qt.resolvedUrl("../graphics/find.svg")
+            iconName: "search"
             onTriggered: pageStack.push(Qt.resolvedUrl("SearchTv.qml"))
         }
     ]

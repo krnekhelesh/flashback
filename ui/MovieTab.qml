@@ -57,7 +57,7 @@ Page {
             text: i18n.tr("Movie")
             keywords: i18n.tr("Search;Movie;Movies;Find")
             description: i18n.tr("Search for Movies")
-            iconSource: Qt.resolvedUrl("../graphics/find.svg")
+            iconName: "search"
             onTriggered: pageStack.push(Qt.resolvedUrl("SearchMovie.qml"))
         }
     ]
