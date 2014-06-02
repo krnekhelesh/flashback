@@ -34,7 +34,6 @@ Page {
         Action {
             id: appSettingsAction
             text: i18n.tr("Settings")
-            visible: !createAccountMessage.visible
             keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
             description: i18n.tr("Application Settings")
             iconName: "settings"
