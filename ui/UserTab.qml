@@ -38,7 +38,7 @@ Page {
             visible: !createAccountMessage.visible
             keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
             description: i18n.tr("Application Settings")
-            iconName: "search"
+            iconName: "settings"
             onTriggered: pagestack.push(Qt.resolvedUrl("SettingPage.qml"))
         },
 
