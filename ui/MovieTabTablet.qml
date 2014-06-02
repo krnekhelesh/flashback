@@ -51,8 +51,12 @@ ConditionalLayout {
                 id: recommendedMoviesModel
                 // FIXME: Only load this data model when the user has logged into trakt
                 Component.onCompleted: {
-                    createMessage(traktLogin.contents.username, traktLogin.contents.password)
-                    sendMessage()
+                    if(traktLogin.contents.status !== "disabled") {
+                        createMessage(traktLogin.contents.username, traktLogin.contents.password)
+                        sendMessage()
+                    } else {
+                        loading = false
+                    }
                 }
             }
 
@@ -74,6 +78,7 @@ ConditionalLayout {
                     onClicked: {
                         selectListItem(trendingMoviesTablet)
                         movieList.dataModel = trendingMoviesModel.model
+                        movieList.loading = trendingMoviesModel.loading
                     }
                 }
 
@@ -85,6 +90,7 @@ ConditionalLayout {
                     onClicked: {
                         selectListItem(nowPlayingTablet)
                         movieList.dataModel = nowPlayingMoviesModel.model
+                        movieList.loading = nowPlayingMoviesModel.loading
                     }
                 }
 
@@ -96,6 +102,7 @@ ConditionalLayout {
                     onClicked: {
                         selectListItem(upcomingMoviesTablet)
                         movieList.dataModel = upcomingMoviesModel.model
+                        movieList.loading = upcomingMoviesModel.loading
                     }
                 }
 
@@ -114,18 +121,19 @@ ConditionalLayout {
                     onClicked: {
                         selectListItem(filterRating)
                         movieList.dataModel = topRatedMovieModel.model
+                        movieList.loading = topRatedMovieModel.loading
                     }
                 }
 
                 SidebarMenuItem {
                     id: filterRecommended
                     shortenedMenuLabel: i18n.tr("Recommended")
-                    visible: traktLogin.contents.status !== "disabled"
                     menuLabel: i18n.tr("Recommended")
                     menuIcon: Qt.resolvedUrl("../graphics/recommended.png")
                     onClicked: {
                         selectListItem(filterRecommended)
                         movieList.dataModel = recommendedMoviesModel.model
+                        movieList.loading = recommendedMoviesModel.loading
                     }
                 }
             }
@@ -177,16 +185,29 @@ ConditionalLayout {
                 bottom: parent.bottom
             }
 
+            EmptyState {
+                id: noContentMessage
+                visible: !movieList.loading && movieList.dataModel.count === 0
+                logo: !filterRecommended.isSelected || traktLogin.contents.status !== "disabled" ? Qt.resolvedUrl("../graphics/empty_content.png") : Qt.resolvedUrl("../graphics/account.png")
+                header: !filterRecommended.isSelected || traktLogin.contents.status !== "disabled" ? i18n.tr("No Content Yet") : i18n.tr("No Trakt Account")
+                message: !filterRecommended.isSelected || traktLogin.contents.status !== "disabled" ? i18n.tr("This space feels empty. Watch some movies!") : i18n.tr("Please set up an account using the add \"Accounts\" button to use this feature")
+            }
+
             LoadingIndicator {
                 id: _loadingIndicator
-                isShown: !movieList.dataModel.count > 0
+                isShown: movieList.loading
             }
 
             Grid {
                 id: movieList
+
+                property bool loading
+
                 anchors.fill: parent
                 anchors.topMargin: units.gu(1)
                 dataModel: trendingMoviesModel.model
+                loading: trendingMoviesModel.loading
+
                 onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
             }
         }
