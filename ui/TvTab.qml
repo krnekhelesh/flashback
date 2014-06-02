@@ -117,8 +117,7 @@ Page {
         anchors.fill: parent
 
         layouts: [
-            TvTabTablet {
-            }
+            TvTabTablet {}
         ]
 
         LoadingIndicator {

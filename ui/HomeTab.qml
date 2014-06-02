@@ -213,6 +213,7 @@ Page {
 
                 NowWatching {
                     id: watchingMovie
+                    Layouts.item: "nowWatchingMovie"
 
                     backgroundFanArt: movieActivityDocument.contents.name !== "default" ? movieActivityDocument.contents.fanart : ""
                     posterArt: movieActivityDocument.contents.name !== "default" ? movieActivityDocument.contents.poster : ""
@@ -233,6 +234,7 @@ Page {
 
                 NowWatching {
                     id: watchingShow
+                    Layouts.item: "nowWatchingShow"
 
                     backgroundFanArt: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.fanart : ""
                     posterArt: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.poster : ""

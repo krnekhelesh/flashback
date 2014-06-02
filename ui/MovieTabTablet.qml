@@ -129,6 +129,43 @@ ConditionalLayout {
                     }
                 }
             }
+
+            NowWatchingTablet {
+                id: nowWatchingShowTablet
+
+                anchors {
+                    left: parent.left
+                    bottom: parent.bottom
+                }
+
+                backgroundFanArt: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.fanart : ""
+                posterArt: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.poster : ""
+                subtitle: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.name : ""
+                title: showActivityDocument.contents.name !== "default" ? showActivityDocument.contents.episode_title : ""
+                extra: showActivityDocument.contents.name !== "default" ? "S" + showActivityDocument.contents.season + "E" + showActivityDocument.contents.number : ""
+                visible: showActivityDocument.contents.name !== "default" && tabletLandscapeForm
+
+                onThumbClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": showActivityDocument.contents.id, "season_number": showActivityDocument.contents.season, "episode_number": showActivityDocument.contents.number, "episode_name": showActivityDocument.contents.episode_title})
+            }
+
+            NowWatchingTablet {
+                id: nowWatchingMovieTablet
+
+                anchors {
+                    left: parent.left
+                    bottom: parent.bottom
+                }
+
+                backgroundFanArt: movieActivityDocument.contents.name !== "default" ? movieActivityDocument.contents.fanart : ""
+                posterArt: movieActivityDocument.contents.name !== "default" ? movieActivityDocument.contents.poster : ""
+                subtitle: movieActivityDocument.contents.name !== "default" ? "Length: " + movieActivityDocument.contents.runtime + " mins" : ""
+                extra: movieActivityDocument.contents.name !== "default" ? "Year: " + movieActivityDocument.contents.year : ""
+                title: movieActivityDocument.contents.name !== "default" ? movieActivityDocument.contents.name : ""
+
+                visible: movieActivityDocument.contents.name !== "default" && tabletLandscapeForm
+
+                onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": movieActivityDocument.contents.id})
+            }
         }
 
         Item {
