@@ -55,7 +55,7 @@ ConditionalLayout {
                     menuLabel: i18n.tr("Now Watching")
                     menuIcon: Qt.resolvedUrl("../graphics/now_playing.png")
                     visible: (movieActivityDocument.contents.name !== "default" || showActivityDocument.contents.name !== "default") && tabletPortraitForm
-                    isSelected: tabletPortraitForm ? true : false
+                    isSelected: tabletPortraitForm && visible ? true : false
                     onClicked: selectListItem(nowWatchingTabletSidebar)
                 }
 
@@ -64,7 +64,7 @@ ConditionalLayout {
                     shortenedMenuLabel: i18n.tr("Theatres")
                     menuLabel: i18n.tr("Playing in Theatres")
                     menuIcon: Qt.resolvedUrl("../graphics/now_playing.png")
-                    isSelected: tabletLandscapeForm ? true : false
+                    isSelected: tabletLandscapeForm ? true : nowWatchingTabletSidebar.isSelected ? false : true
                     onClicked: {
                         selectListItem(nowPlayingTablet)
                         movieList.gridType = "gridCarousel"
