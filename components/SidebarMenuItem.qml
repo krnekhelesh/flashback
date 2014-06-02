@@ -45,7 +45,7 @@ ListItem.Empty {
     property string menuCount: "0"
 
     width: parent.width
-    height: tabletPortraitForm ? units.gu(8) : units.gu(6)
+    height: tabletPortraitForm ? units.gu(8) : units.gu(5)
 
     Rectangle {
         id: _indicator
@@ -111,13 +111,13 @@ ListItem.Empty {
 
         Row {
             anchors.fill: parent
-            spacing: units.gu(2)
+            spacing: units.gu(3)
 
             Image {
                 id: _menuIcon
                 Layouts.item: "_menuIconItem"
                 antialiasing: true
-                height: parent.height/2.5
+                height: parent.height/2
                 fillMode: Image.PreserveAspectFit
                 anchors.verticalCenter: parent.verticalCenter
             }
