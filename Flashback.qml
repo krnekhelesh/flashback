@@ -58,9 +58,14 @@ MainView {
      */
     backgroundColor: UbuntuColors.coolGrey
 
+    // Property to store the aspect ratio of the device
+    property double aspectRatio: mainView.width/mainView.height
+
     // Property to determine if the tablet view should be shown
-    property bool tabletLandscapeForm: mainView.width >= units.gu(130)
-    property bool tabletPortraitForm: mainView.width >= units.gu(80) && mainView.width < units.gu(130)
+    property bool tabletLandscapeForm: aspectRatio >= 1.3
+    property bool tabletPortraitForm: aspectRatio >= 0.8 && aspectRatio < 1.3
+
+    onAspectRatioChanged: console.log("[LOG]: Aspect Ratio: " + aspectRatio.toFixed(1))
 
     actions: [
         Action {
