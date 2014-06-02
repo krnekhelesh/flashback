@@ -237,12 +237,12 @@ Page {
             description: i18n.tr("Play Movie Trailer")
             enabled: movieTrailer.model.count > 0
             iconName: "media-playback-start"
-            onTriggered: PopupUtils.open(trailerPopoverComponent, playTrailer)
+            onTriggered: PopupUtils.open(trailerPopoverComponent, null)
         },
 
         TraktAction {
             id: shareMovieAction
-            onTriggered: PopupUtils.open(sharePopoverComponent, shareMovie)
+            onTriggered: PopupUtils.open(sharePopoverComponent, null)
         }
     ]
 

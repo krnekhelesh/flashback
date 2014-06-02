@@ -47,7 +47,7 @@ Page {
 
         TraktAction {
             id: shareShowAction
-            onTriggered: PopupUtils.open(sharePopoverComponent, shareShow)
+            onTriggered: PopupUtils.open(sharePopoverComponent, null)
         }
     ]
 
