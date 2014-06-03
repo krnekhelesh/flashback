@@ -112,6 +112,9 @@ Page {
         }
     }
 
+    /*
+      Phone and Tablet UI Definitions
+     */
     Layouts {
         id: tvLayout
         anchors.fill: parent

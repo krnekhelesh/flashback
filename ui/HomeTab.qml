@@ -176,6 +176,9 @@ Page {
         }
     }
 
+    /*
+      Phone and Tablet UI Definitions
+     */
     Layouts {
         id: homeLayout
         anchors.fill: parent
