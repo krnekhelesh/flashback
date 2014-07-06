@@ -34,7 +34,6 @@ Page {
         Action {
             id: appSettingsAction
             text: i18n.tr("Settings")
-            visible: !createAccountMessage.visible
             keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
             description: i18n.tr("Application Settings")
             iconName: "settings"
@@ -54,7 +53,7 @@ Page {
         Action {
             id: searchAllAction
             text: i18n.tr("Search")
-            visible: !account.visible
+            visible: !createAccountMessage.visible
             keywords: i18n.tr("Search;Tv;Show;Shows;Find;Movie;Movies;Actor;Celeb")
             description: i18n.tr("Search All")
             iconName: "search"
@@ -177,6 +176,9 @@ Page {
         }
     }
 
+    /*
+      Phone and Tablet UI Definitions
+     */
     Layouts {
         id: homeLayout
         anchors.fill: parent

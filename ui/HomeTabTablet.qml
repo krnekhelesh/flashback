@@ -56,7 +56,10 @@ ConditionalLayout {
                     menuIcon: Qt.resolvedUrl("../graphics/now_playing.png")
                     visible: (movieActivityDocument.contents.name !== "default" || showActivityDocument.contents.name !== "default") && tabletPortraitForm
                     isSelected: tabletPortraitForm && visible ? true : false
-                    onClicked: selectListItem(nowWatchingTabletSidebar)
+                    onClicked: {
+                        selectListItem(nowWatchingTabletSidebar)
+                        movieList.loading = false
+                    }
                 }
 
                 SidebarMenuItem {
@@ -99,6 +102,7 @@ ConditionalLayout {
                         movieList.dataModel = airedShowsModel.model
                         movieList.showDate = true
                         movieList.gridType = "gridDetailedCarousel"
+                        movieList.loading = airedShowsModel.loading
                     }
                 }
 
@@ -112,6 +116,7 @@ ConditionalLayout {
                         selectListItem(userWatchlistTablet)
                         movieList.gridType = "gridCarousel"
                         movieList.dataModel = userWatchlistModel.model
+                        movieList.loading = userWatchlistModel.loading
                     }
                 }
             }
@@ -185,6 +190,7 @@ ConditionalLayout {
                 anchors.fill: parent
                 anchors.topMargin: units.gu(1)
                 dataModel: nowPlayingMoviesModel.model
+                loading: nowPlayingMoviesModel.loading
 
                 visible: !nowWatchingTabletSidebar.isSelected
 

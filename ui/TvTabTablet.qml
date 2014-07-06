@@ -41,6 +41,7 @@ ConditionalLayout {
                         selectListItem(trendingTablet)
                         tvList.gridType = "gridCarousel"
                         tvList.dataModel = trendingShowsModel.model
+                        tvList.loading = trendingShowsModel.loading
                     }
                 }
 
@@ -53,6 +54,7 @@ ConditionalLayout {
                         selectListItem(userLibraryTablet)
                         tvList.gridType = "gridCarousel"
                         tvList.dataModel = userWatchlistShowsModel.model
+                        tvList.loading = userWatchlistShowsModel.loading
                     }
                 }
 
@@ -67,6 +69,7 @@ ConditionalLayout {
                         tvList.dataModel = airingShowsModel.model
                         tvList.showDate = true
                         tvList.gridType = "gridDetailedCarousel"
+                        tvList.loading = airingShowsModel.loading
                     }
                 }
             }
@@ -118,16 +121,29 @@ ConditionalLayout {
                 bottom: parent.bottom
             }
 
+            EmptyState {
+                id: noContentMessage
+                visible: !tvList.loading && tvList.dataModel.count === 0
+                logo: trendingTablet.isSelected || traktLogin.contents.status !== "disabled" ? Qt.resolvedUrl("../graphics/empty_content.png") : Qt.resolvedUrl("../graphics/account.png")
+                header: trendingTablet.isSelected || traktLogin.contents.status !== "disabled" ? i18n.tr("No Content Yet") : i18n.tr("No Trakt Account")
+                message: trendingTablet.isSelected || traktLogin.contents.status !== "disabled" ? i18n.tr("This space feels empty. Follow some tv shows!") : i18n.tr("Please set up an account using the add \"Accounts\" button to use this feature")
+            }
+
             LoadingIndicator {
                 id: _loadingIndicator
-                isShown: !tvList.dataModel.count > 0
+                isShown: tvList.loading
             }
 
             Grid {
                 id: tvList
+
+                property bool loading
+
                 anchors.fill: parent
                 anchors.topMargin: units.gu(1)
                 dataModel: trendingShowsModel.model
+                loading: trendingShowsModel.loading
+
                 onThumbClicked: gridType === "gridCarousel" ? pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
                                                             : pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": model.id, "season_number": model.season, "episode_number": model.episode, "watched": model.watched})
             }

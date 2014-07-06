@@ -45,6 +45,7 @@ ListItem.Empty {
     property string menuCount: "0"
 
     width: parent.width
+    showDivider: false
     height: tabletPortraitForm ? units.gu(8) : units.gu(5)
 
     Rectangle {
@@ -130,7 +131,6 @@ ListItem.Empty {
                 color: isSelected ? UbuntuColors.orange : "White"
                 text: tabletPortraitForm ? shortenedMenuLabel : menuLabel
                 horizontalAlignment: tabletPortraitForm ? Text.AlignHCenter : 0
-
             }
 
             Rectangle {
