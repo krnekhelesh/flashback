@@ -17,9 +17,8 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.Popups 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.Popups 1.0
 import "../backend/backend.js" as Backend
 import "../components"
 import "../models"
@@ -29,6 +28,7 @@ Page {
 
     visible: false
     flickable: null
+    title: episodeDetails.attributes.name ? episodeDetails.attributes.name : "TV Show"
 
     // Properties received from other pages to retrieve episode info
     property string season_number
@@ -184,12 +184,13 @@ Page {
     actions: [
         TraktAction {
             id: shareEpisodeAction
-            onTriggered: PopupUtils.open(sharePopoverComponent, shareEpisode)
+            onTriggered: PopupUtils.open(sharePopoverComponent, null)
         }
     ]
 
     Flickable {
         id: flickable
+        clip: true
         anchors.fill: parent
         contentHeight: mainColumn.height + episodeThumb.height + units.gu(10)
         interactive: contentHeight > parent.height
@@ -197,8 +198,7 @@ Page {
         // Episode thumb. Shown as a background
         Image {
             id: episodeThumb
-            width: parent.width
-            height: parent.width/2
+            height: parent.width/1.5
             sourceSize.width: parent.width
             fillMode: Image.PreserveAspectCrop
             source: episodeDetails.attributes.thumb_url
@@ -215,25 +215,11 @@ Page {
             }
         }
 
-        // Filler component to ensure that the episode thumb shown is not bigger than required
-        Rectangle {
-            id: backgroundFill
-            color: "Transparent"
-            height: episodeThumb.height
-            z: episodeThumb.z + 1
-            anchors {
-                left: parent.left
-                right: parent.right
-                top: parent.top
-                topMargin: episodePage.width < units.gu(60) ? episodeThumb.height : episodeThumb.height/2
-            }
-        }
-
         Column {
             id: mainColumn
 
             anchors {
-                top: backgroundFill.top
+                top: episodeThumb.bottom
                 left: parent.left
                 right: parent.right
                 topMargin: units.gu(1)
@@ -242,7 +228,6 @@ Page {
             }
 
             spacing: units.gu(4)
-            z: backgroundFill.z + 1
 
             // Container to house the episode title and number
             Column {
@@ -321,7 +306,6 @@ Page {
 
         ToolbarButton {
             id: returnHome
-            visible: pageStack.depth > 2
             action: returnHomeAction
         }
     }

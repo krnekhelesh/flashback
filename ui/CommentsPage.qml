@@ -17,8 +17,8 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../backend/backend.js" as Backend
 import "../components"
 import "../models"
@@ -194,7 +194,7 @@ Page {
         height: userComment.height + buttonRow.height + units.gu(4)
         visible: false
 
-        ThinDivider {
+        ListItem.ThinDivider {
             anchors {
                 left: parent.left
                 right: parent.right
@@ -285,13 +285,13 @@ Page {
         Action {
             id: commentAction
             text: i18n.tr("Comment")
+            visible: traktLogin.contents.status !== "disabled"
             keywords: i18n.tr("Add;Comment;Comments;Submit")
             description: i18n.tr("Add comment")
-            iconSource: Qt.resolvedUrl("../graphics/add.png")
+            iconName: "add"
             onTriggered: {
                 commentsList.state = "addcomment"
                 addCommentBox.visible = true
-                toolbarComment.opened = false
                 userComment.forceActiveFocus()
             }
         }
@@ -302,13 +302,11 @@ Page {
 
         ToolbarButton {
             id: comment
-            visible: traktLogin.contents.status !== "disabled"
             action: commentAction
         }
 
         ToolbarButton {
             id: returnHome
-            visible: pageStack.depth > 2
             action: returnHomeAction
         }
     }

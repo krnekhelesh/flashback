@@ -18,7 +18,7 @@
 
 import QtQuick 2.0
 import U1db 1.0 as U1db
-import Ubuntu.Components 0.1
+import Ubuntu.Components 1.1
 import "backend/backend.js" as Backend
 import "models"
 import "ui"
@@ -44,11 +44,28 @@ MainView {
     */
     anchorToKeyboard: true
 
-    width: units.gu(45)
-    height: units.gu(80)
+    /*
+      This property enabled the new header and disables the old toolbar
+    */
+    useDeprecatedToolbar: false
 
-    // TODO: This is a temporary app background. Final background color needs to be decided.
+    width: units.gu(150)
+    height: units.gu(100)
+
+    /*
+      The background is now a image texture file. The background color is used to
+      set the color of the text.
+     */
     backgroundColor: UbuntuColors.coolGrey
+
+    // Property to store the aspect ratio of the device
+    property double aspectRatio: (mainView.width/mainView.height).toFixed(1)
+
+    // Property to determine if the tablet view should be shown
+    property bool tabletLandscapeForm: aspectRatio >= 1.3
+    property bool tabletPortraitForm: aspectRatio >= 0.8 && aspectRatio < 1.3
+
+    onAspectRatioChanged: console.log("[LOG]: Aspect Ratio: " + aspectRatio)
 
     actions: [
         Action {
@@ -56,12 +73,13 @@ MainView {
             text: i18n.tr("Settings")
             keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
             description: i18n.tr("Application Settings")
-            iconSource: Qt.resolvedUrl("graphics/settings.svg")
+            iconName: "settings"
             onTriggered: pagestack.push(Qt.resolvedUrl("ui/SettingPage.qml"))
         },
         Action {
             id: returnHomeAction
             text: i18n.tr("Home")
+            visible: pagestack.depth > 2
             keywords: i18n.tr("Return;Navigate;Home;Page;Tab")
             description: i18n.tr("Get back to the first page")
             iconSource: Qt.resolvedUrl("graphics/home.png")
@@ -213,7 +231,7 @@ MainView {
             }
             else
                 push(rootComponent);
-       }
+        }
 
         Component {
             id: rootComponent

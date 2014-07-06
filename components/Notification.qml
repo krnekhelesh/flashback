@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
+import Ubuntu.Components 1.1
 
 /*
   Component to show user notification about an activity
@@ -42,7 +42,14 @@ Rectangle {
     property bool isShown: false
 
     height: _mainColumn.height + units.gu(5)
-    width: parent.width/1.2
+    width: {
+        if(tabletPortraitForm)
+            return parent.width/1.5
+        else if(tabletLandscapeForm)
+            return parent.width/1.8
+        else
+            return parent.width/1.2
+    }
     radius: units.gu(0.5)
 
     y: -units.gu(20)

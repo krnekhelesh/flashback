@@ -17,8 +17,8 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
 
 Page {
@@ -44,7 +44,7 @@ Page {
         clip: true
         anchors.fill: parent
 
-        delegate: Standard {
+        delegate: ListItem.Standard {
             text: season == 0 ? i18n.tr("Season Specials") : i18n.tr("Season") + " " + season
             iconSource: thumb_url
             onClicked: pageStack.push(Qt.resolvedUrl("SeasonPage.qml"), {"tv_id": tv_id, "imdb_id": imdb_id, "name": name, "year": year, "season_number": season, "season_poster": thumb_url})
@@ -56,7 +56,6 @@ Page {
 
         ToolbarButton {
             id: returnHome
-            visible: pageStack.depth > 2
             action: returnHomeAction
         }
     }

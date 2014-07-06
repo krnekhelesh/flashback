@@ -17,9 +17,9 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
+import Ubuntu.Components 1.1
 import QtGraphicalEffects 1.0
-import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
 import "../models"
 import "../backend/backend.js" as Backend
@@ -33,17 +33,29 @@ Page {
 
     actions: [
         Action {
+            id: appSettingsAction
+            text: i18n.tr("Settings")
+            visible: !createAccountMessage.visible
+            keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
+            description: i18n.tr("Application Settings")
+            iconName: "settings"
+            onTriggered: pagestack.push(Qt.resolvedUrl("SettingPage.qml"))
+        },
+
+        Action {
             id: setupAccountAction
             text: i18n.tr("Account")
+            visible: createAccountMessage.visible
             keywords: i18n.tr("Setup;Create;Account;Trakt")
             description: i18n.tr("Setup a Trakt Account")
-            iconSource: Qt.resolvedUrl("../graphics/add.png")
+            iconName: "add"
             onTriggered: pageStack.push(Qt.resolvedUrl("Trakt.qml"))
         },
 
         Action {
             id: refreshAccountAction
             text: i18n.tr("Refresh")
+            visible: !account.visible
             keywords: i18n.tr("Reload;Refresh;New;Trakt")
             description: i18n.tr("Refresh Account Information")
             iconName: "reload"
@@ -118,20 +130,21 @@ Page {
         visible: createAccountMessage.visible
         transform: Rotation {
             axis { x: 0; y: 0; z: 1 }
-            angle: 90
+            angle: -90
         }
         anchors {
             right: parent.right
-            bottom: parent.bottom
-            rightMargin: units.gu(-7.5)
+            top: parent.top
+            topMargin: units.gu(10)
+            rightMargin: units.gu(-1.5)
         }
 
-        SequentialAnimation on anchors.bottomMargin {
+        SequentialAnimation on anchors.topMargin {
             running: createAccountMessage.visible
             loops: 5
-            NumberAnimation { from: units.gu(0); to: units.gu(3); duration: 1000 }
+            NumberAnimation { from: units.gu(10); to: units.gu(13); duration: 1000 }
             PauseAnimation { duration: 250 }
-            NumberAnimation { from: units.gu(3); to: units.gu(0); duration: 1000 }
+            NumberAnimation { from: units.gu(13); to: units.gu(10); duration: 1000 }
         }
     }
 
@@ -316,24 +329,19 @@ Page {
     tools: ToolbarItems {
         id: toolbarUser
 
-        locked: createAccountMessage.visible
-
         ToolbarButton {
             id: settings
             action: appSettingsAction
-            visible: !account.visible
         }
 
         ToolbarButton {
             id: refresh
             action: refreshAccountAction
-            visible: !account.visible
         }
 
         ToolbarButton {
             id: account
             action: setupAccountAction
-            visible: createAccountMessage.visible
         }
     }
 }

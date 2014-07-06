@@ -17,9 +17,9 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.Popups 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.Popups 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
 import "../models"
 import "../backend/backend.js" as Backend
@@ -29,6 +29,7 @@ Page {
 
     visible: false
     flickable: null
+    title: movie.attributes.title ? movie.attributes.title : i18n.tr("Movie")
 
     property string movie_id
     property bool isMovieSeen
@@ -213,7 +214,7 @@ Page {
                 }
                 Repeater {
                     model: movieTrailer.model.count
-                    delegate: Subtitled {
+                    delegate: ListItem.Subtitled {
                         text: movieTrailer.model.get(index).name
                         iconSource: Qt.resolvedUrl("../graphics/trailer2.png")
                         iconFrame: true
@@ -235,18 +236,19 @@ Page {
             keywords: i18n.tr("Play;Watch;Trailer;Preview")
             description: i18n.tr("Play Movie Trailer")
             enabled: movieTrailer.model.count > 0
-            iconSource: Qt.resolvedUrl("../graphics/play.svg")
-            onTriggered: PopupUtils.open(trailerPopoverComponent, playTrailer)
+            iconName: "media-playback-start"
+            onTriggered: PopupUtils.open(trailerPopoverComponent, null)
         },
 
         TraktAction {
             id: shareMovieAction
-            onTriggered: PopupUtils.open(sharePopoverComponent, shareMovie)
+            onTriggered: PopupUtils.open(sharePopoverComponent, null)
         }
     ]
 
     Flickable {
         id: flickable
+        clip: true
         anchors.fill: parent
         flickableDirection: Flickable.VerticalFlick
         contentHeight: movieThumb.height + ratingsRow.height + detailsColumn.height + units.gu(10)
@@ -269,12 +271,8 @@ Page {
         }
 
         Label {
-            id: title
-            text: movie.attributes.title
-            fontSize: "large"
-            maximumLineCount: 2
-            elide: Text.ElideRight
-            wrapMode: Text.WordWrap
+            id: summary
+
             anchors {
                 top: parent.top
                 left: movieThumb.right
@@ -283,118 +281,27 @@ Page {
                 rightMargin: units.gu(2)
                 topMargin: units.gu(2)
             }
-        }
 
-        Rotater {
-            id: overviewContainer
-
-            flipHeight: moviePage.height
-            height: movieThumb.height/2
-            anchors {
-                top: title.bottom
-                left: title.left
-                right: title.right
-                topMargin: units.gu(2)
-            }
-
+            elide: Text.ElideRight
+            wrapMode: Text.WordWrap
             visible: movie.attributes.overview
+            text: movie.attributes.overview
+            height: movieThumb.height/1.3
 
-            onFlippedChanged: {
-                if (!overviewContainer.flipped)
-                    flickable.interactive =  flickable.contentHeight > moviePage.height
-                else
-                    flickable.interactive = false
-            }
-
-            front: Label {
-                id: overview
-                text: movie.attributes.overview
-                visible: movie.attributes.overview
-                fontSize: "medium"
+            MouseArea {
                 anchors.fill: parent
-                elide: Text.ElideRight
-                wrapMode: Text.WordWrap
-
-                MouseArea {
-                    anchors.fill: parent
-                    enabled: {
-                        if (!overviewContainer.flipped)
-                            if(overview.truncated)
-                                return true
-                            else
-                                return false
-                        else
-                            return false
-                    }
-                    onClicked: {
-                        overviewContainer.flipped = !overviewContainer.flipped
-
-                        if(!flickable.atYBeginning)
-                            flickable.contentY = 0
-                    }
-                }
-            }
-
-            back: Rectangle {
-                color: "Transparent"
-                anchors.fill: parent
-
-                Background{}
-
-                Flickable {
-                    id: summaryFlickable
-                    anchors.fill: parent
-                    flickableDirection: Flickable.VerticalFlick
-                    contentHeight: mainColumn.height > parent.height ? mainColumn.height + units.gu(10) : parent.height
-                    interactive: contentHeight > parent.height
-
-                    Column {
-                        id: mainColumn
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            top: parent.top
-                            margins: units.gu(2)
-                        }
-
-                        spacing: units.gu(2)
-
-                        Label {
-                            id: header
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: i18n.tr("Full Summary")
-                            fontSize: "x-large"
-                        }
-
-                        Label {
-                            id: fullOverview
-                            text: movie.attributes.overview
-                            visible: movie.attributes.overview
-                            fontSize: "medium"
-                            anchors {
-                                left: parent.left
-                                right: parent.right
-                            }
-
-                            elide: Text.ElideRight
-                            wrapMode: Text.WordWrap
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: overviewContainer.flipped
-                        onClicked: overviewContainer.flipped = !overviewContainer.flipped
-                    }
-                }
+                enabled: summary.truncated
+                onClicked: pagestack.push(Qt.resolvedUrl("SummaryPage.qml"), {"summary": movie.attributes.overview})
             }
         }
 
         Column {
             id: movieColumn
             anchors {
-                left: title.left
-                right: title.right
+                left: movieThumb.right
+                right: parent.right
+                leftMargin: units.gu(2)
+                rightMargin: units.gu(2)
                 bottom: movieThumb.bottom
             }
             spacing: units.gu(1)
@@ -455,34 +362,34 @@ Page {
                 topMargin: units.gu(2)
             }
 
-            Header { text: i18n.tr("Details") }
+            ListItem.Header { text: i18n.tr("Details") }
 
-            MultiValue {
+            ListItem.MultiValue {
                 id: genres
                 text: i18n.tr("Genres")
                 values: movie.attributes.genres.map(function(o) { return o.name })
                 visible: movie.attributes.genres.length > 0
             }
 
-            Subtitled {
+            ListItem. Subtitled {
                 id: releaseDate
                 text: i18n.tr("Release Date")
                 subText: Qt.formatDate(new Date(movie.attributes.releaseDate), 'dd MMMM yyyy')
                 visible: movie.attributes.releaseDate
             }
 
-            Subtitled {
+            ListItem.Subtitled {
                 id: theme
                 text: i18n.tr("Tagline")
                 subText: movie.attributes.tagline
                 visible: movie.attributes.tagline
             }
 
-            Header { text: i18n.tr("Casts") }
+            ListItem.Header { text: i18n.tr("Casts") }
 
             Repeater {
                 model: (movieCast.count > 3 ? 3 : movieCast.count)
-                delegate: Subtitled {
+                delegate: ListItem.Subtitled {
                     text: movieCast.model.get(index).name
                     iconSource: movieCast.model.get(index).thumb_url
                     progression: true
@@ -491,18 +398,18 @@ Page {
                 }
             }
 
-            Standard {
+            ListItem.Standard {
                 id: allCast
                 text: i18n.tr("Full Cast")
                 progression: true
                 onClicked: pageStack.push(Qt.resolvedUrl("CastPage.qml"), {"title": i18n.tr("Full Cast"), "dataModel": movieCast.model})
             }
 
-            Header { text: i18n.tr("Production Crew") }
+            ListItem.Header { text: i18n.tr("Production Crew") }
 
             Repeater {
                 model: (movieCrew.count > 3 ? 3 : movieCrew.count)
-                delegate: Subtitled {
+                delegate: ListItem.Subtitled {
                     text: movieCrew.model.get(index).name
                     progression: true
                     subText: movieCrew.model.get(index).department
@@ -510,7 +417,7 @@ Page {
                 }
             }
 
-            Standard {
+            ListItem.Standard {
                 id: fullCrew
                 text: i18n.tr("Full Crew")
                 progression: true
@@ -532,7 +439,6 @@ Page {
 
         ToolbarButton {
             id: returnHome
-            visible: pageStack.depth > 2
             action: returnHomeAction
         }
 

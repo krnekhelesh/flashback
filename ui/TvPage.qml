@@ -17,9 +17,9 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.Popups 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.Popups 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
 import "../models"
 import "../backend/backend.js" as Backend
@@ -29,6 +29,7 @@ Page {
 
     visible: false
     flickable: null
+    title: show.attributes.name ? show.attributes.name : i18n.tr("TV Show")
 
     property string tv_id
     property int userVote: 0
@@ -46,7 +47,7 @@ Page {
 
         TraktAction {
             id: shareShowAction
-            onTriggered: PopupUtils.open(sharePopoverComponent, shareShow)
+            onTriggered: PopupUtils.open(sharePopoverComponent, null)
         }
     ]
 
@@ -159,6 +160,8 @@ Page {
 
     Flickable {
         id: flickable
+
+        clip: true
         anchors.fill: parent
         flickableDirection: Flickable.VerticalFlick
         contentHeight: tvThumb.height + ratingsRow.height + detailsColumn.height + units.gu(10)
@@ -181,13 +184,8 @@ Page {
         }
 
         Label {
-            id: name
-            text: show.attributes.name
-            fontSize: "large"
-            width: tvColumn.width
-            maximumLineCount: 2
-            elide: Text.ElideRight
-            wrapMode: Text.WordWrap
+            id: summary
+
             anchors {
                 top: parent.top
                 left: tvThumb.right
@@ -196,117 +194,27 @@ Page {
                 rightMargin: units.gu(2)
                 topMargin: units.gu(2)
             }
-        }
 
-        Rotater {
-            id: overviewContainer
-
-            flipHeight: tvPage.height
-            height: tvThumb.height/5
-            anchors {
-                top: name.bottom
-                left: name.left
-                right: name.right
-                topMargin: units.gu(2)
-            }
-
+            elide: Text.ElideRight
+            wrapMode: Text.WordWrap
             visible: show.attributes.overview
+            text: show.attributes.overview
+            height: tvThumb.height/2.5
 
-            onFlippedChanged: {
-                if (!overviewContainer.flipped)
-                    flickable.interactive =  flickable.contentHeight > tvPage.height
-                else
-                    flickable.interactive = false
-            }
-
-            front: Label {
-                id: overview
-                text: show.attributes.overview
-                fontSize: "medium"
+            MouseArea {
                 anchors.fill: parent
-                elide: Text.ElideRight
-                wrapMode: Text.WordWrap
-
-                MouseArea {
-                    anchors.fill: parent
-                    enabled: {
-                        if (!overviewContainer.flipped)
-                            if(overview.truncated)
-                                return true
-                            else
-                                return false
-                        else
-                            return false
-                    }
-                    onClicked: {
-                        overviewContainer.flipped = !overviewContainer.flipped
-
-                        if(!flickable.atYBeginning)
-                            flickable.contentY = 0
-                    }
-                }
-            }
-
-            back: Rectangle {
-                color: "Transparent"
-                anchors.fill: parent
-
-                Background{}
-
-                Flickable {
-                    id: summaryFlickable
-                    anchors.fill: parent
-                    flickableDirection: Flickable.VerticalFlick
-                    contentHeight: mainColumn.height > parent.height ? mainColumn.height + units.gu(10) : parent.height
-                    interactive: contentHeight > parent.height
-
-                    Column {
-                        id: mainColumn
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            top: parent.top
-                            margins: units.gu(2)
-                        }
-
-                        spacing: units.gu(2)
-
-                        Label {
-                            id: header
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: i18n.tr("Full Summary")
-                            fontSize: "x-large"
-                        }
-
-                        Label {
-                            id: fullOverview
-                            text: show.attributes.overview
-                            visible: show.attributes.overview
-                            fontSize: "medium"
-                            anchors {
-                                left: parent.left
-                                right: parent.right
-                            }
-
-                            elide: Text.ElideRight
-                            wrapMode: Text.WordWrap
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: overviewContainer.flipped
-                        onClicked: overviewContainer.flipped = !overviewContainer.flipped
-                    }
-                }
+                enabled: summary.truncated
+                onClicked: pagestack.push(Qt.resolvedUrl("SummaryPage.qml"), {"summary": show.attributes.overview})
             }
         }
 
         Column {
             id: tvColumn
             anchors {
-                left: name.left
-                right: name.right
+                left: tvThumb.right
+                right: parent.right
+                leftMargin: units.gu(2)
+                rightMargin: units.gu(2)
                 bottom: tvThumb.bottom
             }
             spacing: units.gu(1)
@@ -391,40 +299,40 @@ Page {
                 topMargin: units.gu(2)
             }
 
-            Header { text: i18n.tr("Details") }
+            ListItem.Header { text: i18n.tr("Details") }
 
-            Subtitled {
+            ListItem.Subtitled {
                 text: i18n.tr("Status")
                 subText: show.attributes.in_production === "Continuing" ? "<font color='lightgreen'>" + i18n.tr("Continuing") + "</font>" : "<font color='orange'>" + i18n.tr("Ended") + "</font>"
                 visible: show.attributes.in_production !== undefined
             }
 
-            MultiValue {
+            ListItem.MultiValue {
                 id: genres
                 text: i18n.tr("Genres")
                 values: show.attributes.genres.map(function(o) { return o })
                 visible: show.attributes.genres.length > 0
             }
 
-            Subtitled {
+            ListItem.Subtitled {
                 id: releaseDate
                 text: i18n.tr("First Air Date")
                 subText: Qt.formatDate(new Date(show.attributes.first_air_date*1000), 'dd MMMM yyyy')
                 visible: show.attributes.first_air_date
             }
 
-            Header { text: i18n.tr("Casts") }
+            ListItem.Header { text: i18n.tr("Casts") }
 
             Repeater {
                 model: (tvCast.count > 3 ? 3 : tvCast.count)
-                delegate: Subtitled {
+                delegate: ListItem.Subtitled {
                     text: tvCast.model.get(index).name
                     iconSource: tvCast.model.get(index).thumb_url
                     subText: tvCast.model.get(index).character
                 }
             }
 
-            Standard {
+            ListItem.Standard {
                 id: allCast
                 text: i18n.tr("Full Cast")
                 progression: true
@@ -438,7 +346,6 @@ Page {
 
         ToolbarButton {
             id: returnHome
-            visible: pageStack.depth > 2
             action: returnHomeAction
         }
 

@@ -17,7 +17,8 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
+import Ubuntu.Layouts 1.0
+import Ubuntu.Components 1.1
 import "../components"
 import "../models"
 import "../backend/backend.js" as Backend
@@ -33,7 +34,7 @@ Page {
             text: i18n.tr("Tv Show")
             keywords: i18n.tr("Search;Tv;Show;Shows;Find")
             description: i18n.tr("Search for Tv Shows")
-            iconSource: Qt.resolvedUrl("../graphics/find.svg")
+            iconName: "search"
             onTriggered: pageStack.push(Qt.resolvedUrl("SearchTv.qml"))
         }
     ]
@@ -111,48 +112,60 @@ Page {
         }
     }
 
-    LoadingIndicator {
-        isShown: trendingShowsModel.loading || userWatchlistShowsModel.loading || airingShowsModel.loading
-    }
-
-    Flickable {
-        id: flickable
-        clip: true
+    /*
+      Phone and Tablet UI Definitions
+     */
+    Layouts {
+        id: tvLayout
         anchors.fill: parent
-        contentHeight: mainColumn.height + units.gu(5)
 
-        Column {
-            id: mainColumn
+        layouts: [
+            TvTabTablet {}
+        ]
 
-            anchors {
-                left: parent.left;
-                right: parent.right;
-                top: parent.top;
-            }
+        LoadingIndicator {
+            isShown: trendingShowsModel.loading || userWatchlistShowsModel.loading || airingShowsModel.loading
+        }
 
-            spacing: units.gu(1)
+        Flickable {
+            id: flickable
+            clip: true
+            anchors.fill: parent
+            contentHeight: mainColumn.height + units.gu(5)
 
-            DetailCarousel {
-                id: airingShows
-                dataModel: airingShowsModel.model
-                header: i18n.tr("Upcoming Episodes")
-                visible: traktLogin.contents.status !== "disabled" && airingShowsModel.count > 0
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": model.id, "season_number": model.season, "episode_number": model.episode, "watched": model.watched})
-            }
+            Column {
+                id: mainColumn
 
-            Carousel {
-                id: userLibrary
-                dataModel: userWatchlistShowsModel.model
-                visible: traktLogin.contents.status !== "disabled" && userWatchlistShowsModel.count > 0
-                header: i18n.tr("Your TV Show Watchlist")
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
-            }
+                anchors {
+                    left: parent.left;
+                    right: parent.right;
+                    top: parent.top;
+                }
 
-            Carousel {
-                id: trending
-                dataModel: trendingShowsModel.model
-                header: i18n.tr("Trending TV Shows")
-                onThumbClicked: pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
+                spacing: units.gu(1)
+
+                DetailCarousel {
+                    id: airingShows
+                    dataModel: airingShowsModel.model
+                    header: i18n.tr("Upcoming Episodes")
+                    visible: traktLogin.contents.status !== "disabled" && airingShowsModel.count > 0
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": model.id, "season_number": model.season, "episode_number": model.episode, "watched": model.watched})
+                }
+
+                Carousel {
+                    id: userLibrary
+                    dataModel: userWatchlistShowsModel.model
+                    visible: traktLogin.contents.status !== "disabled" && userWatchlistShowsModel.count > 0
+                    header: i18n.tr("Your TV Show Watchlist")
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
+                }
+
+                Carousel {
+                    id: trending
+                    dataModel: trendingShowsModel.model
+                    header: i18n.tr("Trending TV Shows")
+                    onThumbClicked: pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
+                }
             }
         }
     }

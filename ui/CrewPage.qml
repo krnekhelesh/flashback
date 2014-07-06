@@ -17,8 +17,8 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
 
 Page {
@@ -39,7 +39,7 @@ Page {
         anchors.fill: parent
         clip: true
 
-        delegate: Subtitled {
+        delegate: ListItem.Subtitled {
             text: name
             subText: department
             progression: true

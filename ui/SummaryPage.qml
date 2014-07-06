@@ -20,37 +20,34 @@ import QtQuick 2.0
 import Ubuntu.Components 1.1
 import "../components"
 
-Item {
-    id: ratings
+Page {
+    id: summaryPage
 
-    property alias rating: _rating.label
-    property alias personal: _personalRating.label
-    property alias personalIcon: _personalRating.image
+    visible: false
+    flickable: null
+    title: i18n.tr("Full Summary")
 
-    height: _overallRating.height
+    property alias summary: _summary.text
 
-    signal clicked()
+    // Page Background
+    Background {}
 
-    Row {
-        id: _overallRating
+    Flickable {
+        id: flickable
 
-        spacing: units.gu(2)
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            verticalCenter: parent.verticalCenter
-        }
+        clip: true
+        anchors.fill: parent
+        flickableDirection: Flickable.VerticalFlick
+        contentHeight: _summary.height + units.gu(5)
 
-        ImageLabel {
-            id: _rating
-            image: Qt.resolvedUrl("../graphics/star.png")
-        }
+        Label {
+            id: _summary
 
-        ImageLabel {
-            id: _personalRating
-            MouseArea {
-                anchors.fill: parent
-                onClicked: ratings.clicked()
-            }
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: units.gu(2)
+            wrapMode: Text.WordWrap
         }
     }
 }
