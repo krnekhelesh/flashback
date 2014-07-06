@@ -53,7 +53,7 @@ Page {
         Action {
             id: searchAllAction
             text: i18n.tr("Search")
-            visible: !account.visible
+            visible: !createAccountMessage.visible
             keywords: i18n.tr("Search;Tv;Show;Shows;Find;Movie;Movies;Actor;Celeb")
             description: i18n.tr("Search All")
             iconName: "search"
