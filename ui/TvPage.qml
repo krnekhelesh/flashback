@@ -29,13 +29,28 @@ Page {
 
     visible: false
     flickable: null
-    title: show.attributes.name ? show.attributes.name : i18n.tr("TV Show")
+    title: i18n.tr("TV Show")
 
     property string tv_id
     property int userVote: 0
     property bool isShowWatchlisted
 
-    actions: [
+    head.contents: Label {
+        width: parent ? parent.width : undefined
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+        text: show.attributes.name ? show.attributes.name : i18n.tr("TV Show")
+        fontSize: "x-large"
+        maximumLineCount: fontSize === "large" ? 2 : 1
+        wrapMode: Text.WordWrap
+        elide: Text.ElideRight
+        onTruncatedChanged: {
+            if (truncated) {
+                fontSize = "large"
+            }
+        }
+    }
+
+    head.actions: [
         Action {
             id: seeEpisodeGuideAction
             text: i18n.tr("Episode Guide")

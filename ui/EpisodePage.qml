@@ -28,7 +28,7 @@ Page {
 
     visible: false
     flickable: null
-    title: episodeDetails.attributes.name ? episodeDetails.attributes.name : "TV Show"
+    title: i18n.tr("TV Show")
 
     // Properties received from other pages to retrieve episode info
     property string season_number
@@ -181,7 +181,22 @@ Page {
         }
     }
 
-    actions: [
+    head.contents: Label {
+        width: parent ? parent.width : undefined
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+        text: episodeDetails.attributes.name ? episodeDetails.attributes.name : i18n.tr("TV Show")
+        fontSize: "x-large"
+        maximumLineCount: fontSize === "large" ? 2 : 1
+        wrapMode: Text.WordWrap
+        elide: Text.ElideRight
+        onTruncatedChanged: {
+            if (truncated) {
+                fontSize = "large"
+            }
+        }
+    }
+
+    head.actions: [
         TraktAction {
             id: shareEpisodeAction
             onTriggered: PopupUtils.open(sharePopoverComponent, null)

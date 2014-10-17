@@ -29,7 +29,7 @@ Page {
 
     visible: false
     flickable: null
-    title: movie.attributes.title ? movie.attributes.title : i18n.tr("Movie")
+    title: i18n.tr("Movie")
 
     property string movie_id
     property bool isMovieSeen
@@ -229,7 +229,22 @@ Page {
         }
     }
 
-    actions: [
+    head.contents: Label {
+        width: parent ? parent.width : undefined
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+        text: movie.attributes.title ? movie.attributes.title : i18n.tr("Movie")
+        fontSize: "x-large"
+        maximumLineCount: fontSize === "large" ? 2 : 1
+        wrapMode: Text.WordWrap
+        elide: Text.ElideRight
+        onTruncatedChanged: {
+            if (truncated) {
+                fontSize = "large"
+            }
+        }
+    }
+
+    head.actions: [
         Action {
             id: playMovieTrailerAction
             text: i18n.tr("Trailer")
