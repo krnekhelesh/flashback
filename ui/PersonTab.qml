@@ -117,7 +117,9 @@ Page {
                 }
 
                 onSearchTriggered: {
-                    searchPageLoader.item.search_model.model.clear();
+                    if (searchPageLoader.status === Loader.Ready) {
+                        searchPageLoader.item.search_model.model.clear();
+                    }
                     if (searchField.text !== "") {
                         searchPageLoader.item.search_model.source = Backend.searchUrl(searchPageLoader.item.type, searchField.search_term);
                     }
