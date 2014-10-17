@@ -25,6 +25,7 @@ import "../models"
 import "../backend/backend.js" as Backend
 
 Page {
+    id: movieTab
 
     flickable: null
 
@@ -51,17 +52,6 @@ Page {
         source: Backend.upcomingMoviesUrl()
     }
 
-    actions: [
-        Action {
-            id: searchMovieAction
-            text: i18n.tr("Movie")
-            keywords: i18n.tr("Search;Movie;Movies;Find")
-            description: i18n.tr("Search for Movies")
-            iconName: "search"
-            onTriggered: pageStack.push(Qt.resolvedUrl("SearchMovie.qml"))
-        }
-    ]
-
     /*
       Phone and Tablet UI Definitions
      */
@@ -74,7 +64,7 @@ Page {
         ]
 
         LoadingIndicator {
-            isShown: nowPlayingMoviesModel.loading || upcomingMoviesModel.loading || trendingMoviesModel.loading
+            isShown: nowPlayingMoviesModel.loading || upcomingMoviesModel.loading || trendingMoviesModel.loading && movieTab.state !== "search"
         }
 
         Flickable {
@@ -142,19 +132,83 @@ Page {
                 }
             }
         }
-    }
 
-    tools: ToolbarItems {
-        id: toolbarMovies
-
-        ToolbarButton {
-            id: settings
-            action: appSettingsAction
+        Loader {
+            id: searchPageLoader
+            anchors.fill: parent
         }
 
-        ToolbarButton {
-            id: searchMovies
-            action: searchMovieAction
+        Component {
+            id: searchPageComponent
+            SearchPage {
+                id: searchPage
+
+                type: "movie"
+                search_model: search_results
+                onResultClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
+
+                Movies {
+                    id: search_results
+                }
+            }
         }
     }
+
+    Action {
+        id: searchMovieAction
+        text: i18n.tr("Movie")
+        keywords: i18n.tr("Search;Movie;Movies;Find")
+        description: i18n.tr("Search for Movies")
+        iconName: "search"
+        onTriggered: {
+            movieTab.state = "search"
+            searchField.forceActiveFocus()
+            flickable.visible = false
+            searchPageLoader.sourceComponent = searchPageComponent
+        }
+    }
+
+    state: "default"
+    states: [
+        PageHeadState {
+            name: "default"
+            head: movieTab.head
+            actions: [
+                searchMovieAction,
+                appSettingsAction
+            ]
+        },
+
+        PageHeadState {
+            name: "search"
+            head: movieTab.head
+            backAction: Action {
+                iconName: "back"
+                text: i18n.tr("Back")
+                onTriggered: {
+                    movieTab.state = "default"
+                    flickable.visible = true
+                    searchField.text = ""
+                    searchPageLoader.sourceComponent = undefined
+                }
+            }
+
+            contents: SearchBox {
+                id: searchField
+                defaultText: i18n.tr("Search movie...")
+                anchors {
+                    left: parent ? parent.left : undefined
+                    right: parent ? parent.right : undefined
+                    rightMargin: units.gu(2)
+                }
+
+                onSearchTriggered: {
+                    searchPageLoader.item.search_model.model.clear()
+                    if (searchField.text !== "") {
+                        searchPageLoader.item.search_model.source = Backend.searchUrl(searchPageLoader.item.type, searchField.search_term)
+                    }
+                }
+            }
+        }
+    ]
 }

@@ -24,20 +24,11 @@ import "../models"
 import "../backend/backend.js" as Backend
 
 Page {
+    id: tvTab
+
     flickable: null
 
     Component.onCompleted: console.log("[LOG]: TV Tab Loaded")
-
-    actions: [
-        Action {
-            id: searchTvAction
-            text: i18n.tr("Tv Show")
-            keywords: i18n.tr("Search;Tv;Show;Shows;Find")
-            description: i18n.tr("Search for Tv Shows")
-            iconName: "search"
-            onTriggered: pageStack.push(Qt.resolvedUrl("SearchTv.qml"))
-        }
-    ]
 
     // Tab Background
     Background {}
@@ -124,7 +115,7 @@ Page {
         ]
 
         LoadingIndicator {
-            isShown: trendingShowsModel.loading || userWatchlistShowsModel.loading || airingShowsModel.loading
+            isShown: trendingShowsModel.loading || userWatchlistShowsModel.loading || airingShowsModel.loading && tvTab.state !== "search"
         }
 
         Flickable {
@@ -168,19 +159,87 @@ Page {
                 }
             }
         }
-    }
 
-    tools: ToolbarItems {
-        id: toolbarTv
-
-        ToolbarButton {
-            id: settings
-            action: appSettingsAction
+        Loader {
+            id: searchPageLoader
+            anchors.fill: parent
         }
 
-        ToolbarButton {
-            id: searchTv
-            action: searchTvAction
+        Component {
+            id: searchPageComponent
+            SearchPage {
+                id: searchPage
+
+                type: "tv"
+                search_model: search_results
+                onResultClicked: pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
+
+                Shows {
+                    id: search_results
+                }
+            }
         }
     }
+
+    Action {
+        id: searchTvAction
+        text: i18n.tr("Tv Show")
+        keywords: i18n.tr("Search;Tv;Show;Shows;Find")
+        description: i18n.tr("Search for Tv Shows")
+        iconName: "search"
+        onTriggered: {
+            tvTab.state = "search"
+            searchField.forceActiveFocus()
+            flickable.visible = false
+            searchPageLoader.sourceComponent = searchPageComponent
+        }
+    }
+
+    state: "default"
+    states: [
+        PageHeadState {
+            name: "default"
+            head: tvTab.head
+            actions: [
+                searchTvAction,
+                appSettingsAction
+            ]
+        },
+
+        PageHeadState {
+            name: "search"
+            head: tvTab.head
+            backAction: Action {
+                iconName: "back"
+                text: i18n.tr("Back")
+                onTriggered: {
+                    tvTab.state = "default"
+                    flickable.visible = true
+                    searchField.text = ""
+                    searchPageLoader.sourceComponent = undefined
+                }
+            }
+
+            contents: SearchBox {
+                id: searchField
+                defaultText: i18n.tr("Search TV Show")
+                anchors {
+                    left: parent ? parent.left : undefined
+                    right: parent ? parent.right : undefined
+                    rightMargin: units.gu(2)
+                }
+
+                onSearchTriggered: {
+                    searchPageLoader.item.search_model.model.clear()
+                    if (searchField.text !== "") {
+                        searchPageLoader.item.search_model.source = Backend.searchUrl(searchPageLoader.item.type, searchField.search_term);
+                        if (searchPageLoader.item.type === "tv") {
+                            searchPageLoader.item.search_model.createMessage(traktLogin.contents.username, traktLogin.contents.password)
+                            searchPageLoader.item.search_model.sendMessage()
+                        }
+                    }
+                }
+            }
+        }
+    ]
 }
