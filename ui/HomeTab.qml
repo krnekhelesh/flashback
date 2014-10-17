@@ -169,7 +169,7 @@ Page {
             clip: true
             anchors.fill: parent
             contentHeight: mainColumn.height + units.gu(5)
-            visible: !createAccountMessage.visible
+            visible: !createAccountMessage.visible && homeTab.state !== "search"
 
             Column {
                 id: mainColumn
@@ -255,6 +255,12 @@ Page {
                 }
             }
         }
+
+        Loader {
+            id: searchPageLoader
+            Layouts.item: "searchPageLoader"
+            anchors.fill: parent
+        }
     }
 
     EmptyState {
@@ -290,11 +296,6 @@ Page {
             PauseAnimation { duration: 250 }
             NumberAnimation { from: units.gu(13); to: units.gu(10); duration: 1000 }
         }
-    }
-
-    Loader {
-        id: searchPageLoader
-        anchors.fill: parent
     }
 
     Component {
@@ -333,9 +334,14 @@ Page {
         onTriggered: {
             homeTab.state = "search"
             searchField.forceActiveFocus()
-            flickable.visible = false
             searchPageLoader.sourceComponent = searchPageComponent
         }
+    }
+
+    function setDefaultState() {
+        homeTab.state = "default"
+        searchField.text = ""
+        searchPageLoader.sourceComponent = undefined
     }
 
     state: "default"
@@ -357,10 +363,7 @@ Page {
                 iconName: "back"
                 text: i18n.tr("Back")
                 onTriggered: {
-                    homeTab.state = "default"
-                    flickable.visible = true
-                    searchField.text = ""
-                    searchPageLoader.sourceComponent = undefined
+                    setDefaultState()
                 }
             }
 

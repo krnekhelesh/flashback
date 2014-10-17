@@ -73,6 +73,7 @@ Page {
             anchors.fill: parent
             contentHeight: mainHomeColumn.height + units.gu(5)
             interactive: contentHeight > parent.height
+            visible: movieTab.state !== "search"
 
             Column {
                 id: mainHomeColumn
@@ -135,6 +136,7 @@ Page {
 
         Loader {
             id: searchPageLoader
+            Layouts.item: "searchPageLoader"
             anchors.fill: parent
         }
 
@@ -154,6 +156,12 @@ Page {
         }
     }
 
+    function setDefaultState() {
+        movieTab.state = "default"
+        searchField.text = ""
+        searchPageLoader.sourceComponent = undefined
+    }
+
     Action {
         id: searchMovieAction
         text: i18n.tr("Movie")
@@ -163,7 +171,6 @@ Page {
         onTriggered: {
             movieTab.state = "search"
             searchField.forceActiveFocus()
-            flickable.visible = false
             searchPageLoader.sourceComponent = searchPageComponent
         }
     }
@@ -186,10 +193,7 @@ Page {
                 iconName: "back"
                 text: i18n.tr("Back")
                 onTriggered: {
-                    movieTab.state = "default"
-                    flickable.visible = true
-                    searchField.text = ""
-                    searchPageLoader.sourceComponent = undefined
+                    setDefaultState()
                 }
             }
 

@@ -76,6 +76,9 @@ ConditionalLayout {
                     menuIcon: Qt.resolvedUrl("../graphics/trending_icon.png")
                     isSelected: true
                     onClicked: {
+                        if (movieTab.state === "search") {
+                            movieTab.setDefaultState()
+                        }
                         selectListItem(trendingMoviesTablet)
                         movieList.dataModel = trendingMoviesModel.model
                         movieList.loading = trendingMoviesModel.loading
@@ -88,6 +91,9 @@ ConditionalLayout {
                     menuLabel: i18n.tr("Playing in Theatres")
                     menuIcon: Qt.resolvedUrl("../graphics/now_playing.png")
                     onClicked: {
+                        if (movieTab.state === "search") {
+                            movieTab.setDefaultState()
+                        }
                         selectListItem(nowPlayingTablet)
                         movieList.dataModel = nowPlayingMoviesModel.model
                         movieList.loading = nowPlayingMoviesModel.loading
@@ -100,6 +106,9 @@ ConditionalLayout {
                     menuLabel: i18n.tr("Upcoming Movies")
                     menuIcon: Qt.resolvedUrl("../graphics/upcoming.png")
                     onClicked: {
+                        if (movieTab.state === "search") {
+                            movieTab.setDefaultState()
+                        }
                         selectListItem(upcomingMoviesTablet)
                         movieList.dataModel = upcomingMoviesModel.model
                         movieList.loading = upcomingMoviesModel.loading
@@ -119,6 +128,9 @@ ConditionalLayout {
                     menuLabel: i18n.tr("Top Rated")
                     menuIcon: Qt.resolvedUrl("../graphics/top_rated.png")
                     onClicked: {
+                        if (movieTab.state === "search") {
+                            movieTab.setDefaultState()
+                        }
                         selectListItem(filterRating)
                         movieList.dataModel = topRatedMovieModel.model
                         movieList.loading = topRatedMovieModel.loading
@@ -131,6 +143,9 @@ ConditionalLayout {
                     menuLabel: i18n.tr("Recommended")
                     menuIcon: Qt.resolvedUrl("../graphics/recommended.png")
                     onClicked: {
+                        if (movieTab.state === "search") {
+                            movieTab.setDefaultState()
+                        }
                         selectListItem(filterRecommended)
                         movieList.dataModel = recommendedMoviesModel.model
                         movieList.loading = recommendedMoviesModel.loading
@@ -187,7 +202,7 @@ ConditionalLayout {
 
             EmptyState {
                 id: noContentMessage
-                visible: !movieList.loading && movieList.dataModel.count === 0
+                visible: !movieList.loading && movieList.dataModel.count === 0 && movieTab.state !== "search"
                 logo: !filterRecommended.isSelected || traktLogin.contents.status !== "disabled" ? Qt.resolvedUrl("../graphics/empty_content.png") : Qt.resolvedUrl("../graphics/account.png")
                 header: !filterRecommended.isSelected || traktLogin.contents.status !== "disabled" ? i18n.tr("No Content Yet") : i18n.tr("No Trakt Account")
                 message: !filterRecommended.isSelected || traktLogin.contents.status !== "disabled" ? i18n.tr("This space feels empty. Watch some movies!") : i18n.tr("Please set up an account using the add \"Accounts\" button to use this feature")
@@ -195,7 +210,7 @@ ConditionalLayout {
 
             LoadingIndicator {
                 id: _loadingIndicator
-                isShown: movieList.loading
+                isShown: movieList.loading && movieTab.state !== "search"
             }
 
             Grid {
@@ -208,7 +223,14 @@ ConditionalLayout {
                 dataModel: trendingMoviesModel.model
                 loading: trendingMoviesModel.loading
 
+                visible: movieTab.state !== "search"
+
                 onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
+            }
+
+            ItemLayout {
+                anchors.fill: parent
+                item: "searchPageLoader"
             }
         }
     }

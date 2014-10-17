@@ -123,6 +123,7 @@ Page {
             clip: true
             anchors.fill: parent
             contentHeight: mainColumn.height + units.gu(5)
+            visible: tvTab.state !== "search"
 
             Column {
                 id: mainColumn
@@ -162,6 +163,7 @@ Page {
 
         Loader {
             id: searchPageLoader
+            Layouts.item: "searchPageLoader"
             anchors.fill: parent
         }
 
@@ -181,6 +183,12 @@ Page {
         }
     }
 
+    function setDefaultState() {
+        tvTab.state = "default"
+        searchField.text = ""
+        searchPageLoader.sourceComponent = undefined
+    }
+
     Action {
         id: searchTvAction
         text: i18n.tr("Tv Show")
@@ -190,7 +198,6 @@ Page {
         onTriggered: {
             tvTab.state = "search"
             searchField.forceActiveFocus()
-            flickable.visible = false
             searchPageLoader.sourceComponent = searchPageComponent
         }
     }
@@ -213,10 +220,7 @@ Page {
                 iconName: "back"
                 text: i18n.tr("Back")
                 onTriggered: {
-                    tvTab.state = "default"
-                    flickable.visible = true
-                    searchField.text = ""
-                    searchPageLoader.sourceComponent = undefined
+                    setDefaultState()
                 }
             }
 
