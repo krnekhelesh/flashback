@@ -38,6 +38,9 @@ ConditionalLayout {
                     menuIcon: Qt.resolvedUrl("../graphics/trending_icon.png")
                     isSelected: true
                     onClicked: {
+                        if (tvTab.state === "search") {
+                            tvTab.setDefaultState()
+                        }
                         selectListItem(trendingTablet)
                         tvList.gridType = "gridCarousel"
                         tvList.dataModel = trendingShowsModel.model
@@ -51,6 +54,9 @@ ConditionalLayout {
                     menuLabel: i18n.tr("TV Show Watchlist")
                     menuIcon: Qt.resolvedUrl("../graphics/watchlist_sidebar.png")
                     onClicked: {
+                        if (tvTab.state === "search") {
+                            tvTab.setDefaultState()
+                        }
                         selectListItem(userLibraryTablet)
                         tvList.gridType = "gridCarousel"
                         tvList.dataModel = userWatchlistShowsModel.model
@@ -65,6 +71,9 @@ ConditionalLayout {
                     menuLabel: i18n.tr("Episodes Upcoming")
                     menuIcon: Qt.resolvedUrl("../graphics/upcoming.png")
                     onClicked: {
+                        if (tvTab.state === "search") {
+                            tvTab.setDefaultState()
+                        }
                         selectListItem(airingShowsTablet)
                         tvList.dataModel = airingShowsModel.model
                         tvList.showDate = true
@@ -123,7 +132,7 @@ ConditionalLayout {
 
             EmptyState {
                 id: noContentMessage
-                visible: !tvList.loading && tvList.dataModel.count === 0
+                visible: !tvList.loading && tvList.dataModel.count === 0 && tvTab.state !== "search"
                 logo: trendingTablet.isSelected || traktLogin.contents.status !== "disabled" ? Qt.resolvedUrl("../graphics/empty_content.png") : Qt.resolvedUrl("../graphics/account.png")
                 header: trendingTablet.isSelected || traktLogin.contents.status !== "disabled" ? i18n.tr("No Content Yet") : i18n.tr("No Trakt Account")
                 message: trendingTablet.isSelected || traktLogin.contents.status !== "disabled" ? i18n.tr("This space feels empty. Follow some tv shows!") : i18n.tr("Please set up an account using the add \"Accounts\" button to use this feature")
@@ -131,7 +140,7 @@ ConditionalLayout {
 
             LoadingIndicator {
                 id: _loadingIndicator
-                isShown: tvList.loading
+                isShown: tvList.loading && tvTab.state !== "search"
             }
 
             Grid {
@@ -144,8 +153,15 @@ ConditionalLayout {
                 dataModel: trendingShowsModel.model
                 loading: trendingShowsModel.loading
 
+                visible: tvTab.state !== "search"
+
                 onThumbClicked: gridType === "gridCarousel" ? pageStack.push(Qt.resolvedUrl("TvPage.qml"), {"tv_id": model.id})
                                                             : pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": model.id, "season_number": model.season, "episode_number": model.episode, "watched": model.watched})
+            }
+
+            ItemLayout {
+                anchors.fill: parent
+                item: "searchPageLoader"
             }
         }
     }

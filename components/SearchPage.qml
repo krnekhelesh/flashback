@@ -25,29 +25,9 @@ Item {
     id: _searchTemplate
 
     // Public Properties
-    property alias searchBoxText: _searchBox.defaultText
     property string type
     property variant search_model
     signal resultClicked(var model)
-
-    // Search Box to enter search query along with the search button
-    SearchBox {
-        id: _searchBox
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            margins: units.gu(2)
-        }
-        onSearchTriggered: {
-            search_model.model.clear();
-            search_model.source = Backend.searchUrl(type, _searchBox.search_term);
-            if (type == "tv") {
-                search_model.createMessage(traktLogin.contents.username, traktLogin.contents.password)
-                search_model.sendMessage()
-            }
-        }
-    }
 
     LoadingIndicator {
         id: loadingIndicator
@@ -58,16 +38,7 @@ Item {
     ListView {
         id: _searchResultsList
         clip: true
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-            top: _searchBox.bottom
-            leftMargin: units.gu(2)
-            rightMargin: units.gu(2)
-            bottomMargin: units.gu(2)
-            topMargin: units.gu(5)
-        }
+        anchors.fill: parent
 
         model: search_model.model
 
