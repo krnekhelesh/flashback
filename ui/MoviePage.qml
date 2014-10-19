@@ -39,6 +39,8 @@ Page {
     property double averageVote: 0
     property int userVote: 0
 
+    property bool isAuthenticated: traktLogin.contents.status !== "disabled"
+
     Cast { id: movieCast }
     Crew { id: movieCrew }
     Trailer { id: movieTrailer }
@@ -156,52 +158,6 @@ Page {
     }
 
     Component {
-        id: sharePopoverComponent
-        TraktPopup {
-            checkInMessage: movieActivityDocument.contents.name !== "default" ? i18n.tr("Cancel current movie check-in") : i18n.tr("Check-in movie into Trakt")
-            watchlistMessage: isMovieWatchlisted ? i18n.tr("Remove movie from watchlist") : i18n.tr("Add movie to watchlist")
-            seenMessage: isMovieSeen ? i18n.tr("Mark movie as unseen") : i18n.tr("Mark movie as seen")
-            onCheckedIn: {
-                if(movieActivityDocument.contents.name !== "default") {
-                    cancelCheckIn.source = Backend.cancelTraktCheckIn("movie")
-                    cancelCheckIn.createMessage(traktLogin.contents.username, traktLogin.contents.password)
-                    cancelCheckIn.sendMessage()
-                }
-                else
-                    pagestack.push(Qt.resolvedUrl("TraktCheckIn.qml"), {moviePage: moviePage, type: "Movie", id: movie.attributes.imdb_id, movieTitle: movie.attributes.title, year: movie.attributes.releaseDate.split('-')[0]})
-            }
-            onWatched: {
-                loadingIndicator.loadingText = !isMovieSeen ? i18n.tr("Marking movie as seen") : i18n.tr("Marking movie as unseen")
-                loadingIndicator.isShown = true
-                if(!isMovieSeen) {
-                    movieSee.source = Backend.traktSeenUrl("movie")
-                    movieSee.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, movie.attributes.imdb_id, movie.attributes.title, movie.attributes.releaseDate.split('-')[0])
-                    movieSee.sendMessage()
-                }
-                else {
-                    movieUnsee.source = Backend.cancelTraktSeen("movie")
-                    movieUnsee.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, movie.attributes.imdb_id, movie.attributes.title, movie.attributes.releaseDate.split('-')[0])
-                    movieUnsee.sendMessage()
-                }
-            }
-            onWatchlisted:  {
-                loadingIndicator.loadingText = !isMovieWatchlisted ? i18n.tr("Adding movie to watchlist") : i18n.tr("Removing movie from watchlist")
-                loadingIndicator.isShown = true
-                if(!isMovieWatchlisted) {
-                    movieWatchlist.source = Backend.traktWatchlistUrl("movie")
-                    movieWatchlist.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, movie.attributes.imdb_id, movie.attributes.title, movie.attributes.releaseDate.split('-')[0])
-                }
-                else {
-                    movieWatchlist.source = Backend.traktUnwatchlistUrl("movie")
-                    movieWatchlist.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, movie.attributes.imdb_id, movie.attributes.title, movie.attributes.releaseDate.split('-')[0])
-                }
-                movieWatchlist.sendMessage()
-            }
-            onCommented: pagestack.push(Qt.resolvedUrl("CommentsPage.qml"), {id: movie_id, type: "Movie", name: movie.attributes.title, year: movie.attributes.releaseDate.split('-')[0]})
-        }
-    }
-
-    Component {
         id: trailerPopoverComponent
         Popover {
             id: popover
@@ -244,21 +200,98 @@ Page {
         }
     }
 
-    head.actions: [
-        Action {
-            id: playMovieTrailerAction
-            text: i18n.tr("Trailer")
-            keywords: i18n.tr("Play;Watch;Trailer;Preview")
-            description: i18n.tr("Play Movie Trailer")
-            enabled: movieTrailer.model.count > 0
-            iconName: "media-playback-start"
-            onTriggered: PopupUtils.open(trailerPopoverComponent, null)
-        },
+    Action {
+        id: authenticateAction
+        text: i18n.tr("Login into Trakt")
+        visible: !isAuthenticated
+        iconSource: Qt.resolvedUrl("../graphics/user_white.png")
+        onTriggered: pagestack.push(Qt.resolvedUrl("Trakt.qml"))
+    }
 
-        TraktAction {
-            id: shareMovieAction
-            onTriggered: PopupUtils.open(sharePopoverComponent, null)
+    Action {
+        id: playMovieTrailerAction
+        text: i18n.tr("Trailer")
+        keywords: i18n.tr("Play;Watch;Trailer;Preview")
+        description: i18n.tr("Play Movie Trailer")
+        enabled: movieTrailer.model.count > 0
+        iconName: "media-playback-start"
+        onTriggered: PopupUtils.open(trailerPopoverComponent, null)
+    }
+
+    Action {
+        id: checkInAction
+        visible: isAuthenticated
+        text: movieActivityDocument.contents.name !== "default" ? i18n.tr("Cancel Check-in") : i18n.tr("Check-in Movie")
+        iconSource: Qt.resolvedUrl("../graphics/checkmark.png")
+        onTriggered: {
+            if(movieActivityDocument.contents.name !== "default") {
+                cancelCheckIn.source = Backend.cancelTraktCheckIn("movie")
+                cancelCheckIn.createMessage(traktLogin.contents.username, traktLogin.contents.password)
+                cancelCheckIn.sendMessage()
+            }
+            else
+                pagestack.push(Qt.resolvedUrl("TraktCheckIn.qml"), {moviePage: moviePage, type: "Movie", id: movie.attributes.imdb_id, movieTitle: movie.attributes.title, year: movie.attributes.releaseDate.split('-')[0]})
         }
+    }
+
+    Action {
+        id: watchlistAction
+        visible: isAuthenticated
+        text: isMovieWatchlisted ? i18n.tr("Remove from watchlist") : i18n.tr("Add to watchlist")
+        iconSource: Qt.resolvedUrl("../graphics/watchlist.png")
+        onTriggered: {
+            loadingIndicator.loadingText = !isMovieWatchlisted ? i18n.tr("Adding movie to watchlist") : i18n.tr("Removing movie from watchlist")
+            loadingIndicator.isShown = true
+            if(!isMovieWatchlisted) {
+                movieWatchlist.source = Backend.traktWatchlistUrl("movie")
+                movieWatchlist.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, movie.attributes.imdb_id, movie.attributes.title, movie.attributes.releaseDate.split('-')[0])
+            }
+            else {
+                movieWatchlist.source = Backend.traktUnwatchlistUrl("movie")
+                movieWatchlist.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, movie.attributes.imdb_id, movie.attributes.title, movie.attributes.releaseDate.split('-')[0])
+            }
+            movieWatchlist.sendMessage()
+        }
+    }
+
+    Action {
+        id: watchedAction
+        visible: isAuthenticated
+        text: isMovieSeen ? i18n.tr("Mark unseen") : i18n.tr("Mark seen")
+        iconSource: Qt.resolvedUrl("../graphics/watched.png")
+        onTriggered: {
+            loadingIndicator.loadingText = !isMovieSeen ? i18n.tr("Marking movie as seen") : i18n.tr("Marking movie as unseen")
+            loadingIndicator.isShown = true
+            if(!isMovieSeen) {
+                movieSee.source = Backend.traktSeenUrl("movie")
+                movieSee.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, movie.attributes.imdb_id, movie.attributes.title, movie.attributes.releaseDate.split('-')[0])
+                movieSee.sendMessage()
+            }
+            else {
+                movieUnsee.source = Backend.cancelTraktSeen("movie")
+                movieUnsee.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, movie.attributes.imdb_id, movie.attributes.title, movie.attributes.releaseDate.split('-')[0])
+                movieUnsee.sendMessage()
+            }
+        }
+    }
+
+    Action {
+        id: commentAction
+        text: i18n.tr("View comments")
+        iconSource: Qt.resolvedUrl("../graphics/comment_white.png")
+        onTriggered: {
+            pagestack.push(Qt.resolvedUrl("CommentsPage.qml"), {id: movie_id, type: "Movie", name: movie.attributes.title, year: movie.attributes.releaseDate.split('-')[0]})
+        }
+    }
+
+    head.actions: [
+        returnHomeAction,
+        playMovieTrailerAction,
+        authenticateAction,
+        checkInAction,
+        watchlistAction,
+        watchedAction,
+        commentAction
     ]
 
     Flickable {
@@ -446,25 +479,6 @@ Page {
                 header: i18n.tr("Similar Movies")
                 onThumbClicked: pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
             }
-        }
-    }
-
-    tools: ToolbarItems {
-        id: toolbarMovie
-
-        ToolbarButton {
-            id: returnHome
-            action: returnHomeAction
-        }
-
-        ToolbarButton {
-            id: shareMovie
-            action: shareMovieAction
-        }
-
-        ToolbarButton {
-            id: playTrailer
-            action: playMovieTrailerAction
         }
     }
 }
