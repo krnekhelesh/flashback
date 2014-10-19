@@ -76,7 +76,6 @@ Page {
         iconName: "search"
         onTriggered: {
             personTab.state = "search"
-            searchField.forceActiveFocus()
             popular.visible = false
             searchPageLoader.sourceComponent = searchPageComponent
         }
@@ -102,29 +101,36 @@ Page {
                 onTriggered: {
                     personTab.state = "default"
                     popular.visible = true
-                    searchField.text = ""
                     searchPageLoader.sourceComponent = undefined
                 }
             }
 
-            contents: SearchBox {
-                id: searchField
-                defaultText: i18n.tr("Search Celeb")
+            contents: Loader {
+                id: searchFieldLoader
                 anchors {
                     left: parent ? parent.left : undefined
                     right: parent ? parent.right : undefined
                     rightMargin: units.gu(2)
                 }
-
-                onSearchTriggered: {
-                    if (searchPageLoader.status === Loader.Ready) {
-                        searchPageLoader.item.search_model.model.clear();
-                    }
-                    if (searchField.text !== "") {
-                        searchPageLoader.item.search_model.source = Backend.searchUrl(searchPageLoader.item.type, searchField.search_term);
-                    }
-                }
+                sourceComponent: searchFieldComponent
+                active: personTab.state === "search"
             }
         }
     ]
+
+    Component {
+        id: searchFieldComponent
+        SearchBox {
+            id: searchField
+            defaultText: i18n.tr("Search Celeb")
+            onSearchTriggered: {
+                if (searchPageLoader.status === Loader.Ready) {
+                    searchPageLoader.item.search_model.model.clear();
+                }
+                if (searchField.text !== "") {
+                    searchPageLoader.item.search_model.source = Backend.searchUrl(searchPageLoader.item.type, searchField.search_term);
+                }
+            }
+        }
+    }
 }

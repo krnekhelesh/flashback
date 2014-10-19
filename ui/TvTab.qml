@@ -185,7 +185,6 @@ Page {
 
     function setDefaultState() {
         tvTab.state = "default"
-        searchField.text = ""
         searchPageLoader.sourceComponent = undefined
     }
 
@@ -197,7 +196,6 @@ Page {
         iconName: "search"
         onTriggered: {
             tvTab.state = "search"
-            searchField.forceActiveFocus()
             searchPageLoader.sourceComponent = searchPageComponent
         }
     }
@@ -224,28 +222,36 @@ Page {
                 }
             }
 
-            contents: SearchBox {
-                id: searchField
-                defaultText: i18n.tr("Search TV Show")
+            contents: Loader {
+                id: searchFieldLoader
                 anchors {
                     left: parent ? parent.left : undefined
                     right: parent ? parent.right : undefined
                     rightMargin: units.gu(2)
                 }
+                sourceComponent: searchFieldComponent
+                active: tvTab.state === "search"
+            }
+        }
+    ]
 
-                onSearchTriggered: {
-                    if (searchPageLoader.status === Loader.Ready) {
-                        searchPageLoader.item.search_model.model.clear()
-                    }
-                    if (searchField.text !== "") {
-                        searchPageLoader.item.search_model.source = Backend.searchUrl(searchPageLoader.item.type, searchField.search_term);
-                        if (searchPageLoader.item.type === "tv") {
-                            searchPageLoader.item.search_model.createMessage(traktLogin.contents.username, traktLogin.contents.password)
-                            searchPageLoader.item.search_model.sendMessage()
-                        }
+    Component {
+        id: searchFieldComponent
+        SearchBox {
+            id: searchField
+            defaultText: i18n.tr("Search TV Show")
+            onSearchTriggered: {
+                if (searchPageLoader.status === Loader.Ready) {
+                    searchPageLoader.item.search_model.model.clear()
+                }
+                if (searchField.text !== "") {
+                    searchPageLoader.item.search_model.source = Backend.searchUrl(searchPageLoader.item.type, searchField.search_term);
+                    if (searchPageLoader.item.type === "tv") {
+                        searchPageLoader.item.search_model.createMessage(traktLogin.contents.username, traktLogin.contents.password)
+                        searchPageLoader.item.search_model.sendMessage()
                     }
                 }
             }
         }
-    ]
+    }
 }

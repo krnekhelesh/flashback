@@ -302,7 +302,7 @@ Page {
         id: searchPageComponent
         SearchAll {
             id: searchPage
-       }
+        }
     }
 
     Action {
@@ -333,14 +333,12 @@ Page {
         iconName: "search"
         onTriggered: {
             homeTab.state = "search"
-            searchField.forceActiveFocus()
             searchPageLoader.sourceComponent = searchPageComponent
         }
     }
 
     function setDefaultState() {
         homeTab.state = "default"
-        searchField.text = ""
         searchPageLoader.sourceComponent = undefined
     }
 
@@ -367,28 +365,38 @@ Page {
                 }
             }
 
-            contents: SearchBox {
-                id: searchField
+            contents: Loader {
+                id: searchFieldLoader
                 anchors {
                     left: parent ? parent.left : undefined
                     right: parent ? parent.right : undefined
                     rightMargin: units.gu(2)
                 }
-                onSearchTriggered: {
-                    if (searchPageLoader.status === Loader.Ready) {
-                        searchPageLoader.item.showSearchResults.model.clear()
-                        searchPageLoader.item.movieSearchResults.model.clear()
-                        searchPageLoader.item.personSearchResults.model.clear()
-                    }
-                    if(searchField.text !== "") {
-                        searchPageLoader.item.showSearchResults.source = Backend.searchUrl("tv", searchField.search_term)
-                        searchPageLoader.item.movieSearchResults.source = Backend.searchUrl("movie", searchField.search_term)
-                        searchPageLoader.item.personSearchResults.source = Backend.searchUrl("person", searchField.search_term)
-                        searchPageLoader.item.showSearchResults.createMessage(traktLogin.contents.username, traktLogin.contents.password)
-                        searchPageLoader.item.showSearchResults.sendMessage()
-                    }
-                }
+                sourceComponent: searchFieldComponent
+                active: homeTab.state === "search"
             }
         }
     ]
+
+    Component {
+        id: searchFieldComponent
+        SearchBox {
+            id: searchField
+            defaultText: i18n.tr("Search all sources")
+            onSearchTriggered: {
+                if (searchPageLoader.status === Loader.Ready) {
+                    searchPageLoader.item.showSearchResults.model.clear()
+                    searchPageLoader.item.movieSearchResults.model.clear()
+                    searchPageLoader.item.personSearchResults.model.clear()
+                }
+                if(searchField.text !== "") {
+                    searchPageLoader.item.showSearchResults.source = Backend.searchUrl("tv", searchField.search_term)
+                    searchPageLoader.item.movieSearchResults.source = Backend.searchUrl("movie", searchField.search_term)
+                    searchPageLoader.item.personSearchResults.source = Backend.searchUrl("person", searchField.search_term)
+                    searchPageLoader.item.showSearchResults.createMessage(traktLogin.contents.username, traktLogin.contents.password)
+                    searchPageLoader.item.showSearchResults.sendMessage()
+                }
+            }
+        }
+    }
 }
