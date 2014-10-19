@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../backend/backend.js" as Backend
@@ -281,33 +281,22 @@ Page {
         }
     }
 
-    actions: [
-        Action {
-            id: commentAction
-            text: i18n.tr("Comment")
-            visible: traktLogin.contents.status !== "disabled"
-            keywords: i18n.tr("Add;Comment;Comments;Submit")
-            description: i18n.tr("Add comment")
-            iconName: "add"
-            onTriggered: {
-                commentsList.state = "addcomment"
-                addCommentBox.visible = true
-                userComment.forceActiveFocus()
-            }
-        }
-    ]
-
-    tools: ToolbarItems {
-        id: toolbarComment
-
-        ToolbarButton {
-            id: comment
-            action: commentAction
-        }
-
-        ToolbarButton {
-            id: returnHome
-            action: returnHomeAction
+    Action {
+        id: commentAction
+        text: i18n.tr("Comment")
+        visible: traktLogin.contents.status !== "disabled"
+        keywords: i18n.tr("Add;Comment;Comments;Submit")
+        description: i18n.tr("Add comment")
+        iconName: "add"
+        onTriggered: {
+            commentsList.state = "addcomment"
+            addCommentBox.visible = true
+            userComment.forceActiveFocus()
         }
     }
+
+    head.actions: [
+        returnHomeAction,
+        commentAction
+    ]
 }
