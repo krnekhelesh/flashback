@@ -31,36 +31,40 @@ Page {
 
     Component.onCompleted: console.log("[LOG]: TV Tab Loaded")
 
-    actions: [
-        Action {
-            id: appSettingsAction
-            text: i18n.tr("Settings")
-            visible: !createAccountMessage.visible
-            keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
-            description: i18n.tr("Application Settings")
-            iconName: "settings"
-            onTriggered: pagestack.push(Qt.resolvedUrl("SettingPage.qml"))
-        },
+    Action {
+        id: appSettingsAction
+        text: i18n.tr("Settings")
+        visible: !createAccountMessage.visible
+        keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
+        description: i18n.tr("Application Settings")
+        iconName: "settings"
+        onTriggered: pagestack.push(Qt.resolvedUrl("SettingPage.qml"))
+    }
 
-        Action {
-            id: setupAccountAction
-            text: i18n.tr("Account")
-            visible: createAccountMessage.visible
-            keywords: i18n.tr("Setup;Create;Account;Trakt")
-            description: i18n.tr("Setup a Trakt Account")
-            iconName: "add"
-            onTriggered: pageStack.push(Qt.resolvedUrl("Trakt.qml"))
-        },
+    Action {
+        id: setupAccountAction
+        text: i18n.tr("Account")
+        visible: createAccountMessage.visible
+        keywords: i18n.tr("Setup;Create;Account;Trakt")
+        description: i18n.tr("Setup a Trakt Account")
+        iconName: "add"
+        onTriggered: pageStack.push(Qt.resolvedUrl("Trakt.qml"))
+    }
 
-        Action {
-            id: refreshAccountAction
-            text: i18n.tr("Refresh")
-            visible: !account.visible
-            keywords: i18n.tr("Reload;Refresh;New;Trakt")
-            description: i18n.tr("Refresh Account Information")
-            iconName: "reload"
-            onTriggered: traktAccountModel.fetchData(traktLogin.contents.username, traktLogin.contents.password)
-        }
+    Action {
+        id: refreshAccountAction
+        text: i18n.tr("Refresh")
+        visible: !account.visible
+        keywords: i18n.tr("Reload;Refresh;New;Trakt")
+        description: i18n.tr("Refresh Account Information")
+        iconName: "reload"
+        onTriggered: traktAccountModel.fetchData(traktLogin.contents.username, traktLogin.contents.password)
+    }
+
+    head.actions: [
+        appSettingsAction,
+        refreshAccountAction,
+        setupAccountAction
     ]
 
     // Page Background
@@ -322,26 +326,6 @@ Page {
                     }
                 ]
             }
-        }
-    }
-
-
-    tools: ToolbarItems {
-        id: toolbarUser
-
-        ToolbarButton {
-            id: settings
-            action: appSettingsAction
-        }
-
-        ToolbarButton {
-            id: refresh
-            action: refreshAccountAction
-        }
-
-        ToolbarButton {
-            id: account
-            action: setupAccountAction
         }
     }
 }

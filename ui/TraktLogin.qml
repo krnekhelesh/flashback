@@ -349,11 +349,7 @@ Page {
         }
     }
 
-    tools: ToolbarItems {
-        id: toolbarLogin
-        ToolbarButton {
-            id: createAccount
-            action: createAccountAction
-        }
-    }
+    head.actions: [
+        createAccountAction
+    ]
 }
