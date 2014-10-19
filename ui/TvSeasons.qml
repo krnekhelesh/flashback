@@ -51,12 +51,7 @@ Page {
         }
     }
 
-    tools: ToolbarItems {
-        id: toolbarSeasons
-
-        ToolbarButton {
-            id: returnHome
-            action: returnHomeAction
-        }
-    }
+    head.actions: [
+        returnHomeAction
+    ]
 }
