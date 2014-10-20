@@ -241,7 +241,7 @@ Page {
         id: checkInAction
         visible: isAuthenticated
         text: movieActivityDocument.contents.name !== "default" ? i18n.tr("Cancel Check-in") : i18n.tr("Check-in Movie")
-        iconSource: Qt.resolvedUrl("../graphics/checkmark.png")
+        iconSource: movieActivityDocument.contents.name !== "default" ? Qt.resolvedUrl("../graphics/checkmark_red.png") : Qt.resolvedUrl("../graphics/checkmark_green.png")
         onTriggered: {
             loadingIndicator.loadingText = movieActivityDocument.contents.name === "default" ? i18n.tr("Checking-in movie") : i18n.tr("Cancelling movie check-in")
             loadingIndicator.isShown = true
