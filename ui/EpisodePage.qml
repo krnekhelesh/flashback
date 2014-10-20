@@ -196,7 +196,7 @@ Page {
         id: checkInAction
         visible: isAuthenticated
         text: showActivityDocument.contents.name !== "default" ? i18n.tr("Cancel Check-in") : i18n.tr("Check-in Episode")
-        iconSource: Qt.resolvedUrl("../graphics/checkmark.png")
+        iconSource: showActivityDocument.contents.name !== "default" ? Qt.resolvedUrl("../graphics/checkmark_red.png") : Qt.resolvedUrl("../graphics/checkmark_green.png")
         onTriggered: {
             loadingIndicator.loadingText = showActivityDocument.contents.name === "default" ? i18n.tr("Checking-in episode") : i18n.tr("Cancelling episode check-in")
             loadingIndicator.isShown = true
@@ -217,7 +217,7 @@ Page {
         id: watchedAction
         visible: isAuthenticated
         text: isEpisodeSeen ? i18n.tr("Mark unseen") : i18n.tr("Mark seen")
-        iconSource: Qt.resolvedUrl("../graphics/watched.png")
+        iconSource: isEpisodeSeen ? Qt.resolvedUrl("../graphics/watched_red.png") : Qt.resolvedUrl("../graphics/watched_green.png")
         onTriggered: {
             loadingIndicator.loadingText = isEpisodeSeen ? i18n.tr("Marking episode as unseen") : i18n.tr("Marking episode as seen")
             loadingIndicator.isShown = true

@@ -241,7 +241,7 @@ Page {
         id: checkInAction
         visible: isAuthenticated
         text: movieActivityDocument.contents.name !== "default" ? i18n.tr("Cancel Check-in") : i18n.tr("Check-in Movie")
-        iconSource: Qt.resolvedUrl("../graphics/checkmark.png")
+        iconSource: movieActivityDocument.contents.name !== "default" ? Qt.resolvedUrl("../graphics/checkmark_red.png") : Qt.resolvedUrl("../graphics/checkmark_green.png")
         onTriggered: {
             loadingIndicator.loadingText = movieActivityDocument.contents.name === "default" ? i18n.tr("Checking-in movie") : i18n.tr("Cancelling movie check-in")
             loadingIndicator.isShown = true
@@ -262,7 +262,7 @@ Page {
         id: watchlistAction
         visible: isAuthenticated
         text: isMovieWatchlisted ? i18n.tr("Remove from watchlist") : i18n.tr("Add to watchlist")
-        iconSource: Qt.resolvedUrl("../graphics/watchlist.png")
+        iconSource: isMovieWatchlisted ? Qt.resolvedUrl("../graphics/watchlist_red.png") : Qt.resolvedUrl("../graphics/watchlist_green.png")
         onTriggered: {
             loadingIndicator.loadingText = !isMovieWatchlisted ? i18n.tr("Adding movie to watchlist") : i18n.tr("Removing movie from watchlist")
             loadingIndicator.isShown = true
@@ -282,7 +282,7 @@ Page {
         id: watchedAction
         visible: isAuthenticated
         text: isMovieSeen ? i18n.tr("Mark unseen") : i18n.tr("Mark seen")
-        iconSource: Qt.resolvedUrl("../graphics/watched.png")
+        iconSource: isMovieSeen ? Qt.resolvedUrl("../graphics/watched_red.png") : Qt.resolvedUrl("../graphics/watched_green.png")
         onTriggered: {
             loadingIndicator.loadingText = !isMovieSeen ? i18n.tr("Marking movie as seen") : i18n.tr("Marking movie as unseen")
             loadingIndicator.isShown = true

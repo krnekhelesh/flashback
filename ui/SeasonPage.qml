@@ -80,7 +80,7 @@ Page {
         id: watchedAction
         visible: isAuthenticated
         text: isSeasonSeen ? i18n.tr("Mark unseen") : i18n.tr("Mark seen")
-        iconSource: Qt.resolvedUrl("../graphics/watched.png")
+        iconSource: isSeasonSeen ? Qt.resolvedUrl("../graphics/watched_red.png") : Qt.resolvedUrl("../graphics/watched_green.png")
         onTriggered: {
             if(!isSeasonSeen) {
                 loadingIndicator.loadingText = i18n.tr("Marking season as seen")
