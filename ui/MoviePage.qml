@@ -108,6 +108,7 @@ Page {
             if(reply.status === "success") {
                 console.log("[LOG]: Movie Check-in cancelled")
                 isMovieSeen = false
+                loadingIndicator.isShown = false
                 userActivityLoader.item.setDefaultDatabase()
                 userActivityLoader.item.getUserActivityOnline()
             }
@@ -153,6 +154,24 @@ Page {
                     tempData.movie = "Removed->" + movie.attributes.title
                 }
                 watchlistActivityDocument.contents = tempData
+            }
+        }
+    }
+
+    Notification { id: checkInNotification }
+
+    TraktCheckIn {
+        id: movieCheckIn
+        function updateJSONModel() {
+            loadingIndicator.visible = false
+            if (reply.status === "success") {
+                isMovieSeen = true
+                userActivityLoader.item.getUserActivityOnline()
+            }
+            else if (reply.status === "failure"){
+                checkInNotification.messageTitle = i18n.tr("Movie Check-in Failed")
+                checkInNotification.message = reply.error
+                checkInNotification.visible = true
             }
         }
     }
@@ -224,13 +243,18 @@ Page {
         text: movieActivityDocument.contents.name !== "default" ? i18n.tr("Cancel Check-in") : i18n.tr("Check-in Movie")
         iconSource: Qt.resolvedUrl("../graphics/checkmark.png")
         onTriggered: {
+            loadingIndicator.loadingText = movieActivityDocument.contents.name === "default" ? i18n.tr("Checking-in movie") : i18n.tr("Cancelling movie check-in")
+            loadingIndicator.isShown = true
             if(movieActivityDocument.contents.name !== "default") {
                 cancelCheckIn.source = Backend.cancelTraktCheckIn("movie")
                 cancelCheckIn.createMessage(traktLogin.contents.username, traktLogin.contents.password)
                 cancelCheckIn.sendMessage()
             }
-            else
-                pagestack.push(Qt.resolvedUrl("TraktCheckIn.qml"), {moviePage: moviePage, type: "Movie", id: movie.attributes.imdb_id, movieTitle: movie.attributes.title, year: movie.attributes.releaseDate.split('-')[0]})
+            else {
+                movieCheckIn.source = Backend.traktCheckInUrl("movie")
+                movieCheckIn.createMovieMessage(traktLogin.contents.username, traktLogin.contents.password, movie.attributes.imdb_id, movie.attributes.title, movie.attributes.releaseDate.split('-')[0], "Check-in using Flashback (Ubuntu Touch)", pagestack.app_version, pagestack.last_updated)
+                movieCheckIn.sendMessage()
+            }
         }
     }
 
