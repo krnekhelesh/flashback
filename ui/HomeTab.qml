@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Layouts 1.0
 import Ubuntu.Components 1.1
 import "../backend/backend.js" as Backend
@@ -29,37 +29,6 @@ Page {
     flickable: null
 
     Component.onCompleted: console.log("[LOG]: Home Tab Loaded")
-
-    actions: [
-        Action {
-            id: appSettingsAction
-            text: i18n.tr("Settings")
-            keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
-            description: i18n.tr("Application Settings")
-            iconName: "settings"
-            onTriggered: pagestack.push(Qt.resolvedUrl("SettingPage.qml"))
-        },
-
-        Action {
-            id: setupAccountAction
-            text: i18n.tr("Account")
-            visible: createAccountMessage.visible
-            keywords: i18n.tr("Setup;Create;Account;Trakt")
-            description: i18n.tr("Setup a Trakt Account")
-            iconName: "add"
-            onTriggered: pageStack.push(Qt.resolvedUrl("Trakt.qml"))
-        },
-
-        Action {
-            id: searchAllAction
-            text: i18n.tr("Search")
-            visible: !createAccountMessage.visible
-            keywords: i18n.tr("Search;Tv;Show;Shows;Find;Movie;Movies;Actor;Celeb")
-            description: i18n.tr("Search All")
-            iconName: "search"
-            onTriggered: pageStack.push(Qt.resolvedUrl("SearchAll.qml"))
-        }
-    ]
 
     // Tab Background
     Background {}
@@ -200,7 +169,7 @@ Page {
             clip: true
             anchors.fill: parent
             contentHeight: mainColumn.height + units.gu(5)
-            visible: !createAccountMessage.visible
+            visible: !createAccountMessage.visible && homeTab.state !== "search"
 
             Column {
                 id: mainColumn
@@ -286,6 +255,12 @@ Page {
                 }
             }
         }
+
+        Loader {
+            id: searchPageLoader
+            Layouts.item: "searchPageLoader"
+            anchors.fill: parent
+        }
     }
 
     EmptyState {
@@ -323,22 +298,105 @@ Page {
         }
     }
 
-    tools: ToolbarItems {
-        id: toolbarHome
-
-        ToolbarButton {
-            id: settings
-            action: appSettingsAction
+    Component {
+        id: searchPageComponent
+        SearchAll {
+            id: searchPage
         }
+    }
 
-        ToolbarButton {
-            id: account
-            action: setupAccountAction
+    Action {
+        id: appSettingsAction
+        text: i18n.tr("Settings")
+        keywords: i18n.tr("Settings;Setting;Configuration;Account;Authenticate")
+        description: i18n.tr("Application Settings")
+        iconName: "settings"
+        onTriggered: pagestack.push(Qt.resolvedUrl("SettingPage.qml"))
+    }
+
+    Action {
+        id: setupAccountAction
+        text: i18n.tr("Account")
+        visible: createAccountMessage.visible
+        keywords: i18n.tr("Setup;Create;Account;Trakt")
+        description: i18n.tr("Setup a Trakt Account")
+        iconName: "add"
+        onTriggered: pageStack.push(Qt.resolvedUrl("Trakt.qml"))
+    }
+
+    Action {
+        id: searchAllAction
+        text: i18n.tr("Search")
+        visible: !createAccountMessage.visible
+        keywords: i18n.tr("Search;Tv;Show;Shows;Find;Movie;Movies;Actor;Celeb")
+        description: i18n.tr("Search All")
+        iconName: "search"
+        onTriggered: {
+            homeTab.state = "search"
+            searchPageLoader.sourceComponent = searchPageComponent
         }
+    }
 
-        ToolbarButton {
-            id: search
-            action: searchAllAction
+    function setDefaultState() {
+        homeTab.state = "default"
+        searchPageLoader.sourceComponent = undefined
+    }
+
+    state: "default"
+    states: [
+        PageHeadState {
+            name: "default"
+            head: homeTab.head
+            actions: [
+                searchAllAction,
+                appSettingsAction,
+                setupAccountAction
+            ]
+        },
+
+        PageHeadState {
+            name: "search"
+            head: homeTab.head
+            backAction: Action {
+                iconName: "back"
+                text: i18n.tr("Back")
+                onTriggered: {
+                    setDefaultState()
+                }
+            }
+
+            contents: Loader {
+                id: searchFieldLoader
+                anchors {
+                    left: parent ? parent.left : undefined
+                    right: parent ? parent.right : undefined
+                    rightMargin: units.gu(2)
+                }
+                sourceComponent: searchFieldComponent
+                active: homeTab.state === "search"
+            }
+        }
+    ]
+
+    Component {
+        id: searchFieldComponent
+        SearchBox {
+            id: searchField
+            defaultText: i18n.tr("Search all sources")
+            onSearchTriggered: {
+                if (searchPageLoader.status === Loader.Ready) {
+                    searchPageLoader.item.showSearchResults.model.clear()
+                    searchPageLoader.item.movieSearchResults.model.clear()
+                    searchPageLoader.item.personSearchResults.model.clear()
+                }
+                if(searchField.text !== "") {
+                    searchPageLoader.item.showSearchResults.source = Backend.searchUrl("tv", searchField.search_term)
+                    searchPageLoader.item.movieSearchResults.source = Backend.searchUrl("movie", searchField.search_term)
+                    searchPageLoader.item.personSearchResults.source = Backend.searchUrl("person", searchField.search_term)
+                    searchPageLoader.item.showSearchResults.createMessage(traktLogin.contents.username, traktLogin.contents.password)
+                    searchPageLoader.item.showSearchResults.sendMessage()
+                }
+            }
         }
     }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.Popups 1.0
 import "../backend/backend.js" as Backend
@@ -28,12 +28,14 @@ Page {
 
     visible: false
     flickable: null
-    title: episodeDetails.attributes.name ? episodeDetails.attributes.name : "TV Show"
+    title: i18n.tr("TV Show")
 
     // Properties received from other pages to retrieve episode info
     property string season_number
     property string episode_number
     property string tv_id
+
+    property bool isAuthenticated: traktLogin.contents.status !== "disabled"
 
     property int userVote: 0
 
@@ -104,6 +106,7 @@ Page {
         function updateJSONModel() {
             if(reply.status === "success") {
                 console.log("[LOG]: Episode Check-in cancelled")
+                loadingIndicator.isShown = false
                 userActivityLoader.item.setDefaultDatabase()
                 userActivityLoader.item.getUserActivityOnline()
             }
@@ -143,49 +146,109 @@ Page {
         }
     }
 
+    Notification { id: checkInNotification }
+
+    TraktCheckIn {
+        id: episodeCheckIn
+        function updateJSONModel() {
+            loadingIndicator.visible = false
+            if (reply.status === "success") {
+                episodePage.episodeSeen()
+                userActivityLoader.item.getUserActivityOnline()
+            }
+            else if (reply.status === "failure"){
+                checkInNotification.messageTitle = i18n.tr("Episode Check-in Failed")
+                checkInNotification.message = reply.error
+                checkInNotification.visible = true
+            }
+        }
+    }
+
     LoadingIndicator {
         id: loadingIndicator
         isShown: episodeDetails.loading
     }
 
-    Component {
-        id: sharePopoverComponent
-        TraktPopup {
-            showWatchlistAction: false
-            checkInMessage: showActivityDocument.contents.name !== "default" ? i18n.tr("Cancel current episode check-in") : i18n.tr("Check-in episode into Trakt")
-            seenMessage: isEpisodeSeen ? i18n.tr("Mark episode an unseen") : i18n.tr("Mark episode as seen")
-            onCheckedIn: {
-                if(showActivityDocument.contents.name !== "default") {
-                    cancelCheckIn.source = Backend.cancelTraktCheckIn("show")
-                    cancelCheckIn.createMessage(traktLogin.contents.username, traktLogin.contents.password)
-                    cancelCheckIn.sendMessage()
-                }
-                else
-                    pagestack.push(Qt.resolvedUrl("../ui/TraktCheckIn.qml"), {episodePage: episodePage, type: "Episode", id: tv_id, episodeTitle: episodeDetails.attributes.name, year: episodeDetails.attributes.year, season: season_number, episode: episode_number})
+    head.contents: Label {
+        width: parent ? parent.width : undefined
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+        text: episodeDetails.attributes.name ? episodeDetails.attributes.name : i18n.tr("TV Show")
+        fontSize: "x-large"
+        maximumLineCount: fontSize === "large" ? 2 : 1
+        wrapMode: Text.WordWrap
+        elide: Text.ElideRight
+        onTruncatedChanged: {
+            if (truncated) {
+                fontSize = "large"
             }
-            onWatched: {
-                loadingIndicator.loadingText = !isEpisodeSeen ? i18n.tr("Marking episode as seen") : i18n.tr("Marking episode as unseen")
-                loadingIndicator.isShown = true
-                if(!isEpisodeSeen) {
-                    episodeSee.source = Backend.traktSeenUrl("show/episode")
-                    episodeSee.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, episodeDetails.attributes.id, episodeDetails.attributes.imdb_id, episodeDetails.attributes.name, episodeDetails.attributes.year, episodeDetails.attributes.season, episodeDetails.attributes.episode)
-                    episodeSee.sendMessage()
-                }
-                else {
-                    episodeUnsee.source = Backend.cancelTraktSeen("show/episode")
-                    episodeUnsee.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, episodeDetails.attributes.id, episodeDetails.attributes.imdb_id, episodeDetails.attributes.name, episodeDetails.attributes.year, episodeDetails.attributes.season, episodeDetails.attributes.episode)
-                    episodeUnsee.sendMessage()
-                }
-            }
-            onCommented: pagestack.push(Qt.resolvedUrl("CommentsPage.qml"), {id: tv_id, type: "Episode", name: episodeDetails.attributes.name, year: episodeDetails.attributes.year, season: season_number, episode: episode_number})
         }
     }
 
-    actions: [
-        TraktAction {
-            id: shareEpisodeAction
-            onTriggered: PopupUtils.open(sharePopoverComponent, null)
+    Action {
+        id: authenticateAction
+        text: i18n.tr("Login into Trakt")
+        visible: !isAuthenticated
+        iconSource: Qt.resolvedUrl("../graphics/user_white.png")
+        onTriggered: pagestack.push(Qt.resolvedUrl("Trakt.qml"))
+    }
+
+    Action {
+        id: checkInAction
+        visible: isAuthenticated
+        text: showActivityDocument.contents.name !== "default" ? i18n.tr("Cancel Check-in") : i18n.tr("Check-in Episode")
+        iconSource: showActivityDocument.contents.name !== "default" ? Qt.resolvedUrl("../graphics/checkmark_red.png") : Qt.resolvedUrl("../graphics/checkmark_green.png")
+        onTriggered: {
+            loadingIndicator.loadingText = showActivityDocument.contents.name === "default" ? i18n.tr("Checking-in episode") : i18n.tr("Cancelling episode check-in")
+            loadingIndicator.isShown = true
+            if(showActivityDocument.contents.name !== "default") {
+                cancelCheckIn.source = Backend.cancelTraktCheckIn("show")
+                cancelCheckIn.createMessage(traktLogin.contents.username, traktLogin.contents.password)
+                cancelCheckIn.sendMessage()
+            }
+            else {
+                episodeCheckIn.source = Backend.traktCheckInUrl("show")
+                episodeCheckIn.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, episodeDetails.attributes.name, episodeDetails.attributes.year, season_number, episode_number, "Check-in using Flashback (Ubuntu Touch)", pagestack.app_version, pagestack.last_updated)
+                episodeCheckIn.sendMessage()
+            }
         }
+    }
+
+    Action {
+        id: watchedAction
+        visible: isAuthenticated
+        text: isEpisodeSeen ? i18n.tr("Mark unseen") : i18n.tr("Mark seen")
+        iconSource: isEpisodeSeen ? Qt.resolvedUrl("../graphics/watched_red.png") : Qt.resolvedUrl("../graphics/watched_green.png")
+        onTriggered: {
+            loadingIndicator.loadingText = isEpisodeSeen ? i18n.tr("Marking episode as unseen") : i18n.tr("Marking episode as seen")
+            loadingIndicator.isShown = true
+            if(!isEpisodeSeen) {
+                episodeSee.source = Backend.traktSeenUrl("show/episode")
+                episodeSee.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, episodeDetails.attributes.id, episodeDetails.attributes.imdb_id, episodeDetails.attributes.name, episodeDetails.attributes.year, episodeDetails.attributes.season, episodeDetails.attributes.episode)
+                episodeSee.sendMessage()
+            }
+            else {
+                episodeUnsee.source = Backend.cancelTraktSeen("show/episode")
+                episodeUnsee.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, episodeDetails.attributes.id, episodeDetails.attributes.imdb_id, episodeDetails.attributes.name, episodeDetails.attributes.year, episodeDetails.attributes.season, episodeDetails.attributes.episode)
+                episodeUnsee.sendMessage()
+            }
+        }
+    }
+
+    Action {
+        id: commentAction
+        text: i18n.tr("View comments")
+        iconSource: Qt.resolvedUrl("../graphics/comment_white.png")
+        onTriggered: {
+            pagestack.push(Qt.resolvedUrl("CommentsPage.qml"), {id: tv_id, type: "Episode", name: episodeDetails.attributes.name, year: episodeDetails.attributes.year, season: season_number, episode: episode_number})
+        }
+    }
+
+    head.actions: [
+        returnHomeAction,
+        authenticateAction,
+        checkInAction,
+        watchedAction,
+        commentAction
     ]
 
     Flickable {
@@ -293,20 +356,6 @@ Page {
                     right: parent.right
                 }
             }
-        }
-    }
-
-    tools: ToolbarItems {
-        id: toolbarEpisode
-
-        ToolbarButton {
-            id: shareEpisode
-            action: shareEpisodeAction
-        }
-
-        ToolbarButton {
-            id: returnHome
-            action: returnHomeAction
         }
     }
 }

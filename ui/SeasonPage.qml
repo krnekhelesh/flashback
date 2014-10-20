@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.Popups 1.0
 import Ubuntu.Components.ListItems 1.0 as ListItem
@@ -42,6 +42,7 @@ Page {
     property bool isSeasonSeen: false
     property int currentSeenEpisode: -1
     property alias episodeModel: episodes.model
+    property bool isAuthenticated: traktLogin.contents.status !== "disabled"
 
     signal watched()
 
@@ -67,11 +68,34 @@ Page {
         isShown: episodes.loading
     }
 
-    actions: [
-        TraktAction {
-            id: shareSeasonAction
-            onTriggered: PopupUtils.open(sharePopoverComponent, null)
+    Action {
+        id: authenticateAction
+        text: i18n.tr("Login into Trakt")
+        visible: !isAuthenticated
+        iconSource: Qt.resolvedUrl("../graphics/user_white.png")
+        onTriggered: pagestack.push(Qt.resolvedUrl("Trakt.qml"))
+    }
+
+    Action {
+        id: watchedAction
+        visible: isAuthenticated
+        text: isSeasonSeen ? i18n.tr("Mark unseen") : i18n.tr("Mark seen")
+        iconSource: isSeasonSeen ? Qt.resolvedUrl("../graphics/watched_red.png") : Qt.resolvedUrl("../graphics/watched_green.png")
+        onTriggered: {
+            if(!isSeasonSeen) {
+                loadingIndicator.loadingText = i18n.tr("Marking season as seen")
+                loadingIndicator.isShown = true
+                seasonSee.source = Backend.traktSeenUrl("show/season")
+                seasonSee.createSeasonMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, imdb_id, name, year, season_number)
+                seasonSee.sendMessage()
+            }
         }
+    }
+
+    head.actions: [
+        returnHomeAction,
+        authenticateAction,
+        watchedAction
     ]
 
     // Page Background
@@ -86,25 +110,6 @@ Page {
                 watched_count = episodes.model.count
                 for (var i=0; i<episodes.model.count; i++) {
                     episodes.model.setProperty(i, "watched", "true")
-                }
-            }
-        }
-    }
-
-    Component {
-        id: sharePopoverComponent
-        TraktPopup {
-            showCheckInAction: false
-            showCommentAction: false
-            showWatchlistAction: false
-            seenMessage: !isSeasonSeen ? i18n.tr("Mark season as seen") : i18n.tr("Season has been watched!")
-            onWatched: {
-                if(!isSeasonSeen) {
-                    loadingIndicator.loadingText = i18n.tr("Marking season as seen")
-                    loadingIndicator.isShown = true
-                    seasonSee.source = Backend.traktSeenUrl("show/season")
-                    seasonSee.createSeasonMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, imdb_id, name, year, season_number)
-                    seasonSee.sendMessage()
                 }
             }
         }
@@ -271,20 +276,6 @@ Page {
                     }
                 }
             }
-        }
-    }
-
-    tools: ToolbarItems {
-        id: toolbarSeason
-
-        ToolbarButton {
-            id: shareSeason
-            action: shareSeasonAction
-        }
-
-        ToolbarButton {
-            id: returnHome
-            action: returnHomeAction
         }
     }
 }

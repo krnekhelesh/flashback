@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Layouts 1.0
 import Ubuntu.Components 1.1
 import "../components"
@@ -57,6 +57,9 @@ ConditionalLayout {
                     visible: (movieActivityDocument.contents.name !== "default" || showActivityDocument.contents.name !== "default") && tabletPortraitForm
                     isSelected: tabletPortraitForm && visible ? true : false
                     onClicked: {
+                        if (homeTab.state === "search") {
+                            homeTab.setDefaultState()
+                        }
                         selectListItem(nowWatchingTabletSidebar)
                         movieList.loading = false
                     }
@@ -69,6 +72,9 @@ ConditionalLayout {
                     menuIcon: Qt.resolvedUrl("../graphics/now_playing.png")
                     isSelected: tabletLandscapeForm ? true : nowWatchingTabletSidebar.isSelected ? false : true
                     onClicked: {
+                        if (homeTab.state === "search") {
+                            homeTab.setDefaultState()
+                        }
                         selectListItem(nowPlayingTablet)
                         movieList.gridType = "gridCarousel"
                         movieList.dataModel = nowPlayingMoviesModel.model
@@ -83,6 +89,9 @@ ConditionalLayout {
                     menuLabel: i18n.tr("Episodes Airing Today")
                     menuIcon: Qt.resolvedUrl("../graphics/today_sidebar.png")
                     onClicked: {
+                        if (homeTab.state === "search") {
+                            homeTab.setDefaultState()
+                        }
                         selectListItem(airingShowsTablet)
                         movieList.dataModel = airingShowsModel.model
                         movieList.showDate = false
@@ -98,6 +107,9 @@ ConditionalLayout {
                     menuLabel: i18n.tr("Unwatched Episodes")
                     menuIcon: Qt.resolvedUrl("../graphics/unwatched_sidebar.png")
                     onClicked: {
+                        if (homeTab.state === "search") {
+                            homeTab.setDefaultState()
+                        }
                         selectListItem(airedShowsTablet)
                         movieList.dataModel = airedShowsModel.model
                         movieList.showDate = true
@@ -113,6 +125,9 @@ ConditionalLayout {
                     menuLabel: i18n.tr("Movie Watchlist")
                     menuIcon: Qt.resolvedUrl("../graphics/watchlist_sidebar.png")
                     onClicked: {
+                        if (homeTab.state === "search") {
+                            homeTab.setDefaultState()
+                        }
                         selectListItem(userWatchlistTablet)
                         movieList.gridType = "gridCarousel"
                         movieList.dataModel = userWatchlistModel.model
@@ -171,7 +186,7 @@ ConditionalLayout {
 
             EmptyState {
                 id: noContentMessage
-                visible: !movieList.loading && !movieList.dataModel.count > 0 && movieList.visible
+                visible: !movieList.loading && !movieList.dataModel.count > 0 && movieList.visible && homeTab.state !== "search"
                 logo: Qt.resolvedUrl("../graphics/empty_content.png")
                 header: i18n.tr("No Content Yet")
                 message: i18n.tr("This space feels empty. Watch some movies or follow a tv show!")
@@ -179,7 +194,7 @@ ConditionalLayout {
 
             LoadingIndicator {
                 id: _loadingIndicator
-                isShown: movieList.loading && movieList.visible
+                isShown: movieList.loading && movieList.visible && homeTab.state !== "search"
             }
 
             Grid {
@@ -192,7 +207,7 @@ ConditionalLayout {
                 dataModel: nowPlayingMoviesModel.model
                 loading: nowPlayingMoviesModel.loading
 
-                visible: !nowWatchingTabletSidebar.isSelected
+                visible: !nowWatchingTabletSidebar.isSelected && homeTab.state !== "search"
 
                 onThumbClicked: gridType === "gridCarousel" ? pageStack.push(Qt.resolvedUrl("MoviePage.qml"), {"movie_id": model.id})
                                                             : pageStack.push(Qt.resolvedUrl("EpisodePage.qml"), {"tv_id": model.id, "season_number": model.season, "episode_number": model.episode, "watched": model.watched})
@@ -206,7 +221,7 @@ ConditionalLayout {
                     leftMargin: units.gu(2)
                 }
                 item: "nowWatchingMovie"
-                visible: nowWatchingTabletSidebar.isSelected && movieActivityDocument.contents.name !== "default"
+                visible: nowWatchingTabletSidebar.isSelected && movieActivityDocument.contents.name !== "default" && !(tabletPortraitForm && homeTab.state === "search")
                 width: watchingMovie.width
                 height: watchingMovie.height
             }
@@ -219,9 +234,14 @@ ConditionalLayout {
                     leftMargin: units.gu(2)
                 }
                 item: "nowWatchingShow"
-                visible: nowWatchingTabletSidebar.isSelected && showActivityDocument.contents.name !== "default"
+                visible: nowWatchingTabletSidebar.isSelected && showActivityDocument.contents.name !== "default" && !(tabletPortraitForm && homeTab.state === "search")
                 width: watchingShow.width
                 height: watchingShow.height
+            }
+
+            ItemLayout {
+                anchors.fill: parent
+                item: "searchPageLoader"
             }
         }
     }

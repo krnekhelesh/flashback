@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0 as ListItem
 import '../models'
@@ -28,7 +28,7 @@ Page {
 
     visible: false
     flickable: null
-    title: person.attributes.name ? person.attributes.name : "Celeb"
+    title: i18n.tr("Celeb")
 
     property string person_id
 
@@ -206,12 +206,22 @@ Page {
         }
     }
 
-    tools: ToolbarItems {
-        id: toolbarPerson
-
-        ToolbarButton {
-            id: returnHome
-            action: returnHomeAction
+    head.contents: Label {
+        width: parent ? parent.width : undefined
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+        text: person.attributes.name ? person.attributes.name : "Celeb"
+        fontSize: "x-large"
+        maximumLineCount: fontSize === "large" ? 2 : 1
+        wrapMode: Text.WordWrap
+        elide: Text.ElideRight
+        onTruncatedChanged: {
+            if (truncated) {
+                fontSize = "large"
+            }
         }
     }
+
+    head.actions: [
+        returnHomeAction
+    ]
 }

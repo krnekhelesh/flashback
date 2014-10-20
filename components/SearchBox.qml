@@ -16,11 +16,11 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 
-Item {
-    id: searchBox
+TextField {
+    id: searchField
 
     property alias defaultText: searchField.placeholderText
     property alias search_term: searchField.text
@@ -28,30 +28,16 @@ Item {
 
     Component.onCompleted: search_timer.triggered.connect(searchTriggered)
 
-    TextField {
-        id: searchField
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: parent.top
-        }
-
-        primaryItem: Image {
-            height: parent.height/1.5;
-            fillMode: Image.PreserveAspectFit
-            source: Qt.resolvedUrl("../graphics/search_icon.svg")
-        }
-
-        Timer {
-            id: search_timer
-            interval: 1100
-            repeat: false
-        }
-
-        placeholderText: i18n.tr("Search")
-        hasClearButton: true
-        inputMethodHints: Qt.ImhNoPredictiveText
-        onTextChanged: search_timer.restart()
+    Timer {
+        id: search_timer
+        interval: 1100
+        repeat: false
     }
+
+    placeholderText: i18n.tr("Search")
+    hasClearButton: true
+    inputMethodHints: Qt.ImhNoPredictiveText
+    onTextChanged: search_timer.restart()
 }
+
 

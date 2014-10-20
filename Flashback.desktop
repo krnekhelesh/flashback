@@ -1,10 +1,12 @@
 [Desktop Entry]
 Version=1.0
 Name=Flashback
-Comment=My project description
+Comment=Entertainment for Ubuntu Touch
 Exec=qmlscene $@ Flashback.qml
 Icon=flashback.png
 Terminal=false
 Type=Application
 Keywords=Movie,Film,TV,Show,Entertainment;
 X-Ubuntu-Touch=true
+X-Ubuntu-Splash-Show-Header=true
+X-Ubuntu-Splash-Color=#333333

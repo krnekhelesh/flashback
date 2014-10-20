@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 import "../components"
 import "../models"
@@ -35,19 +35,8 @@ Page {
         source: Backend.popularPeopleUrl()
     }
 
-    actions: [
-        Action {
-            id: searchPersonAction
-            text: i18n.tr("Celeb")
-            keywords: i18n.tr("Search;Person;Actor;Actors;Actress;Cast;Crew;Find")
-            description: i18n.tr("Search for Actors, Actress and Crew")
-            iconName: "search"
-            onTriggered: pageStack.push(Qt.resolvedUrl("SearchPerson.qml"))
-        }
-    ]
-
     LoadingIndicator {
-        isShown: popularPeople.loading
+        isShown: popularPeople.loading && personTab.state !== "search"
     }
 
     Grid {
@@ -58,17 +47,90 @@ Page {
         onThumbClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": model.id})
     }
 
-    tools: ToolbarItems {
-        id: toolbarPerson
+    Loader {
+        id: searchPageLoader
+        anchors.fill: parent
+    }
 
-        ToolbarButton {
-            id: settings
-            action: appSettingsAction
+    Component {
+        id: searchPageComponent
+        SearchPage {
+            id: searchPage
+
+            type: "person"
+            search_model: search_results
+            onResultClicked: pageStack.push(Qt.resolvedUrl("PersonPage.qml"), {"person_id": model.id, "type": "person"})
+
+            People {
+                id: search_results
+            }
         }
+    }
 
-        ToolbarButton {
-            id: searchPersons
-            action: searchPersonAction
+
+    Action {
+        id: searchPersonAction
+        text: i18n.tr("Celeb")
+        keywords: i18n.tr("Search;Person;Actor;Actors;Actress;Cast;Crew;Find")
+        description: i18n.tr("Search for Actors, Actress and Crew")
+        iconName: "search"
+        onTriggered: {
+            personTab.state = "search"
+            popular.visible = false
+            searchPageLoader.sourceComponent = searchPageComponent
+        }
+    }
+
+    state: "default"
+    states: [
+        PageHeadState {
+            name: "default"
+            head: personTab.head
+            actions: [
+                searchPersonAction,
+                appSettingsAction
+            ]
+        },
+
+        PageHeadState {
+            name: "search"
+            head: personTab.head
+            backAction: Action {
+                iconName: "back"
+                text: i18n.tr("Back")
+                onTriggered: {
+                    personTab.state = "default"
+                    popular.visible = true
+                    searchPageLoader.sourceComponent = undefined
+                }
+            }
+
+            contents: Loader {
+                id: searchFieldLoader
+                anchors {
+                    left: parent ? parent.left : undefined
+                    right: parent ? parent.right : undefined
+                    rightMargin: units.gu(2)
+                }
+                sourceComponent: searchFieldComponent
+                active: personTab.state === "search"
+            }
+        }
+    ]
+
+    Component {
+        id: searchFieldComponent
+        SearchBox {
+            id: searchField
+            defaultText: i18n.tr("Search Celeb")
+            onSearchTriggered: {
+                if (searchPageLoader.status === Loader.Ready) {
+                    searchPageLoader.item.search_model.model.clear();
+                }
+                if (searchField.text !== "") {
+                    searchPageLoader.item.search_model.source = Backend.searchUrl(searchPageLoader.item.type, searchField.search_term);
+                }
+            }
         }
     }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../components"
@@ -51,12 +51,7 @@ Page {
         }
     }
 
-    tools: ToolbarItems {
-        id: toolbarSeasons
-
-        ToolbarButton {
-            id: returnHome
-            action: returnHomeAction
-        }
-    }
+    head.actions: [
+        returnHomeAction
+    ]
 }

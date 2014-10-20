@@ -22,6 +22,10 @@ Project {
         filter: "Makefile"
     }
     Files {
+        directory: "."
+        paths: ["manifest.json", "Flashback.json"]
+    }
+    Files {
         directory: "html"
         filter: "*"
     }

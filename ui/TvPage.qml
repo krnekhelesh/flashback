@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.Popups 1.0
 import Ubuntu.Components.ListItems 1.0 as ListItem
@@ -29,26 +29,95 @@ Page {
 
     visible: false
     flickable: null
-    title: show.attributes.name ? show.attributes.name : i18n.tr("TV Show")
+    title: i18n.tr("TV Show")
 
     property string tv_id
     property int userVote: 0
     property bool isShowWatchlisted
+    property bool isAuthenticated: traktLogin.contents.status !== "disabled"
 
-    actions: [
-        Action {
-            id: seeEpisodeGuideAction
-            text: i18n.tr("Episode Guide")
-            keywords: i18n.tr("See;Episode;Guide;Guides;Episodes")
-            description: i18n.tr("See Episode Guide")
-            iconSource: Qt.resolvedUrl("../graphics/guide.png")
-            onTriggered: pageStack.push(Qt.resolvedUrl("TvSeasons.qml"), {"title": i18n.tr("Episode Guide"), "dataModel": tvSeasons.model, "tv_id": tv_id, "imdb_id": show.imdb_id, "name": show.name, "year": show.year})
-        },
-
-        TraktAction {
-            id: shareShowAction
-            onTriggered: PopupUtils.open(sharePopoverComponent, null)
+    head.contents: Label {
+        width: parent ? parent.width : undefined
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+        text: show.attributes.name ? show.attributes.name : i18n.tr("TV Show")
+        fontSize: "x-large"
+        maximumLineCount: fontSize === "large" ? 2 : 1
+        wrapMode: Text.WordWrap
+        elide: Text.ElideRight
+        onTruncatedChanged: {
+            if (truncated) {
+                fontSize = "large"
+            }
         }
+    }
+
+    Action {
+        id: seeEpisodeGuideAction
+        text: i18n.tr("Episode Guide")
+        keywords: i18n.tr("See;Episode;Guide;Guides;Episodes")
+        description: i18n.tr("See Episode Guide")
+        iconSource: Qt.resolvedUrl("../graphics/guide.png")
+        onTriggered: pageStack.push(Qt.resolvedUrl("TvSeasons.qml"), {"title": i18n.tr("Episode Guide"), "dataModel": tvSeasons.model, "tv_id": tv_id, "imdb_id": show.imdb_id, "name": show.name, "year": show.year})
+    }
+
+    Action {
+        id: authenticateAction
+        text: i18n.tr("Login into Trakt")
+        visible: !isAuthenticated
+        iconSource: Qt.resolvedUrl("../graphics/user_white.png")
+        onTriggered: pagestack.push(Qt.resolvedUrl("Trakt.qml"))
+    }
+
+    Action {
+        id: watchlistAction
+        visible: isAuthenticated
+        text: isShowWatchlisted ? i18n.tr("Remove from watchlist") : i18n.tr("Add to watchlist")
+        iconSource: isShowWatchlisted ? Qt.resolvedUrl("../graphics/watchlist_red.png") : Qt.resolvedUrl("../graphics/watchlist_green.png")
+        onTriggered: {
+            loadingIndicator.loadingText = !isShowWatchlisted ? i18n.tr("Adding show to watchlist") : i18n.tr("Removing show from watchlist")
+            loadingIndicator.isShown = true
+            if(!isShowWatchlisted) {
+                showWatchlist.source = Backend.traktWatchlistUrl("show")
+                showWatchlist.createShowMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, show.name, show.year)
+            }
+            else {
+                showWatchlist.source = Backend.traktUnwatchlistUrl("show")
+                showWatchlist.createShowMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, show.name, show.year)
+            }
+            showWatchlist.sendMessage()
+        }
+    }
+
+    Action {
+        id: watchedAction
+        visible: isAuthenticated
+        text: i18n.tr("Mark seen")
+        iconSource: Qt.resolvedUrl("../graphics/watched_green.png")
+        onTriggered: {
+            loadingIndicator.loadingText = i18n.tr("Marking show as seen")
+            loadingIndicator.isShown = true
+            showSee.source = Backend.traktSeenUrl("show")
+            showSee.createShowMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, show.imdb_id, show.name, show.year)
+            showSee.sendMessage()
+        }
+    }
+
+    Action {
+        id: commentAction
+        text: i18n.tr("View comments")
+        iconSource: Qt.resolvedUrl("../graphics/comment_white.png")
+        onTriggered: {
+            pagestack.push(Qt.resolvedUrl("CommentsPage.qml"), {id: tv_id, type: "Show", name: show.name, year: show.year})
+        }
+    }
+
+    head.actions: [
+        returnHomeAction,
+        authenticateAction,
+        seeEpisodeGuideAction,
+        watchlistAction,
+        watchedAction,
+        commentAction
     ]
 
     // Page Background
@@ -90,36 +159,6 @@ Page {
         isShown: tvCast.loading ||
                  tvSeasons.loading ||
                  show.loading
-    }
-
-    Component {
-        id: sharePopoverComponent
-        TraktPopup {
-            showCheckInAction: false
-            seenMessage: i18n.tr("Mark show as seen")
-            watchlistMessage: isShowWatchlisted ? i18n.tr("Remove show from watchlist") : i18n.tr("Add show to watchlist")
-            onWatched: {
-                loadingIndicator.loadingText = i18n.tr("Marking show as seen")
-                loadingIndicator.isShown = true
-                showSee.source = Backend.traktSeenUrl("show")
-                showSee.createShowMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, show.imdb_id, show.name, show.year)
-                showSee.sendMessage()
-            }
-            onWatchlisted:  {
-                loadingIndicator.loadingText = !isShowWatchlisted ? i18n.tr("Adding show to watchlist") : i18n.tr("Removing show from watchlist")
-                loadingIndicator.isShown = true
-                if(!isShowWatchlisted) {
-                    showWatchlist.source = Backend.traktWatchlistUrl("show")
-                    showWatchlist.createShowMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, show.name, show.year)
-                }
-                else {
-                    showWatchlist.source = Backend.traktUnwatchlistUrl("show")
-                    showWatchlist.createShowMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, show.name, show.year)
-                }
-                showWatchlist.sendMessage()
-            }
-            onCommented: pagestack.push(Qt.resolvedUrl("CommentsPage.qml"), {id: tv_id, type: "Show", name: show.name, year: show.year})
-        }
     }
 
     TraktCast { id: tvCast }
@@ -338,25 +377,6 @@ Page {
                 progression: true
                 onClicked: pageStack.push(Qt.resolvedUrl("CastPage.qml"), {"title": i18n.tr("Full Cast"), "dataModel": tvCast.model, "getActorDetail": false})
             }
-        }
-    }
-
-    tools: ToolbarItems {
-        id: toolbarTv
-
-        ToolbarButton {
-            id: returnHome
-            action: returnHomeAction
-        }
-
-        ToolbarButton {
-            id: shareShow
-            action: shareShowAction
-        }
-
-        ToolbarButton {
-            id: seeEpisodeGuides
-            action: seeEpisodeGuideAction
         }
     }
 }

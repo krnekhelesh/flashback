@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import U1db 1.0 as U1db
 import Ubuntu.Components 1.1
 import "backend/backend.js" as Backend
@@ -215,7 +215,7 @@ MainView {
         // Properties to hold the application details which are then used throughout the application for consistency
         property string app_version: "@APP_VERSION@"
         property string app_name: "Flashback"
-        property string last_updated: "23 April 2014"
+        property string last_updated: "20 October 2014"
 
         // Property to hold the trakt account status to allow for detecting account changes after the app is open
         property string account_status

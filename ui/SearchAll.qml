@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../backend/backend.js" as Backend
@@ -24,19 +24,16 @@ import "../components"
 import "../models"
 
 // Page to search for movies, tv shows and actors
-Page {
+Item {
     id: searchAllPage
 
-    visible: false
-    flickable: null
-    title: i18n.tr("Search All")
+    property alias showSearchResults: show_search_results
+    property alias movieSearchResults: movie_search_results
+    property alias personSearchResults: person_search_results
 
     Shows  { id: show_search_results   }
     Movies { id: movie_search_results  }
     People { id: person_search_results }
-
-    // Page Background
-    Background {}
 
     LoadingIndicator {
         id: loadingIndicator
@@ -48,39 +45,15 @@ Page {
         id: mainFlickable
         clip: true
         anchors.fill: parent
-        contentHeight: _searchBox.height + search_results.height + units.gu(10)
-
-        // Search Box to enter search query along with the search button
-        SearchBox {
-            id: _searchBox
-            anchors {
-                top: parent.top
-                left: parent.left
-                right: parent.right
-                margins: units.gu(2)
-            }
-            onSearchTriggered: {
-                show_search_results.model.clear()
-                movie_search_results.model.clear()
-                person_search_results.model.clear()
-                if(_searchBox.search_term !== "") {
-                    show_search_results.source = Backend.searchUrl("tv", _searchBox.search_term)
-                    movie_search_results.source = Backend.searchUrl("movie", _searchBox.search_term)
-                    person_search_results.source = Backend.searchUrl("person", _searchBox.search_term)
-                    show_search_results.createMessage(traktLogin.contents.username, traktLogin.contents.password)
-                    show_search_results.sendMessage()
-                }
-            }
-        }
+        contentHeight: search_results.height + units.gu(10)
 
         Column {
             id: search_results
 
             anchors {
-                top: _searchBox.bottom
+                top: parent.top
                 left: parent.left
                 right: parent.right
-                topMargin: units.gu(4)
             }
 
             ListViewExpandable {
