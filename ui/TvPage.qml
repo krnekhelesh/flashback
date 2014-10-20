@@ -72,7 +72,7 @@ Page {
         id: watchlistAction
         visible: isAuthenticated
         text: isShowWatchlisted ? i18n.tr("Remove from watchlist") : i18n.tr("Add to watchlist")
-        iconSource: Qt.resolvedUrl("../graphics/watchlist.png")
+        iconSource: isShowWatchlisted ? Qt.resolvedUrl("../graphics/watchlist_red.png") : Qt.resolvedUrl("../graphics/watchlist_green.png")
         onTriggered: {
             loadingIndicator.loadingText = !isShowWatchlisted ? i18n.tr("Adding show to watchlist") : i18n.tr("Removing show from watchlist")
             loadingIndicator.isShown = true
