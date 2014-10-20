@@ -106,6 +106,7 @@ Page {
         function updateJSONModel() {
             if(reply.status === "success") {
                 console.log("[LOG]: Episode Check-in cancelled")
+                loadingIndicator.isShown = false
                 userActivityLoader.item.setDefaultDatabase()
                 userActivityLoader.item.getUserActivityOnline()
             }
@@ -145,6 +146,24 @@ Page {
         }
     }
 
+    Notification { id: checkInNotification }
+
+    TraktCheckIn {
+        id: episodeCheckIn
+        function updateJSONModel() {
+            loadingIndicator.visible = false
+            if (reply.status === "success") {
+                episodePage.episodeSeen()
+                userActivityLoader.item.getUserActivityOnline()
+            }
+            else if (reply.status === "failure"){
+                checkInNotification.messageTitle = i18n.tr("Episode Check-in Failed")
+                checkInNotification.message = reply.error
+                checkInNotification.visible = true
+            }
+        }
+    }
+
     LoadingIndicator {
         id: loadingIndicator
         isShown: episodeDetails.loading
@@ -179,13 +198,18 @@ Page {
         text: showActivityDocument.contents.name !== "default" ? i18n.tr("Cancel Check-in") : i18n.tr("Check-in Episode")
         iconSource: Qt.resolvedUrl("../graphics/checkmark.png")
         onTriggered: {
+            loadingIndicator.loadingText = showActivityDocument.contents.name === "default" ? i18n.tr("Checking-in episode") : i18n.tr("Cancelling episode check-in")
+            loadingIndicator.isShown = true
             if(showActivityDocument.contents.name !== "default") {
                 cancelCheckIn.source = Backend.cancelTraktCheckIn("show")
                 cancelCheckIn.createMessage(traktLogin.contents.username, traktLogin.contents.password)
                 cancelCheckIn.sendMessage()
             }
-            else
-                pagestack.push(Qt.resolvedUrl("../ui/TraktCheckIn.qml"), {episodePage: episodePage, type: "Episode", id: tv_id, episodeTitle: episodeDetails.attributes.name, year: episodeDetails.attributes.year, season: season_number, episode: episode_number})
+            else {
+                episodeCheckIn.source = Backend.traktCheckInUrl("show")
+                episodeCheckIn.createEpisodeMessage(traktLogin.contents.username, traktLogin.contents.password, tv_id, episodeDetails.attributes.name, episodeDetails.attributes.year, season_number, episode_number, "Check-in using Flashback (Ubuntu Touch)", pagestack.app_version, pagestack.last_updated)
+                episodeCheckIn.sendMessage()
+            }
         }
     }
 
