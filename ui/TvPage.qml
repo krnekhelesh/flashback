@@ -92,7 +92,7 @@ Page {
         id: watchedAction
         visible: isAuthenticated
         text: i18n.tr("Mark seen")
-        iconSource: Qt.resolvedUrl("../graphics/watched.png")
+        iconSource: Qt.resolvedUrl("../graphics/watched_green.png")
         onTriggered: {
             loadingIndicator.loadingText = i18n.tr("Marking show as seen")
             loadingIndicator.isShown = true

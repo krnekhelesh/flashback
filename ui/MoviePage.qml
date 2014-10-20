@@ -282,7 +282,7 @@ Page {
         id: watchedAction
         visible: isAuthenticated
         text: isMovieSeen ? i18n.tr("Mark unseen") : i18n.tr("Mark seen")
-        iconSource: Qt.resolvedUrl("../graphics/watched.png")
+        iconSource: isMovieSeen ? Qt.resolvedUrl("../graphics/watched_red.png") : Qt.resolvedUrl("../graphics/watched_green.png")
         onTriggered: {
             loadingIndicator.loadingText = !isMovieSeen ? i18n.tr("Marking movie as seen") : i18n.tr("Marking movie as unseen")
             loadingIndicator.isShown = true
