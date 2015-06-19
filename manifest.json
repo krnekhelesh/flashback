@@ -1,7 +1,7 @@
 {
     "architecture": "all",
     "description": "Entertainment app for Ubuntu Touch",
-    "framework": "ubuntu-sdk-14.10-qml-dev3",
+    "framework": "ubuntu-sdk-15.04",
     "hooks": {
         "flashback": {
             "apparmor": "Flashback.json",
