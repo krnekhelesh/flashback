@@ -11,5 +11,5 @@
     "maintainer": "Nekhelesh Ramananthan <krnekhelesh@gmail.com>",
     "name": "com.ubuntu.developer.nik90.flashback",
     "title": "Flashback",
-    "version": "@APP_VERSION@"
+    "version": "0.4.3"
 }
