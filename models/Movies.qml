@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.3
+import QtQuick 2.4
 
 BaseModel {
     id: movies

@@ -16,9 +16,9 @@
  *
  */
 
-import QtQuick 2.3
+import QtQuick 2.4
 import U1db 1.0 as U1db
-import Ubuntu.Components 1.1
+import Ubuntu.Components 1.2
 import "backend/backend.js" as Backend
 import "models"
 import "ui"
@@ -43,11 +43,6 @@ MainView {
       by the on-screen keyboard
     */
     anchorToKeyboard: true
-
-    /*
-      This property enabled the new header and disables the old toolbar
-    */
-    useDeprecatedToolbar: false
 
     width: units.gu(150)
     height: units.gu(100)

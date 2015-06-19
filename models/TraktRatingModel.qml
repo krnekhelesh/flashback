@@ -16,7 +16,7 @@
  *
  */
 
-import QtQuick 2.3
+import QtQuick 2.4
 
 /*
   Trakt Rating Model. Rating Advanced from 1-10. Set as 0 to remove rating
